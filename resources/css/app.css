@@ -1,3 +1,161 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer components {
+    .store-shell {
+        @apply mx-auto max-w-7xl px-4 sm:px-6 lg:px-8;
+    }
+
+    .store-panel {
+        @apply rounded-[2rem] border border-stone-200 bg-amber-50 p-8 shadow-lg shadow-stone-200/70;
+    }
+
+    .store-panel-dark {
+        @apply rounded-[2rem] border border-stone-200 bg-stone-900 p-8 text-white shadow-xl shadow-stone-300/40 lg:p-12;
+    }
+
+    .store-card {
+        @apply rounded-[1.75rem] border border-stone-200 bg-white p-6 shadow-lg shadow-stone-200/70;
+    }
+
+    .store-card-hover {
+        @apply transition hover:-translate-y-1 hover:shadow-xl;
+    }
+
+    .store-media {
+        @apply flex items-center justify-center rounded-[1.25rem] bg-gradient-to-br from-stone-100 via-white to-amber-100;
+    }
+
+    .store-media-sm {
+        @apply h-40;
+    }
+
+    .store-media-md {
+        @apply h-44;
+    }
+
+    .store-media-lg {
+        @apply min-h-[28rem] rounded-[1.5rem];
+    }
+
+    .store-kicker {
+        @apply text-sm font-semibold uppercase tracking-[0.25em] text-stone-500;
+    }
+
+    .store-kicker-light {
+        @apply mb-4 text-sm font-semibold uppercase tracking-[0.35em] text-amber-300;
+    }
+
+    .store-heading {
+        @apply mt-2 text-3xl font-black tracking-tight text-stone-900;
+    }
+
+    .store-heading-xl {
+        @apply text-4xl font-black tracking-tight sm:text-5xl;
+    }
+
+    .store-title-xl {
+        @apply text-5xl font-black tracking-tight text-stone-900 sm:text-6xl;
+    }
+
+    .store-title-lg {
+        @apply text-2xl font-black text-stone-900;
+    }
+
+    .store-text {
+        @apply text-sm leading-6 text-stone-600;
+    }
+
+    .store-subtitle-muted {
+        @apply mt-4 text-xs font-medium tracking-[0.12em] text-stone-300;
+    }
+
+    .store-description {
+        @apply text-base leading-8 text-stone-700;
+    }
+
+    .store-button-primary {
+        @apply rounded-full bg-stone-900 px-4 py-2 text-sm font-bold text-white transition hover:bg-stone-700;
+    }
+
+    .store-button-secondary {
+        @apply rounded-full border border-stone-300 px-4 py-2 text-sm font-bold text-stone-700 transition hover:border-stone-900 hover:text-stone-950;
+    }
+
+    .store-button-accent {
+        @apply rounded-full bg-amber-300 px-5 py-3 text-sm font-bold text-stone-950 transition hover:bg-amber-200;
+    }
+
+    .store-button-outline-light {
+        @apply rounded-full border border-stone-600 px-5 py-3 text-sm font-bold text-white transition hover:border-stone-400;
+    }
+
+    .store-price {
+        @apply text-3xl font-black text-stone-950;
+    }
+
+    .store-price-lg {
+        @apply text-5xl font-black tracking-tight text-stone-950;
+    }
+
+    .store-price-old {
+        @apply text-sm text-stone-400 line-through;
+    }
+
+    .store-filter-pill {
+        @apply inline-flex items-center rounded-full border border-stone-300 bg-white px-5 py-3 text-sm font-bold text-stone-700 shadow-sm shadow-stone-200/70 transition hover:-translate-y-0.5 hover:border-stone-900 hover:shadow-md hover:shadow-stone-300/60 hover:text-stone-950;
+    }
+
+    .store-filter-pill-active {
+        @apply inline-flex items-center rounded-full bg-stone-900 px-5 py-3 text-sm font-bold text-white shadow-md shadow-stone-300/60;
+    }
+
+    .store-filter-pill-highlight {
+        @apply inline-flex items-center rounded-full bg-amber-300 px-5 py-3 text-sm font-bold text-stone-950 shadow-md shadow-amber-200/80 ring-1 ring-amber-400/60;
+    }
+
+    .store-alert-stock {
+        @apply text-sm font-bold uppercase tracking-[0.2em] text-red-600;
+    }
+
+    .store-discount-badge {
+        @apply rounded-full bg-amber-300 px-4 py-2 text-sm font-bold text-stone-950;
+    }
+
+    .store-toolbar {
+        @apply flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between;
+    }
+
+    .store-detail-card {
+        @apply mt-10 rounded-[1.75rem] border border-stone-200 bg-gradient-to-br from-stone-50 via-white to-stone-100 p-8 shadow-md shadow-stone-200/70;
+    }
+
+    .store-detail-label {
+        @apply text-xs font-semibold uppercase tracking-[0.2em] text-stone-500;
+    }
+
+    .store-detail-accent {
+        @apply mt-4 h-1 w-14 rounded-full bg-amber-300;
+    }
+
+    .store-category-summary {
+        @apply mt-4 max-w-2xl rounded-[1.5rem] border border-stone-200 bg-stone-50 px-5 py-4 text-sm leading-6 text-stone-600;
+    }
+
+    .store-controls-bar {
+        @apply flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between;
+    }
+
+    .store-controls-inline {
+        @apply inline-flex items-center gap-3 rounded-full border border-stone-200 bg-stone-50 px-4 py-2 shadow-sm shadow-stone-200/30;
+    }
+
+    .store-empty {
+        @apply rounded-[1.75rem] border border-dashed border-stone-300 bg-white p-8 text-sm text-stone-600;
+    }
+
+    .store-chip {
+        @apply rounded-full bg-stone-100 px-3 py-1 text-xs font-bold uppercase tracking-[0.15em] text-stone-500;
+    }
+}
