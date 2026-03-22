@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use InvalidArgumentException;
 
 class Product extends Model
 {
@@ -53,5 +54,37 @@ class Product extends Model
     public function category(): BelongsTo
     {
         return $this->belongsTo(Category::class);
+    }
+
+    public function getDiscountedPriceAttribute(): string
+    {
+        $salePrice = (float) $this->sale_price;
+        $discountValue = (float) $this->discount_value;
+
+        if ($discountValue <= 0) {
+            return number_format($salePrice, 2, '.', '');
+        }
+
+        $discountedPrice = match ($this->discount_type) {
+            'percentage' => $salePrice - ($salePrice * $discountValue / 100),
+            'fixed' => $salePrice - $discountValue,
+            default => throw new InvalidArgumentException('Unsupported discount type.'),
+        };
+
+        return number_format(max($discountedPrice, 0), 2, '.', '');
+    }
+
+    public function getHasDiscountAttribute(): bool
+    {
+        return (float) $this->discount_value > 0;
+    }
+
+    public function getIsNewAttribute(): bool
+    {
+        if (! $this->created_at) {
+            return false;
+        }
+
+        return $this->created_at->greaterThanOrEqualTo(now()->subDays(14));
     }
 }
