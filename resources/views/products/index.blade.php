@@ -2,7 +2,7 @@
     <section class="store-shell pb-16 pt-10">
         <div
             class="store-panel mx-auto"
-            style="max-width: 70rem; background-color: #fcfaf7; border-color: #e9e2d8; box-shadow: 0 18px 45px rgba(120, 112, 97, 0.10);"
+            style="background-color: #fcfaf7; border-color: #e9e2d8; box-shadow: 0 18px 45px rgba(120, 112, 97, 0.10);"
         >
             <div>
                 <p class="store-kicker">Catalogo</p>
@@ -55,14 +55,17 @@
             </form>
         </div>
 
-        <div class="mt-8 grid gap-5 md:grid-cols-2 xl:grid-cols-3">
+        <div
+            class="mt-8 grid gap-4 mx-auto"
+            style="grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));"
+        >
             @forelse ($products as $product)
-                <article class="store-card">
+                <article class="store-card flex h-full w-full max-w-[18rem] flex-col justify-self-center">
                     <div class="store-media store-media-md">
                         <span class="text-sm font-semibold uppercase tracking-[0.25em] text-stone-500">Sin imagen</span>
                     </div>
 
-                    <div class="mt-5">
+                    <div class="mt-5 flex-1">
                         <div>
                             <p class="store-kicker">{{ $product->category?->name ?? 'Sin categoria' }}</p>
                             <h2 class="mt-2 store-title-lg">{{ $product->name }}</h2>

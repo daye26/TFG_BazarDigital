@@ -16,7 +16,7 @@
     }
 
     .store-card {
-        @apply rounded-[1.75rem] border border-stone-200 bg-white p-6 shadow-lg shadow-stone-200/70;
+        @apply rounded-[1.5rem] border border-stone-200 bg-white p-5 shadow-lg shadow-stone-200/70;
     }
 
     .store-card-hover {
@@ -32,7 +32,7 @@
     }
 
     .store-media-md {
-        @apply h-44;
+        @apply h-36;
     }
 
     .store-media-lg {
@@ -60,7 +60,7 @@
     }
 
     .store-title-lg {
-        @apply text-2xl font-black text-stone-900;
+        @apply text-xl font-black text-stone-900;
     }
 
     .store-text {
@@ -92,7 +92,7 @@
     }
 
     .store-price {
-        @apply text-3xl font-black text-stone-950;
+        @apply text-2xl font-black text-stone-950;
     }
 
     .store-price-lg {
