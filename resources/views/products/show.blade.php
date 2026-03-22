@@ -8,37 +8,40 @@
             </div>
 
             <div class="store-panel">
-                <p class="store-kicker">{{ $product->category?->name ?? 'Sin categoria' }}</p>
-                <h1 class="mt-4 store-title-xl">{{ $product->name }}</h1>
-                <p class="store-subtitle-muted">{{ $product->barcode }}</p>
+                <h1 class="text-4xl font-black tracking-tight text-stone-950 sm:text-5xl">{{ $product->name }}</h1>
+                <p class="mt-7 text-2xl font-medium text-stone-500">{{ $product->category?->name ?? 'Sin categoria' }}</p>
+                <p class="mt-5 text-lg tracking-[0.03em] text-stone-400">|||| {{ $product->barcode }}</p>
 
-                <div class="store-detail-card">
-                    <p class="store-detail-label">Descripcion</p>
-                    <div class="store-detail-accent"></div>
-                    <p class="store-description mt-5">{{ $product->description }}</p>
-                </div>
-
-                @if ($product->qty < 1)
-                    <p class="store-alert-stock mt-5">Actualmente sin stock</p>
-                @endif
-
-                <div class="mt-8 flex flex-wrap items-end gap-6">
-                    <div>
-                        @if ($product->has_discount)
-                            <p class="text-base text-stone-400 line-through">{{ number_format((float) $product->sale_price, 2, ',', '.') }} &euro;</p>
-                        @endif
-                        <p class="store-price-lg">{{ number_format((float) $product->discounted_price, 2, ',', '.') }} &euro;</p>
-                    </div>
+                <div style="margin-top: 2rem;">
                     @if ($product->has_discount)
-                        <span class="store-discount-badge">
-                            @if ($product->discount_type === 'percentage')
-                                -{{ rtrim(rtrim(number_format((float) $product->discount_value, 2, '.', ''), '0'), '.') }}%
-                            @else
-                                -{{ number_format((float) $product->discount_value, 2, ',', '.') }} &euro;
-                            @endif
-                        </span>
+                        <div class="mb-3 flex flex-wrap items-center gap-4">
+                            <p class="text-lg text-stone-400 line-through">{{ number_format((float) $product->sale_price, 2, ',', '.') }} &euro;</p>
+                            <span class="store-discount-badge">
+                                @if ($product->discount_type === 'percentage')
+                                    -{{ rtrim(rtrim(number_format((float) $product->discount_value, 2, '.', ''), '0'), '.') }}%
+                                @else
+                                    -{{ number_format((float) $product->discount_value, 2, ',', '.') }} &euro;
+                                @endif
+                            </span>
+                        </div>
                     @endif
+
+                    <div>
+                        <p class="font-light tracking-tight text-emerald-800" style="font-size: 4rem; line-height: 1;">{{ number_format((float) $product->discounted_price, 2, ',', '.') }} &euro;</p>
+                    </div>
                 </div>
+
+                <p class="text-xl leading-10 text-slate-500" style="margin-top: 2rem;">{{ $product->description }}</p>
+
+                @if ($product->qty > 0)
+                    <p class="mt-8 text-lg font-medium text-stone-700">
+                        Disponible
+                    </p>
+                @else
+                    <p class="mt-8 text-lg font-medium text-red-600">
+                        Sin stock
+                    </p>
+                @endif
 
                 <div class="mt-8 flex flex-wrap gap-3">
                     <a href="{{ route('products.index') }}" class="store-button-primary px-5 py-3">
