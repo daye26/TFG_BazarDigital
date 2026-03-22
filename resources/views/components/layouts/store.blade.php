@@ -29,6 +29,7 @@
                     <nav class="hidden items-center gap-6 text-sm font-medium text-stone-700 md:flex">
                         <a href="{{ route('home') }}" class="transition hover:text-stone-950">Inicio</a>
                         <a href="{{ route('products.index') }}" class="transition hover:text-stone-950">Tienda</a>
+                        <a href="{{ route('products.latest') }}" class="transition hover:text-stone-950">Novedades</a>
                         @auth
                             <a href="{{ route('dashboard') }}" class="transition hover:text-stone-950">Mi cuenta</a>
                         @endauth

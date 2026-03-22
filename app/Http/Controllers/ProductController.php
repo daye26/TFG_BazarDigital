@@ -22,6 +22,35 @@ class ProductController extends Controller
                 ->latest()
                 ->take(4)
                 ->get(),
+            'latestProductsPreview' => Product::query()
+                ->where('is_active', true)
+                ->with('category')
+                ->latest()
+                ->take(4)
+                ->get(),
+        ]);
+    }
+
+    public function latest(Request $request): View
+    {
+        $sort = $request->string('sort')->toString();
+
+        $productsQuery = Product::query()
+            ->where('is_active', true)
+            ->with('category');
+
+        match ($sort) {
+            'alphabetical' => $productsQuery->orderBy('name'),
+            'alphabetical_desc' => $productsQuery->orderByDesc('name'),
+            'price' => $productsQuery->orderByRaw('(sale_price - CASE WHEN discount_value > 0 AND discount_type = ? THEN sale_price * discount_value / 100 WHEN discount_value > 0 AND discount_type = ? THEN discount_value ELSE 0 END) asc', ['percentage', 'fixed']),
+            default => $productsQuery->latest(),
+        };
+
+        return view('products.latest', [
+            'products' => $productsQuery
+                ->take(20)
+                ->get(),
+            'selectedSort' => in_array($sort, ['alphabetical', 'alphabetical_desc', 'price'], true) ? $sort : 'default',
         ]);
     }
 
