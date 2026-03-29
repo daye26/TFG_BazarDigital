@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Enums\UserRole;
 use App\Models\Category;
 use App\Models\Product;
 use App\Models\User;
@@ -20,11 +21,22 @@ class DatabaseSeeder extends Seeder
         $validCategoryUrls = ['hogar', 'oficina'];
         $validProductBarcodes = ['000000000001', '000000000002', '000000000003', '000000000004', '000000000005'];
 
-        User::firstOrCreate([
+        User::updateOrCreate([
             'email' => 'test@example.com',
         ], [
             'name' => 'Test User',
-            'password' => 'password',
+            'email_verified_at' => now(),
+            'password' => '1234',
+            'role' => UserRole::USER->value,
+        ]);
+
+        User::updateOrCreate([
+            'email' => 'admin@bazardigital.com',
+        ], [
+            'name' => 'Admin Bazar Digital',
+            'email_verified_at' => now(),
+            'password' => 'admin1234',
+            'role' => UserRole::ADMIN->value,
         ]);
 
         Product::query()

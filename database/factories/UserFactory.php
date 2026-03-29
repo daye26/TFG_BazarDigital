@@ -42,12 +42,4 @@ class UserFactory extends Factory
             'email_verified_at' => null,
         ]);
     }
-
-    //Crea un usuario admin
-    public function admin(): static
-    {
-        return $this->state(fn()=> [
-            'role' => 'admin',
-        ]);
-    }
 }

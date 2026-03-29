@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Enums\UserRole;
 use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -23,7 +24,9 @@ class CheckRole
             return redirect()->route('login');
         }
 
-        if ($user->role !== $role) {
+        $userRole = $user->role instanceof UserRole ? $user->role->value : $user->role;
+
+        if ($userRole !== $role) {
             abort(403, 'Unauthorized');
         }
 

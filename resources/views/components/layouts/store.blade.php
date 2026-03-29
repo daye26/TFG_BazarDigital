@@ -16,7 +16,7 @@
         <div class="relative overflow-hidden">
             <div class="absolute inset-x-0 top-0 h-80 bg-gradient-to-br from-amber-200 via-orange-100 to-stone-100"></div>
 
-            <header class="relative border-b border-stone-200/80 bg-white/80 backdrop-blur">
+            <header class="relative z-50 border-b border-stone-200/80 bg-white/80 backdrop-blur">
                 <div class="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
                     <a href="{{ route('home') }}" class="flex items-center gap-3">
                         <span class="inline-flex h-11 w-11 items-center justify-center rounded-2xl bg-stone-900 text-sm font-black uppercase tracking-[0.2em] text-amber-200">BD</span>
@@ -31,15 +31,48 @@
                         <a href="{{ route('products.index') }}" class="transition hover:text-stone-950">Tienda</a>
                         <a href="{{ route('products.latest') }}" class="transition hover:text-stone-950">Novedades</a>
                         @auth
-                            <a href="{{ route('dashboard') }}" class="transition hover:text-stone-950">Mi cuenta</a>
+                            @if (Auth::user()->isAdmin())
+                                <a href="{{ route('admin.index') }}" class="transition hover:text-stone-950">Panel de control</a>
+                            @endif
                         @endauth
                     </nav>
 
                     <div class="flex items-center gap-3">
                         @auth
-                            <a href="{{ route('dashboard') }}" class="rounded-full border border-stone-300 px-4 py-2 text-sm font-semibold text-stone-800 transition hover:border-stone-900 hover:text-stone-950">
-                                {{ Auth::user()->name }}
-                            </a>
+                            @if (Auth::user()->isAdmin())
+                                <a href="{{ route('admin.index') }}" class="rounded-full bg-amber-200 px-4 py-2 text-sm font-semibold text-stone-900 transition hover:bg-amber-300">
+                                    Panel de control
+                                </a>
+                            @else
+                                <span class="px-1 text-sm font-bold text-stone-900">
+                                    Hola, {{ Auth::user()->name }}!
+                                </span>
+                            @endif
+                            <x-dropdown align="right" width="48" contentClasses="py-2 bg-white">
+                                <x-slot name="trigger">
+                                    <button type="button" class="inline-flex items-center gap-2 rounded-full border border-stone-300 bg-white px-4 py-2 text-sm font-semibold text-stone-800 transition hover:border-stone-900 hover:text-stone-950">
+                                        <span>{{ Auth::user()->name }}</span>
+                                        <svg class="h-4 w-4 fill-current" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                                            <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                                        </svg>
+                                    </button>
+                                </x-slot>
+
+                                <x-slot name="content">
+                                    <x-dropdown-link :href="route('profile.edit')">
+                                        Ajustes
+                                    </x-dropdown-link>
+
+                                    <form method="POST" action="{{ route('logout') }}">
+                                        @csrf
+
+                                        <x-dropdown-link :href="route('logout')"
+                                            onclick="event.preventDefault(); this.closest('form').submit();">
+                                            Cerrar sesion
+                                        </x-dropdown-link>
+                                    </form>
+                                </x-slot>
+                            </x-dropdown>
                         @else
                             <a href="{{ route('login') }}" class="rounded-full border border-stone-300 px-4 py-2 text-sm font-semibold text-stone-800 transition hover:border-stone-900 hover:text-stone-950">
                                 Iniciar sesion

@@ -10,6 +10,10 @@ Route::get('/products', [ProductController::class, 'index'])->name('products.ind
 Route::get('/products/latest', [ProductController::class, 'latest'])->name('products.latest');
 Route::get('/products/{product}', [ProductController::class, 'show'])->name('products.show');
 
+Route::get('/admin', function () {
+    return view('admin.index');
+})->middleware(['auth', 'role:admin'])->name('admin.index');
+
 Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
