@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use App\Models\Product;
+use Illuminate\Http\Response;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 
@@ -94,18 +95,36 @@ class ProductController extends Controller
         ]);
     }
 
-    public function show(Product $product): View
+    public function show(string $product): View|Response
     {
-        abort_unless($product->is_active, 404);
+        $productModel = Product::query()
+            ->with('category')
+            ->find($product);
+
+        if (! $productModel || ! $productModel->is_active) {
+            return $this->missingProductResponse();
+        }
 
         return view('products.show', [
-            'product' => $product->load('category'),
+            'product' => $productModel,
             'relatedProducts' => Product::query()
                 ->where('is_active', true)
-                ->whereKeyNot($product->id)
-                ->when($product->category_id, fn ($query) => $query->where('category_id', $product->category_id))
+                ->whereKeyNot($productModel->id)
+                ->when($productModel->category_id, fn ($query) => $query->where('category_id', $productModel->category_id))
                 ->take(3)
                 ->get(),
         ]);
+    }
+
+    protected function missingProductResponse(): Response
+    {
+        return response()->view('products.not-found', [
+            'suggestedProducts' => Product::query()
+                ->where('is_active', true)
+                ->with('category')
+                ->latest()
+                ->take(3)
+                ->get(),
+        ], 404);
     }
 }
