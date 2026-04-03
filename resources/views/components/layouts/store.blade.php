@@ -30,11 +30,6 @@
                         <a href="{{ route('home') }}" class="transition hover:text-stone-950">Inicio</a>
                         <a href="{{ route('products.index') }}" class="transition hover:text-stone-950">Tienda</a>
                         <a href="{{ route('products.latest') }}" class="transition hover:text-stone-950">Novedades</a>
-                        @auth
-                            @if (Auth::user()->isAdmin())
-                                <a href="{{ route('admin.index') }}" class="transition hover:text-stone-950">Panel de control</a>
-                            @endif
-                        @endauth
                     </nav>
 
                     <div class="flex items-center gap-3">

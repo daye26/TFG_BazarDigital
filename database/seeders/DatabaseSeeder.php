@@ -25,6 +25,7 @@ class DatabaseSeeder extends Seeder
             'email' => 'test@example.com',
         ], [
             'name' => 'Test User',
+            'phone' => '+34600000001',
             'email_verified_at' => now(),
             'password' => '1234',
             'role' => UserRole::USER->value,
@@ -34,6 +35,7 @@ class DatabaseSeeder extends Seeder
             'email' => 'admin@bazardigital.com',
         ], [
             'name' => 'Admin Bazar Digital',
+            'phone' => '+34600000002',
             'email_verified_at' => now(),
             'password' => 'admin1234',
             'role' => UserRole::ADMIN->value,

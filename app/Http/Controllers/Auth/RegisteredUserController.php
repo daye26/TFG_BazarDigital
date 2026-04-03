@@ -29,15 +29,28 @@ class RegisteredUserController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
+        $normalizedCountryCode = preg_replace('/\s+/', '', (string) $request->input('phone_country_code'));
+        $normalizedPhoneNumber = preg_replace('/\s+/', '', (string) $request->input('phone_number'));
+
+        $request->merge([
+            'phone_country_code' => $normalizedCountryCode,
+            'phone_number' => $normalizedPhoneNumber,
+            'phone' => $normalizedCountryCode.$normalizedPhoneNumber,
+        ]);
+
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
+            'phone_country_code' => ['required', 'string', 'regex:/^\+[1-9]\d{0,3}$/'],
+            'phone_number' => ['required', 'string', 'regex:/^\d{6,14}$/'],
+            'phone' => ['required', 'string', 'regex:/^\+[1-9]\d{7,14}$/'],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
 
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
+            'phone' => $request->phone,
             'password' => Hash::make($request->password),
         ]);
 

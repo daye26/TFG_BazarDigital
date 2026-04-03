@@ -1,11 +1,11 @@
 <section>
     <header>
         <h2 class="text-lg font-medium text-gray-900">
-            {{ __('Profile Information') }}
+            {{ __('Informacion del perfil') }}
         </h2>
 
         <p class="mt-1 text-sm text-gray-600">
-            {{ __("Update your account's profile information and email address.") }}
+            {{ __('Actualiza la informacion de tu cuenta y tu direccion de email.') }}
         </p>
     </header>
 
@@ -18,7 +18,7 @@
         @method('patch')
 
         <div>
-            <x-input-label for="name" :value="__('Name')" />
+            <x-input-label for="name" :value="__('Nombre')" />
             <x-text-input id="name" name="name" type="text" class="mt-1 block w-full" :value="old('name', $user->name)" required autofocus autocomplete="name" />
             <x-input-error class="mt-2" :messages="$errors->get('name')" />
         </div>
@@ -45,6 +45,33 @@
                     @endif
                 </div>
             @endif
+        </div>
+
+        @php
+            $storedPhone = old('phone', $user->phone);
+            $phoneCountryCode = old('phone_country_code');
+            $phoneNumber = old('phone_number');
+
+            if ($phoneCountryCode === null || $phoneNumber === null) {
+                if (preg_match('/^(\+\d{1,4})(\d+)$/', (string) $storedPhone, $matches)) {
+                    $phoneCountryCode ??= $matches[1];
+                    $phoneNumber ??= $matches[2];
+                } else {
+                    $phoneCountryCode ??= '+34';
+                    $phoneNumber ??= '';
+                }
+            }
+        @endphp
+
+        <div>
+            <x-input-label for="phone_country_code" :value="__('Telefono')" />
+            <div class="mt-1 flex items-start gap-3">
+                <x-text-input id="phone_country_code" name="phone_country_code" type="text" class="block shadow-none" :value="$phoneCountryCode" required autocomplete="tel-country-code" maxlength="4" style="width: 80px;" />
+                <x-text-input id="phone_number" name="phone_number" type="tel" class="block flex-1" :value="$phoneNumber" required autocomplete="tel-national" placeholder="612345678" />
+            </div>
+            <x-input-error class="mt-2" :messages="$errors->get('phone_country_code')" />
+            <x-input-error class="mt-2" :messages="$errors->get('phone_number')" />
+            <x-input-error class="mt-2" :messages="$errors->get('phone')" />
         </div>
 
         <div class="flex items-center gap-4">
