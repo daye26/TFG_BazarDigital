@@ -67,8 +67,12 @@
                         </div>
                     @endif
 
-                    <div class="store-media store-media-md">
-                        <span class="text-sm font-semibold uppercase tracking-[0.25em] text-stone-500">Sin imagen</span>
+                    <div class="store-media store-media-md overflow-hidden">
+                        @if ($product->image_url)
+                            <img src="{{ $product->image_url }}" alt="{{ $product->name }}" class="h-full w-full object-cover">
+                        @else
+                            <span class="text-sm font-semibold uppercase tracking-[0.25em] text-stone-500">Sin imagen</span>
+                        @endif
                     </div>
 
                     <div class="mt-5 flex-1">

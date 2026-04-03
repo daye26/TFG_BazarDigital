@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\ProductManagementController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
@@ -10,9 +11,11 @@ Route::get('/products', [ProductController::class, 'index'])->name('products.ind
 Route::get('/products/latest', [ProductController::class, 'latest'])->name('products.latest');
 Route::get('/products/{product}', [ProductController::class, 'show'])->name('products.show');
 
-Route::get('/admin', function () {
-    return view('admin.index');
-})->middleware(['auth', 'role:admin'])->name('admin.index');
+Route::middleware(['auth', 'role:admin'])->group(function () {
+    Route::get('/admin', [ProductManagementController::class, 'index'])->name('admin.index');
+    Route::get('/admin/products/create', [ProductManagementController::class, 'create'])->name('admin.products.create');
+    Route::post('/admin/products', [ProductManagementController::class, 'store'])->name('admin.products.store');
+});
 
 Route::get('/dashboard', function () {
     return view('dashboard');

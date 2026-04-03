@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Facades\Storage;
 use InvalidArgumentException;
 
 class Product extends Model
@@ -44,7 +45,7 @@ class Product extends Model
             'tax' => 'integer',
             'cost_price' => 'decimal:4',
             'sale_price' => 'decimal:2',
-            'margin_multiplier' => 'decimal:2',
+            'margin_multiplier' => 'decimal:4',
             'discount_value' => 'decimal:2',
             'qty' => 'integer',
             'is_active' => 'boolean',
@@ -77,6 +78,15 @@ class Product extends Model
     public function getHasDiscountAttribute(): bool
     {
         return (float) $this->discount_value > 0;
+    }
+
+    public function getImageUrlAttribute(): ?string
+    {
+        if (! $this->image) {
+            return null;
+        }
+
+        return Storage::disk('public')->url($this->image);
     }
 
     public function getIsNewAttribute(): bool

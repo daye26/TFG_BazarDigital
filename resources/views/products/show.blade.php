@@ -2,8 +2,12 @@
     <section class="store-shell pb-10 pt-10">
         <div class="grid gap-8 lg:grid-cols-[0.95fr_1.05fr]">
             <div class="store-panel">
-                <div class="store-media store-media-lg">
-                    <span class="text-sm font-semibold uppercase tracking-[0.25em] text-stone-500">Sin imagen</span>
+                <div class="store-media store-media-lg overflow-hidden">
+                    @if ($product->image_url)
+                        <img src="{{ $product->image_url }}" alt="{{ $product->name }}" class="h-full w-full object-cover">
+                    @else
+                        <span class="text-sm font-semibold uppercase tracking-[0.25em] text-stone-500">Sin imagen</span>
+                    @endif
                 </div>
             </div>
 
@@ -66,6 +70,13 @@
         <div class="grid gap-5 md:grid-cols-3">
             @forelse ($relatedProducts as $relatedProduct)
                 <article class="store-card">
+                    <div class="store-media store-media-md overflow-hidden">
+                        @if ($relatedProduct->image_url)
+                            <img src="{{ $relatedProduct->image_url }}" alt="{{ $relatedProduct->name }}" class="h-full w-full object-cover">
+                        @else
+                            <span class="text-sm font-semibold uppercase tracking-[0.25em] text-stone-500">Sin imagen</span>
+                        @endif
+                    </div>
                     <p class="store-kicker">{{ $relatedProduct->category?->name ?? 'Sin categoria' }}</p>
                     <h3 class="mt-2 store-title-lg">{{ $relatedProduct->name }}</h3>
                     <p class="store-text mt-3 line-clamp-3">{{ $relatedProduct->description }}</p>
