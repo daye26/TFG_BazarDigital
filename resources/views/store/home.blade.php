@@ -20,13 +20,13 @@
                 <p class="store-kicker">Categorias</p>
                 <div class="mt-6 space-y-4">
                     @forelse ($categories as $category)
-                        <a href="{{ route('products.index', ['category' => $category->url]) }}" class="block rounded-2xl border border-stone-200 px-5 py-4 transition hover:border-amber-400 hover:bg-amber-50">
+                        <a href="{{ route('products.index', ['category' => $category->url]) }}" class="store-category-link">
                             <div class="flex items-center justify-between gap-4">
                                 <div>
                                     <h2 class="text-lg font-bold text-stone-900">{{ $category->name }}</h2>
                                     <p class="store-text mt-1">{{ $category->description }}</p>
                                 </div>
-                                <span class="rounded-full bg-stone-100 px-3 py-1 text-xs font-bold uppercase tracking-[0.2em] text-stone-500">Explorar</span>
+                                <span class="store-category-link-chip">Explorar</span>
                             </div>
                         </a>
                     @empty
@@ -49,15 +49,12 @@
             <a href="{{ route('products.latest') }}" class="store-button-primary">Entrar</a>
         </div>
 
-        <div
-            class="grid gap-4"
-            style="grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));"
-        >
+        <div class="store-grid-auto">
             @forelse ($latestProductsPreview as $product)
-                <article class="store-card relative flex h-full w-full max-w-[18rem] flex-col justify-self-center">
+                <article class="store-product-card">
                     @if ($product->has_discount)
-                        <div class="absolute left-3 top-3 z-10 flex flex-col gap-2">
-                            <span class="rounded-full bg-red-600 px-3 py-1 text-xs font-semibold text-white">
+                        <div class="store-discount-stack">
+                            <span class="store-discount-pill">
                                 @if ($product->discount_type === 'percentage')
                                     -{{ rtrim(rtrim(number_format((float) $product->discount_value, 2, '.', ''), '0'), '.') }}%
                                 @else
@@ -95,7 +92,7 @@
                             <p class="store-price">{{ number_format((float) $product->discounted_price, 2, ',', '.') }} &euro;</p>
                         </div>
 
-                        <a href="{{ route('products.show', $product) }}" class="store-button-primary hover:bg-amber-400 hover:text-stone-950">
+                        <a href="{{ route('products.show', $product) }}" class="store-button-primary-highlight">
                             Ver detalle
                         </a>
                     </div>

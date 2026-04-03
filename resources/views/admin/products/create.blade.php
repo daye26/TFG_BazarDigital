@@ -1,22 +1,22 @@
 <x-app-layout>
     <x-slot name="header">
-        <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+        <div class="app-page-header">
+            <h2 class="app-page-title">
                 Nuevo producto
             </h2>
-            <a href="{{ route('admin.index') }}" class="inline-flex items-center rounded-full border border-stone-300 px-4 py-2 text-sm font-bold text-stone-700 transition hover:border-stone-900 hover:text-stone-950">
+            <a href="{{ route('admin.index') }}" class="app-button-secondary">
                 Volver al panel
             </a>
         </div>
     </x-slot>
 
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto space-y-8 sm:px-6 lg:px-8">
-            <section class="overflow-hidden rounded-3xl border border-stone-200 bg-white shadow-sm">
-                <div class="border-b border-stone-200 bg-gradient-to-r from-stone-950 via-stone-900 to-amber-500/80 px-6 py-8 text-white">
-                    <p class="text-sm font-semibold uppercase tracking-[0.2em] text-amber-200">Gestion de productos</p>
-                    <h3 class="mt-2 text-3xl font-black tracking-tight">Crear producto</h3>
-                    <p class="mt-4 max-w-3xl text-sm leading-6 text-stone-200">
+    <div class="app-page">
+        <div class="app-shell-stack">
+            <section class="app-surface">
+                <div class="app-hero">
+                    <p class="app-hero-kicker">Gestion de productos</p>
+                    <h3 class="app-hero-title">Crear producto</h3>
+                    <p class="app-hero-copy">
                         Completa la ficha, revisa la imagen y valida el precio antes de guardar el producto en el catalogo.
                     </p>
                 </div>
@@ -33,10 +33,10 @@
                     })"
                     x-init="init()"
                     x-effect="refreshPreview()"
-                    class="p-6 lg:p-8"
+                    class="app-surface-body"
                 >
                     @if ($errors->any())
-                        <div class="mb-6 rounded-2xl border border-rose-200 bg-rose-50 px-5 py-4 text-sm text-rose-800">
+                        <div class="app-alert-error">
                             Revisa los campos marcados. Hay datos que no se han podido guardar.
                         </div>
                     @endif
@@ -45,7 +45,7 @@
                         @csrf
 
                         <div class="space-y-8">
-                            <section class="rounded-3xl border border-stone-200 bg-stone-50 p-6">
+                            <section class="app-card-muted">
                                 <h4 class="text-lg font-bold text-stone-900">Ficha del producto</h4>
                                 <div class="mt-6 grid gap-6 md:grid-cols-2">
                                     <div>
@@ -66,13 +66,13 @@
 
                                     <div class="md:col-span-2">
                                         <x-input-label for="description" value="Descripcion" />
-                                        <textarea id="description" name="description" rows="4" class="mt-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">{{ old('description') }}</textarea>
+                                        <textarea id="description" name="description" rows="4" class="form-textarea mt-2">{{ old('description') }}</textarea>
                                         <x-input-error :messages="$errors->get('description')" class="mt-2" />
                                     </div>
 
                                     <div>
                                         <x-input-label for="category_id" value="Categoria" />
-                                        <select id="category_id" name="category_id" class="mt-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                                        <select id="category_id" name="category_id" class="form-select mt-2">
                                             <option value="">Sin categoria</option>
                                             @foreach ($categories as $category)
                                                 <option value="{{ $category->id }}" @selected((string) old('category_id') === (string) $category->id)>
@@ -99,7 +99,7 @@
                                             class="mt-2 block w-full"
                                             @change="handleImageSelection($event)"
                                         />
-                                        <p class="mt-2 text-xs text-stone-500">Formatos permitidos: JPG, PNG y WEBP. Maximo 2 MB.</p>
+                                        <p class="app-helper-text">Formatos permitidos: JPG, PNG y WEBP. Maximo 2 MB.</p>
                                         <p x-cloak x-show="imageClientError" x-text="imageClientError" class="mt-2 text-sm text-rose-600"></p>
                                         <x-input-error :messages="$errors->get('image')" class="mt-2" />
                                     </div>
@@ -111,9 +111,9 @@
                                     </div>
 
                                     <div class="md:col-span-2">
-                                        <div class="rounded-2xl border border-dashed border-stone-300 bg-white p-4">
+                                        <div class="app-image-preview-card">
                                             <p class="text-xs font-semibold uppercase tracking-[0.2em] text-stone-500">Vista previa de imagen</p>
-                                            <div class="mt-4 flex min-h-56 items-center justify-center overflow-hidden rounded-2xl bg-stone-100">
+                                            <div class="app-image-preview-media">
                                                 <template x-if="imagePreviewUrl">
                                                     <img :src="imagePreviewUrl" :alt="imageFileName || 'Vista previa de imagen'" class="h-full max-h-72 w-full object-contain">
                                                 </template>
@@ -123,13 +123,13 @@
                                                     </span>
                                                 </template>
                                             </div>
-                                            <p class="mt-3 text-xs text-stone-500" x-show="imageFileName" x-text="imageFileName"></p>
+                                            <p class="app-helper-text mt-3" x-show="imageFileName" x-text="imageFileName"></p>
                                         </div>
                                     </div>
                                 </div>
                             </section>
 
-                            <section class="rounded-3xl border border-stone-200 bg-white p-6 shadow-sm">
+                            <section class="app-card">
                                 <h4 class="text-lg font-bold text-stone-900">Precios e impuestos</h4>
                                 <div class="mt-6 grid gap-6 md:grid-cols-2">
                                     <div>
@@ -149,7 +149,7 @@
                                             @blur="applyPreview()"
                                             required
                                         />
-                                        <p class="mt-2 text-xs text-stone-500">Se guarda con 4 decimales.</p>
+                                        <p class="app-helper-text">Se guarda con 4 decimales.</p>
                                         <x-input-error :messages="$errors->get('cost_price')" class="mt-2" />
                                     </div>
 
@@ -168,7 +168,7 @@
                                             @blur="applyPreview()"
                                             required
                                         />
-                                        <p class="mt-2 text-xs text-stone-500">Por defecto 21.</p>
+                                        <p class="app-helper-text">Por defecto 21.</p>
                                         <x-input-error :messages="$errors->get('tax')" class="mt-2" />
                                     </div>
 
@@ -189,7 +189,7 @@
                                             @blur="applyPreview()"
                                             required
                                         />
-                                        <p class="mt-2 text-xs text-stone-500">
+                                        <p class="app-helper-text">
                                             Valor inicial 2.0000. Vista previa del precio base:
                                             <span class="font-semibold text-stone-700" x-text="formatCurrency(previewSalePrice, 2)"></span>
                                         </p>
@@ -213,7 +213,7 @@
                                             @blur="applyPreview()"
                                             required
                                         />
-                                        <p class="mt-2 text-xs text-stone-500">
+                                        <p class="app-helper-text">
                                             Incluye IVA. Vista previa del margen:
                                             <span class="font-semibold text-stone-700" x-text="formatNumber(previewMarginMultiplier, 4)"></span>
                                         </p>
@@ -222,7 +222,7 @@
 
                                     <div>
                                         <x-input-label for="discount_type" value="Tipo de descuento" />
-                                        <select id="discount_type" name="discount_type" x-model="discountType" class="mt-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" required>
+                                        <select id="discount_type" name="discount_type" x-model="discountType" class="form-select mt-2" required>
                                             <option value="fixed" @selected(old('discount_type', 'fixed') === 'fixed')>Importe fijo</option>
                                             <option value="percentage" @selected(old('discount_type') === 'percentage')>Porcentaje</option>
                                         </select>
@@ -240,7 +240,7 @@
                                             class="mt-2 block w-full"
                                             x-model="discountValue"
                                         />
-                                        <p class="mt-2 text-xs text-stone-500">
+                                        <p class="app-helper-text">
                                             Vista previa del precio con descuento:
                                             <span class="font-semibold text-stone-700" x-text="formatCurrency(displayDiscountedSalePriceValue(), 2)"></span>
                                         </p>
@@ -253,8 +253,8 @@
                         </div>
 
                         <aside class="space-y-6">
-                            <section class="rounded-3xl border border-stone-200 bg-amber-50 p-6 shadow-sm">
-                                <p class="text-sm font-semibold uppercase tracking-[0.2em] text-amber-700">Resumen</p>
+                            <section class="app-note-card">
+                                <p class="app-note-kicker">Resumen</p>
                                 <dl class="mt-5 space-y-4 text-sm text-stone-700">
                                     <div class="flex items-center justify-between gap-4">
                                         <dt>Coste base</dt>
@@ -282,13 +282,13 @@
                                 </p>
                             </section>
 
-                            <section class="rounded-3xl border border-stone-200 bg-white p-6 shadow-sm">
+                            <section class="app-card">
                                 <label class="flex items-start gap-3">
                                     <input
                                         type="checkbox"
                                         name="is_active"
                                         value="1"
-                                        class="mt-1 rounded border-gray-300 text-stone-900 shadow-sm focus:ring-stone-900"
+                                        class="app-checkbox"
                                         @checked(old('is_active', '1'))
                                     >
                                     <span>
@@ -297,7 +297,7 @@
                                     </span>
                                 </label>
 
-                                <button type="submit" class="mt-6 inline-flex w-full items-center justify-center rounded-full bg-stone-900 px-5 py-3 text-sm font-bold text-white transition hover:bg-stone-700">
+                                <button type="submit" class="app-button-primary mt-6 w-full">
                                     Crear producto
                                 </button>
                             </section>

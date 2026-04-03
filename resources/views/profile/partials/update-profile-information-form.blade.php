@@ -1,10 +1,10 @@
 <section>
     <header>
-        <h2 class="text-lg font-medium text-gray-900">
+        <h2 class="form-section-title">
             {{ __('Informacion del perfil') }}
         </h2>
 
-        <p class="mt-1 text-sm text-gray-600">
+        <p class="form-section-copy">
             {{ __('Actualiza la informacion de tu cuenta y tu direccion de email.') }}
         </p>
     </header>
@@ -33,7 +33,7 @@
                     <p class="text-sm mt-2 text-gray-800">
                         {{ __('Your email address is unverified.') }}
 
-                        <button form="send-verification" class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                        <button form="send-verification" class="form-link-muted">
                             {{ __('Click here to re-send the verification email.') }}
                         </button>
                     </p>
@@ -65,8 +65,8 @@
 
         <div>
             <x-input-label for="phone_country_code" :value="__('Telefono')" />
-            <div class="mt-1 flex items-start gap-3">
-                <x-text-input id="phone_country_code" name="phone_country_code" type="text" class="block shadow-none" :value="$phoneCountryCode" required autocomplete="tel-country-code" maxlength="4" style="width: 80px;" />
+            <div class="form-phone-row">
+                <x-text-input id="phone_country_code" name="phone_country_code" type="text" class="form-phone-code" :value="$phoneCountryCode" required autocomplete="tel-country-code" maxlength="4" />
                 <x-text-input id="phone_number" name="phone_number" type="tel" class="block flex-1" :value="$phoneNumber" required autocomplete="tel-national" placeholder="612345678" />
             </div>
             <x-input-error class="mt-2" :messages="$errors->get('phone_country_code')" />
@@ -83,7 +83,7 @@
                     x-show="show"
                     x-transition
                     x-init="setTimeout(() => show = false, 2000)"
-                    class="text-sm text-gray-600"
+                    class="form-status-inline"
                 >{{ __('Saved.') }}</p>
             @endif
         </div>

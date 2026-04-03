@@ -8,7 +8,7 @@
     }
 
     .store-panel {
-        @apply rounded-[2rem] border border-stone-200 bg-amber-50 p-8 shadow-lg shadow-stone-200/70;
+        @apply rounded-[2rem] border border-stone-200 bg-white p-8 shadow-lg shadow-stone-200/70;
     }
 
     .store-panel-dark {
@@ -127,6 +127,43 @@
         @apply flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between;
     }
 
+    .store-product-layout {
+        @apply grid gap-6 lg:grid-cols-[0.76fr_1.24fr] xl:grid-cols-[0.7fr_1.3fr];
+    }
+
+    .store-product-panel {
+        @apply p-6 lg:p-7;
+    }
+
+    .store-media-product {
+        @apply min-h-[16rem] rounded-[1.5rem] sm:min-h-[18rem] lg:min-h-[20rem] xl:min-h-[22rem];
+    }
+
+    .store-product-title {
+        @apply text-[2.4rem] font-black tracking-tight text-stone-950 sm:text-[2.9rem] xl:text-[3.35rem];
+        line-height: 0.92;
+    }
+
+    .store-product-category {
+        @apply mt-4 text-lg font-medium text-stone-600 sm:text-xl;
+    }
+
+    .store-product-barcode {
+        @apply mt-3 text-sm tracking-[0.03em] text-stone-400 sm:text-base;
+    }
+
+    .store-product-price-block {
+        @apply mt-6;
+    }
+
+    .store-product-stock {
+        @apply mt-6 text-base font-medium sm:text-lg;
+    }
+
+    .store-product-actions {
+        @apply mt-6 flex flex-wrap gap-3;
+    }
+
     .store-detail-card {
         @apply mt-10 rounded-[1.75rem] border border-stone-200 bg-gradient-to-br from-stone-50 via-white to-stone-100 p-8 shadow-md shadow-stone-200/70;
     }
@@ -157,5 +194,296 @@
 
     .store-chip {
         @apply rounded-full bg-stone-100 px-3 py-1 text-xs font-bold uppercase tracking-[0.15em] text-stone-500;
+    }
+
+    .store-panel-soft {
+        background-color: #ffffff;
+        border-color: #e7e5e4;
+        box-shadow: 0 18px 45px rgba(28, 25, 23, 0.08);
+    }
+
+    .store-controls-bar-spaced {
+        @apply mt-12 flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between;
+    }
+
+    .store-sort-label {
+        @apply mr-2 text-sm font-semibold text-stone-500;
+    }
+
+    .store-sort-select {
+        @apply rounded-lg border border-stone-300 bg-white px-4 py-2 text-sm font-semibold text-stone-700 focus:outline-none focus:ring-2 focus:ring-[#1a5542];
+        min-width: 10rem;
+    }
+
+    .store-grid-auto {
+        @apply grid gap-4;
+        grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+    }
+
+    .store-product-card {
+        @apply relative flex h-full w-full max-w-[18rem] flex-col justify-self-center rounded-[1.5rem] border border-stone-200 bg-white p-5 shadow-lg shadow-stone-200/70;
+    }
+
+    .store-discount-stack {
+        @apply absolute left-3 top-3 z-10 flex flex-col gap-2;
+    }
+
+    .store-discount-pill {
+        @apply rounded-full bg-red-600 px-3 py-1 text-xs font-semibold text-white;
+    }
+
+    .store-kicker-muted {
+        color: #a8a29e;
+    }
+
+    .store-button-primary-highlight {
+        @apply rounded-full bg-stone-900 px-4 py-2 text-sm font-bold text-white transition hover:bg-amber-400 hover:text-stone-950;
+    }
+
+    .store-price-hero {
+        @apply font-light tracking-tight text-emerald-800;
+        font-size: clamp(2.95rem, 5vw, 3.55rem);
+        line-height: 0.95;
+    }
+
+    .store-description-emphasis {
+        @apply mt-6 text-base leading-7 text-stone-800 sm:text-lg;
+    }
+
+    .store-category-link {
+        @apply block rounded-2xl border border-stone-200 px-5 py-4 transition hover:border-amber-400 hover:bg-amber-50;
+    }
+
+    .store-category-link-chip {
+        @apply rounded-full bg-stone-100 px-3 py-1 text-xs font-bold uppercase tracking-[0.2em] text-stone-500;
+    }
+
+    .guest-page {
+        @apply flex min-h-screen flex-col items-center bg-gray-100 pt-6 sm:justify-center sm:pt-0;
+    }
+
+    .guest-card {
+        @apply mt-6 w-full overflow-hidden bg-white px-6 py-4 shadow-md sm:max-w-md sm:rounded-lg;
+    }
+
+    .app-page {
+        @apply py-12;
+    }
+
+    .app-shell {
+        @apply mx-auto max-w-7xl sm:px-6 lg:px-8;
+    }
+
+    .app-shell-stack {
+        @apply mx-auto max-w-7xl space-y-8 sm:px-6 lg:px-8;
+    }
+
+    .app-shell-stack-sm {
+        @apply mx-auto max-w-7xl space-y-6 sm:px-6 lg:px-8;
+    }
+
+    .app-surface {
+        @apply overflow-hidden rounded-3xl border border-stone-200 bg-white shadow-sm;
+    }
+
+    .app-surface-body {
+        @apply p-6 lg:p-8;
+    }
+
+    .app-page-header {
+        @apply flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between;
+    }
+
+    .app-page-title {
+        @apply text-xl font-semibold leading-tight text-gray-800;
+    }
+
+    .app-hero {
+        @apply border-b border-stone-200 bg-gradient-to-r from-stone-950 via-stone-900 to-amber-500/80 px-6 py-8 text-white;
+    }
+
+    .app-hero-kicker {
+        @apply text-sm font-semibold uppercase tracking-[0.2em] text-amber-200;
+    }
+
+    .app-hero-title {
+        @apply mt-2 text-3xl font-black tracking-tight;
+    }
+
+    .app-hero-copy {
+        @apply mt-4 max-w-3xl text-sm leading-6 text-stone-200;
+    }
+
+    .app-alert-success {
+        @apply mb-6 rounded-2xl border border-emerald-200 bg-emerald-50 px-5 py-4 text-sm font-medium text-emerald-800;
+    }
+
+    .app-alert-error {
+        @apply mb-6 rounded-2xl border border-rose-200 bg-rose-50 px-5 py-4 text-sm text-rose-800;
+    }
+
+    .app-card-muted {
+        @apply rounded-3xl border border-stone-200 bg-stone-50 p-6;
+    }
+
+    .app-card {
+        @apply rounded-3xl border border-stone-200 bg-white p-6 shadow-sm;
+    }
+
+    .app-note-card {
+        @apply rounded-3xl border border-stone-200 bg-white p-6 shadow-sm;
+    }
+
+    .app-note-kicker {
+        @apply text-sm font-semibold uppercase tracking-[0.2em] text-amber-700;
+    }
+
+    .app-note-copy {
+        @apply mt-5 space-y-3 text-sm leading-6 text-stone-700;
+    }
+
+    .app-section-kicker {
+        @apply text-sm font-semibold uppercase tracking-[0.2em] text-stone-500;
+    }
+
+    .app-section-title {
+        @apply mt-2 text-2xl font-black tracking-tight text-stone-950;
+    }
+
+    .app-button-primary {
+        @apply inline-flex items-center justify-center rounded-full bg-stone-900 px-5 py-3 text-sm font-bold text-white transition hover:bg-stone-700;
+    }
+
+    .app-button-secondary {
+        @apply inline-flex items-center justify-center rounded-full border border-stone-300 px-4 py-2 text-sm font-bold text-stone-700 transition hover:border-stone-900 hover:text-stone-950;
+    }
+
+    .app-stat-card {
+        @apply flex min-h-[9.5rem] flex-col justify-between overflow-hidden rounded-3xl border border-stone-200 bg-white px-6 py-6 shadow-sm;
+    }
+
+    .app-stat-label {
+        @apply text-xs font-semibold uppercase tracking-[0.18em] text-stone-500;
+    }
+
+    .app-stat-value {
+        @apply text-5xl font-black leading-none tracking-tight text-stone-950;
+    }
+
+    .app-stat-value-success {
+        @apply text-5xl font-black leading-none tracking-tight text-emerald-700;
+    }
+
+    .app-mini-card {
+        @apply rounded-2xl border border-stone-200 px-4 py-4;
+    }
+
+    .app-mini-card-title {
+        @apply text-sm font-bold text-stone-900;
+    }
+
+    .app-mini-card-meta {
+        @apply mt-1 text-xs uppercase tracking-[0.2em] text-stone-500;
+    }
+
+    .app-mini-card-row {
+        @apply mt-3 flex items-center justify-between gap-3 text-sm;
+    }
+
+    .app-helper-text {
+        @apply mt-2 text-xs text-stone-500;
+    }
+
+    .app-checkbox {
+        @apply mt-1 rounded border-gray-300 text-stone-900 shadow-sm focus:ring-stone-900;
+    }
+
+    .app-image-preview-card {
+        @apply rounded-2xl border border-dashed border-stone-300 bg-white p-4;
+    }
+
+    .app-image-preview-media {
+        @apply mt-4 flex min-h-56 items-center justify-center overflow-hidden rounded-2xl bg-stone-100;
+    }
+
+    .profile-card {
+        @apply bg-white p-4 shadow sm:rounded-lg sm:p-8;
+    }
+
+    .form-input {
+        @apply rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500;
+    }
+
+    .form-label {
+        @apply block text-sm font-medium text-gray-700;
+    }
+
+    .form-error-list {
+        @apply space-y-1 text-sm text-red-600;
+    }
+
+    .form-status-success {
+        @apply text-sm font-medium text-green-600;
+    }
+
+    .form-textarea {
+        @apply block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500;
+    }
+
+    .form-select {
+        @apply block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500;
+    }
+
+    .form-copy {
+        @apply mb-4 text-sm text-gray-600;
+    }
+
+    .form-section-title {
+        @apply text-lg font-medium text-gray-900;
+    }
+
+    .form-section-copy {
+        @apply mt-1 text-sm text-gray-600;
+    }
+
+    .form-link-muted {
+        @apply rounded-md text-sm text-gray-600 underline focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 hover:text-gray-900;
+    }
+
+    .form-checkbox {
+        @apply rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500;
+    }
+
+    .form-phone-row {
+        @apply mt-1 flex items-start gap-3;
+    }
+
+    .form-phone-code {
+        @apply block shadow-none;
+        width: 80px;
+    }
+
+    .form-actions-end {
+        @apply mt-4 flex items-center justify-end;
+    }
+
+    .form-actions-between {
+        @apply mt-4 flex items-center justify-between;
+    }
+
+    .form-status-inline {
+        @apply text-sm text-gray-600;
+    }
+
+    .button-primary {
+        @apply inline-flex items-center rounded-md border border-transparent bg-gray-800 px-4 py-2 text-xs font-semibold uppercase tracking-widest text-white transition ease-in-out duration-150 hover:bg-gray-700 focus:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 active:bg-gray-900;
+    }
+
+    .button-secondary {
+        @apply inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-xs font-semibold uppercase tracking-widest text-gray-700 shadow-sm transition ease-in-out duration-150 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:opacity-25;
+    }
+
+    .button-danger {
+        @apply inline-flex items-center rounded-md border border-transparent bg-red-600 px-4 py-2 text-xs font-semibold uppercase tracking-widest text-white transition ease-in-out duration-150 hover:bg-red-500 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 active:bg-red-700;
     }
 }

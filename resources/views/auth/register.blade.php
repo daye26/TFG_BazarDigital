@@ -19,8 +19,8 @@
         <!-- Phone -->
         <div class="mt-4">
             <x-input-label for="phone_country_code" :value="__('Telefono')" />
-            <div class="mt-1 flex items-start gap-3">
-                <x-text-input id="phone_country_code" class="block shadow-none" type="text" name="phone_country_code" :value="old('phone_country_code', '+34')" required autocomplete="tel-country-code" maxlength="4" style="width: 80px;" />
+            <div class="form-phone-row">
+                <x-text-input id="phone_country_code" class="form-phone-code" type="text" name="phone_country_code" :value="old('phone_country_code', '+34')" required autocomplete="tel-country-code" maxlength="4" />
                 <x-text-input id="phone_number" class="block flex-1" type="tel" name="phone_number" :value="old('phone_number')" required autocomplete="tel-national" placeholder="612345678" />
             </div>
             <x-input-error :messages="$errors->get('phone_country_code')" class="mt-2" />
@@ -51,8 +51,8 @@
             <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
         </div>
 
-        <div class="flex items-center justify-end mt-4">
-            <a class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" href="{{ route('login') }}">
+        <div class="form-actions-end">
+            <a class="form-link-muted" href="{{ route('login') }}">
                 {{ __('¿Ya tienes cuenta?') }}
             </a>
 
