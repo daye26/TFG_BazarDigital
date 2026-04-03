@@ -15,6 +15,8 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/admin', [ProductManagementController::class, 'index'])->name('admin.index');
     Route::get('/admin/products/create', [ProductManagementController::class, 'create'])->name('admin.products.create');
     Route::post('/admin/products', [ProductManagementController::class, 'store'])->name('admin.products.store');
+    Route::get('/admin/categories/create', [ProductManagementController::class, 'createCategory'])->name('admin.categories.create');
+    Route::post('/admin/categories', [ProductManagementController::class, 'storeCategory'])->name('admin.categories.store');
 });
 
 Route::get('/dashboard', function () {

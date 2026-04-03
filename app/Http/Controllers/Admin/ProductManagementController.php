@@ -41,6 +41,11 @@ class ProductManagementController extends Controller
         ]);
     }
 
+    public function createCategory(): View
+    {
+        return view('admin.categories.create');
+    }
+
     public function store(Request $request): RedirectResponse
     {
         $validated = $request->validate([
@@ -99,5 +104,26 @@ class ProductManagementController extends Controller
         return redirect()
             ->route('admin.index')
             ->with('status', 'Producto creado correctamente.');
+    }
+
+    public function storeCategory(Request $request): RedirectResponse
+    {
+        $validated = $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'description' => ['nullable', 'string'],
+            'url' => ['nullable', 'string', 'max:255', 'unique:categories,url'],
+            'is_active' => ['nullable', 'boolean'],
+        ]);
+
+        Category::create([
+            'name' => $validated['name'],
+            'description' => $validated['description'] ?? null,
+            'url' => ($validated['url'] ?? null) ?: null,
+            'is_active' => $request->boolean('is_active'),
+        ]);
+
+        return redirect()
+            ->route('admin.index')
+            ->with('status', 'Categoria creada correctamente.');
     }
 }

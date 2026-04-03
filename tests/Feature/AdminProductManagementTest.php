@@ -27,7 +27,9 @@ class AdminProductManagementTest extends TestCase
 
         $response
             ->assertOk()
-            ->assertSee('Acciones rapidas');
+            ->assertSee('Acciones rapidas')
+            ->assertSee('Nueva categoria')
+            ->assertSee(route('admin.categories.create'), false);
     }
 
     public function test_admin_can_view_product_creation_page(): void
@@ -43,6 +45,21 @@ class AdminProductManagementTest extends TestCase
         $response
             ->assertOk()
             ->assertSee('Crear producto');
+    }
+
+    public function test_admin_can_view_category_creation_page(): void
+    {
+        $admin = User::factory()->create([
+            'role' => UserRole::ADMIN,
+        ]);
+
+        $response = $this
+            ->actingAs($admin)
+            ->get(route('admin.categories.create'));
+
+        $response
+            ->assertOk()
+            ->assertSee('Crear categoria');
     }
 
     public function test_admin_can_create_a_product_from_cost_margin_and_tax(): void
@@ -125,6 +142,33 @@ class AdminProductManagementTest extends TestCase
 
         $this->assertSame('30.25', $product->sale_price);
         $this->assertSame('2.5000', $product->margin_multiplier);
+    }
+
+    public function test_admin_can_create_a_category(): void
+    {
+        $admin = User::factory()->create([
+            'role' => UserRole::ADMIN,
+        ]);
+
+        $response = $this
+            ->actingAs($admin)
+            ->post(route('admin.categories.store'), [
+                'name' => 'Iluminacion',
+                'description' => 'Lamparas, focos y soluciones de luz.',
+                'url' => 'iluminacion',
+                'is_active' => '1',
+            ]);
+
+        $response
+            ->assertRedirect(route('admin.index'))
+            ->assertSessionHasNoErrors();
+
+        $this->assertDatabaseHas('categories', [
+            'name' => 'Iluminacion',
+            'description' => 'Lamparas, focos y soluciones de luz.',
+            'url' => 'iluminacion',
+            'is_active' => true,
+        ]);
     }
 
     public function test_admin_cannot_upload_an_unsupported_image_format(): void

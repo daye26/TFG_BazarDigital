@@ -8,11 +8,11 @@
     <div class="py-12">
         <div class="max-w-7xl mx-auto space-y-8 sm:px-6 lg:px-8">
             <section class="overflow-hidden rounded-3xl border border-stone-200 bg-white shadow-sm">
-                <div class="border-b border-stone-200 bg-gradient-to-r from-stone-950 via-stone-900 to-amber-500/80 px-6 py-8 text-white">
+                <div class="border-b border-stone-200 bg-gradient-to-r from-stone-950 via-stone-900 to-amber-500/80 px-6 py-8">
                     <p class="text-sm font-semibold uppercase tracking-[0.2em] text-amber-200">Zona admin</p>
                     <h3 class="mt-2 text-3xl font-black tracking-tight">Panel de control</h3>
                     <p class="mt-4 max-w-3xl text-sm leading-6 text-stone-200">
-                        Desde aqui puedes entrar al alta de productos cuando haga falta y seguir ampliando el panel con mas utilidades de gestion.
+                        Desde aqui puedes entrar al alta de productos y categorias cuando haga falta y seguir ampliando el panel con mas utilidades de gestion.
                     </p>
                 </div>
 
@@ -27,17 +27,14 @@
                         <div class="rounded-3xl border border-stone-200 bg-stone-50 p-6">
                             <p class="text-sm font-semibold uppercase tracking-[0.2em] text-stone-500">Panel admin</p>
                             <h4 class="mt-2 text-2xl font-black tracking-tight text-stone-950">Acciones rapidas</h4>
-                            <p class="mt-3 max-w-2xl text-sm leading-6 text-stone-600">
-                                El alta de productos vive en una pantalla propia para que este panel se mantenga limpio y pueda crecer con nuevos modulos.
-                            </p>
 
                             <div class="mt-6 flex flex-wrap gap-3">
                                 <a href="{{ route('admin.products.create') }}" class="inline-flex items-center rounded-full bg-stone-900 px-5 py-3 text-sm font-bold text-white transition hover:bg-stone-700">
                                     Nuevo producto
                                 </a>
 
-                                <a href="{{ route('products.index') }}" class="inline-flex items-center rounded-full border border-stone-300 px-5 py-3 text-sm font-bold text-stone-700 transition hover:border-stone-900 hover:text-stone-950">
-                                    Ver tienda
+                                <a href="{{ route('admin.categories.create') }}" class="inline-flex items-center rounded-full bg-stone-900 px-5 py-3 text-sm font-bold text-white transition hover:bg-stone-700">
+                                    Nueva categoria
                                 </a>
                             </div>
                         </div>
