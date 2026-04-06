@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Auth;
 
+use App\Enums\UserRole;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -27,7 +28,42 @@ class AuthenticationTest extends TestCase
         ]);
 
         $this->assertAuthenticated();
-        $response->assertRedirect(route('dashboard', absolute: false));
+        $response->assertRedirect(route('products.index', absolute: false));
+    }
+
+    public function test_admins_are_redirected_to_the_control_panel_after_login(): void
+    {
+        $admin = User::factory()->create([
+            'role' => UserRole::ADMIN,
+        ]);
+
+        $response = $this->post('/login', [
+            'email' => $admin->email,
+            'password' => 'password',
+        ]);
+
+        $this->assertAuthenticated();
+        $response->assertRedirect(route('admin.index', absolute: false));
+    }
+
+    public function test_authenticated_users_are_redirected_away_from_the_login_screen_to_the_store(): void
+    {
+        $user = User::factory()->create();
+
+        $response = $this->actingAs($user)->get('/login');
+
+        $response->assertRedirect(route('products.index'));
+    }
+
+    public function test_authenticated_admins_are_redirected_away_from_the_login_screen_to_the_control_panel(): void
+    {
+        $admin = User::factory()->create([
+            'role' => UserRole::ADMIN,
+        ]);
+
+        $response = $this->actingAs($admin)->get('/login');
+
+        $response->assertRedirect(route('admin.index'));
     }
 
     public function test_users_can_not_authenticate_with_invalid_password(): void
