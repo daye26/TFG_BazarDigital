@@ -66,6 +66,30 @@ class ProfileTest extends TestCase
         $this->assertNotNull($user->refresh()->email_verified_at);
     }
 
+    public function test_profile_information_cannot_be_updated_with_a_duplicate_phone(): void
+    {
+        $user = User::factory()->create();
+        $otherUser = User::factory()->create([
+            'phone' => '+34612345678',
+        ]);
+
+        $response = $this
+            ->actingAs($user)
+            ->from('/profile')
+            ->patch('/profile', [
+                'name' => 'Test User',
+                'email' => 'test@example.com',
+                'phone_country_code' => '+34',
+                'phone_number' => '612345678',
+            ]);
+
+        $response
+            ->assertSessionHasErrors('phone')
+            ->assertRedirect('/profile');
+
+        $this->assertNotSame($otherUser->phone, $user->fresh()->phone);
+    }
+
     public function test_user_can_delete_their_account(): void
     {
         $user = User::factory()->create();

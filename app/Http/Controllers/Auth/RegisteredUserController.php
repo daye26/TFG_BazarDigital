@@ -43,7 +43,7 @@ class RegisteredUserController extends Controller
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
             'phone_country_code' => ['required', 'string', 'regex:/^\+[1-9]\d{0,3}$/'],
             'phone_number' => ['required', 'string', 'regex:/^\d{6,14}$/'],
-            'phone' => ['required', 'string', 'regex:/^\+[1-9]\d{7,14}$/'],
+            'phone' => ['required', 'string', 'regex:/^\+[1-9]\d{7,14}$/', 'unique:'.User::class],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
 

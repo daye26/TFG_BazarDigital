@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Auth;
 
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -29,5 +30,27 @@ class RegistrationTest extends TestCase
 
         $this->assertAuthenticated();
         $response->assertRedirect(route('products.index', absolute: false));
+    }
+
+    public function test_new_users_cannot_register_with_a_duplicate_phone(): void
+    {
+        User::factory()->create([
+            'phone' => '+34612345678',
+        ]);
+
+        $response = $this->from('/register')->post('/register', [
+            'name' => 'Another User',
+            'email' => 'another@example.com',
+            'phone_country_code' => '+34',
+            'phone_number' => '612345678',
+            'password' => 'password',
+            'password_confirmation' => 'password',
+        ]);
+
+        $response
+            ->assertSessionHasErrors('phone')
+            ->assertRedirect('/register');
+
+        $this->assertGuest();
     }
 }

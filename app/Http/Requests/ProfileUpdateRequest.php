@@ -39,7 +39,12 @@ class ProfileUpdateRequest extends FormRequest
             ],
             'phone_country_code' => ['required', 'string', 'regex:/^\+[1-9]\d{0,3}$/'],
             'phone_number' => ['required', 'string', 'regex:/^\d{6,14}$/'],
-            'phone' => ['required', 'string', 'regex:/^\+[1-9]\d{7,14}$/'],
+            'phone' => [
+                'required',
+                'string',
+                'regex:/^\+[1-9]\d{7,14}$/',
+                Rule::unique(User::class, 'phone')->ignore($this->user()->id),
+            ],
         ];
     }
 }
