@@ -23,20 +23,29 @@
         <div class="mt-8 grid gap-6 lg:grid-cols-[1.18fr_0.82fr]">
             <div class="space-y-4">
                 @forelse ($items as $item)
-                    <article class="store-card store-cart-compact-card">
+                    <article
+                        class="store-card store-cart-compact-card"
+                        data-cart-item-card
+                        data-unit-price="{{ number_format((float) $item->unit_price, 2, '.', '') }}"
+                        data-base-unit-price="{{ number_format((float) $item->product->sale_price, 2, '.', '') }}"
+                    >
                         <div class="store-cart-compact-layout">
                             <div class="min-w-0">
                                 <p class="store-cart-barcode">{{ $item->product->barcode }}</p>
-                                <h2 class="mt-2 store-title-lg">{{ $item->product->name }}</h2>
+                                <h2 class="mt-2">
+                                    <a href="{{ route('products.show', $item->product) }}" class="store-title-lg transition hover:text-stone-700 hover:underline">
+                                        {{ $item->product->name }}
+                                    </a>
+                                </h2>
 
                                 <div class="store-cart-price-row">
-                                    <p class="store-cart-price">
-                                        {{ number_format((float) $item->unit_price, 2, ',', '.') }} &euro;
+                                    <p class="store-cart-price" data-cart-item-total>
+                                        {{ number_format((float) $item->line_total, 2, ',', '.') }} &euro;
                                     </p>
 
                                     @if ($item->product->has_discount)
-                                        <p class="store-price-old">
-                                            {{ number_format((float) $item->product->sale_price, 2, ',', '.') }} &euro;
+                                        <p class="store-price-old" data-cart-item-base-total>
+                                            {{ number_format((float) $item->product->sale_price * $item->quantity, 2, ',', '.') }} &euro;
                                         </p>
                                     @endif
                                 </div>
