@@ -37,15 +37,19 @@
 
                 <p class="store-description-emphasis">{{ $product->description }}</p>
 
-                @if ($product->qty > 0)
-                    <p class="store-product-stock text-stone-700">
-                        Disponible
-                    </p>
-                @else
-                    <p class="store-product-stock text-red-600">
-                        Sin stock
-                    </p>
-                @endif
+                <div class="store-detail-card">
+                    <div class="mt-6">
+                        <x-store.add-to-cart-form
+                            :product="$product"
+                            :show-quantity="true"
+                            button-label="Añadir al carrito"
+                            button-class="store-button-primary"
+                            form-class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between"
+                            toast-placement="inline"
+                            toast-anchor-id="product-cart-toast-anchor"
+                        />
+                    </div>
+                </div>
 
                 <div class="store-product-actions">
                     <a href="{{ route('products.index') }}" class="store-button-primary px-5 py-3">
@@ -58,6 +62,8 @@
             </div>
         </div>
     </section>
+
+    <div id="product-cart-toast-anchor"></div>
 
     <section class="store-shell pb-16">
         <div class="mb-6 flex items-end justify-between gap-4">

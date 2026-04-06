@@ -2,6 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
+[x-cloak] {
+    display: none !important;
+}
+
 @layer components {
     .store-shell {
         @apply mx-auto max-w-7xl px-4 sm:px-6 lg:px-8;
@@ -92,7 +96,7 @@
     }
 
     .store-price {
-        @apply text-2xl font-black text-stone-950;
+        @apply whitespace-nowrap text-2xl font-black text-stone-950 leading-none;
     }
 
     .store-price-lg {
@@ -100,7 +104,7 @@
     }
 
     .store-price-old {
-        @apply text-sm text-stone-400 line-through;
+        @apply whitespace-nowrap text-sm text-stone-400 line-through;
     }
 
     .store-filter-pill {
@@ -224,6 +228,42 @@
         @apply relative flex h-full w-full max-w-[18rem] flex-col justify-self-center rounded-[1.5rem] border border-stone-200 bg-white p-5 shadow-lg shadow-stone-200/70;
     }
 
+    .store-cart-compact-card {
+        @apply p-4 sm:p-5;
+    }
+
+    .store-cart-compact-layout {
+        @apply flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between;
+    }
+
+    .store-cart-price {
+        @apply text-xl font-black text-stone-950;
+    }
+
+    .store-cart-barcode {
+        @apply font-mono text-sm tracking-[0.18em] text-stone-500;
+    }
+
+    .store-cart-price-row {
+        @apply mt-3 flex flex-wrap items-center gap-3;
+    }
+
+    .store-cart-compact-actions {
+        @apply flex w-full flex-col gap-2 lg:w-auto lg:min-w-[16rem];
+    }
+
+    .store-cart-action-row {
+        @apply flex flex-wrap items-center gap-2 lg:justify-end;
+    }
+
+    .store-cart-update-card {
+        @apply rounded-[1.5rem] border border-stone-200 bg-stone-50 p-2;
+    }
+
+    .store-cart-delete-button {
+        @apply justify-center px-5;
+    }
+
     .store-discount-stack {
         @apply absolute left-3 top-3 z-10 flex flex-col gap-2;
     }
@@ -238,6 +278,29 @@
 
     .store-button-primary-highlight {
         @apply rounded-full bg-stone-900 px-4 py-2 text-sm font-bold text-white transition hover:bg-amber-400 hover:text-stone-950;
+    }
+
+    .store-quantity-stepper {
+        @apply inline-flex items-center gap-1 rounded-full border border-stone-300 bg-white p-1 shadow-sm shadow-stone-200/40;
+    }
+
+    .store-quantity-stepper-button {
+        @apply inline-flex h-9 w-9 items-center justify-center rounded-full border border-stone-200 bg-stone-50 text-lg font-black leading-none text-stone-700 transition hover:border-stone-300 hover:bg-stone-100 hover:text-stone-950 disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:border-stone-200 disabled:hover:bg-stone-50 disabled:hover:text-stone-700;
+    }
+
+    .store-quantity-stepper-input {
+        @apply w-12 border-0 bg-transparent px-1 py-0 text-center text-sm font-semibold text-stone-700 focus:outline-none focus:ring-0;
+        appearance: textfield;
+    }
+
+    .store-quantity-stepper-input::-webkit-outer-spin-button,
+    .store-quantity-stepper-input::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+
+    .store-quantity-input {
+        @apply w-24 rounded-full border border-stone-300 bg-white px-4 py-2 text-sm font-semibold text-stone-700 focus:border-stone-900 focus:outline-none focus:ring-2 focus:ring-stone-300;
     }
 
     .store-price-hero {

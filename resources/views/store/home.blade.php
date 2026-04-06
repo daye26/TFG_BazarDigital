@@ -79,22 +79,27 @@
                         </div>
 
                         <p class="store-text mt-3 line-clamp-3">{{ $product->description }}</p>
-                        @if ($product->qty < 1)
-                            <p class="store-alert-stock mt-3">Sin stock</p>
-                        @endif
                     </div>
 
                     <div class="mt-6 flex items-end justify-between gap-4">
-                        <div>
+                        <div class="shrink-0">
                             @if ($product->has_discount)
                                 <p class="store-price-old">{{ number_format((float) $product->sale_price, 2, ',', '.') }} &euro;</p>
                             @endif
                             <p class="store-price">{{ number_format((float) $product->discounted_price, 2, ',', '.') }} &euro;</p>
                         </div>
 
-                        <a href="{{ route('products.show', $product) }}" class="store-button-primary-highlight">
-                            Ver detalle
-                        </a>
+                        <div class="flex flex-wrap items-center justify-end gap-2">
+                            <x-store.add-to-cart-form
+                                :product="$product"
+                                button-label="Añadir"
+                                button-class="store-button-secondary"
+                            />
+
+                            <a href="{{ route('products.show', $product) }}" class="store-button-primary-highlight">
+                                Ver detalle
+                            </a>
+                        </div>
                     </div>
                 </article>
             @empty

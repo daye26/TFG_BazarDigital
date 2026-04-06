@@ -39,9 +39,9 @@
                                     Panel de control
                                 </a>
                             @else
-                                <span class="px-1 text-sm font-bold text-stone-900">
-                                    Hola, {{ Auth::user()->name }}!
-                                </span>
+                                <a href="{{ route('cart.show') }}" class="rounded-full border border-stone-300 bg-white px-4 py-2 text-sm font-semibold text-stone-800 transition hover:border-stone-900 hover:text-stone-950">
+                                    Carrito (<span data-cart-count>{{ $storeCartItemsCount ?? 0 }}</span>)
+                                </a>
                             @endif
                             <x-dropdown align="right" width="48" contentClasses="py-2 bg-white">
                                 <x-slot name="trigger">
@@ -80,7 +80,26 @@
                 </div>
             </header>
 
+            @if (session('cart_status'))
+                <div
+                    data-cart-toast-source
+                    data-placement="{{ request()->routeIs('products.show') ? 'inline' : 'floating' }}"
+                    data-anchor-id="{{ request()->routeIs('products.show') ? 'product-cart-toast-anchor' : '' }}"
+                    hidden
+                >
+                    {{ session('cart_status') }}
+                </div>
+            @endif
+
             <main class="relative">
+                @if ($errors->any())
+                    <div class="store-shell pt-6">
+                        <div class="app-alert-error">
+                            {{ $errors->first('cart') ?: $errors->first() }}
+                        </div>
+                    </div>
+                @endif
+
                 {{ $slot }}
             </main>
 
