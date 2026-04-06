@@ -30,19 +30,9 @@
             </div>
         </div>
 
-        <div class="grid gap-5 md:grid-cols-3">
+        <div class="store-grid-auto">
             @forelse ($suggestedProducts as $product)
-                <article class="store-card">
-                    <p class="store-kicker">{{ $product->category?->name ?? 'Sin categoria' }}</p>
-                    <h3 class="mt-2 store-title-lg">{{ $product->name }}</h3>
-                    <p class="store-text mt-3 line-clamp-3">{{ $product->description }}</p>
-                    <div class="mt-6 flex items-end justify-between gap-4">
-                        <p class="store-price">{{ number_format((float) $product->discounted_price, 2, ',', '.') }} &euro;</p>
-                        <a href="{{ route('products.show', $product) }}" class="store-button-secondary">
-                            Abrir
-                        </a>
-                    </div>
-                </article>
+                <x-store.responsive-product-card :product="$product" title-tag="h3" />
             @empty
                 <div class="store-empty">
                     No hay productos sugeridos por ahora.

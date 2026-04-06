@@ -17,22 +17,76 @@
             <div class="absolute inset-x-0 top-0 h-80 bg-gradient-to-br from-amber-200 via-orange-100 to-stone-100"></div>
 
             <header class="relative z-50 border-b border-stone-200/80 bg-white/80 backdrop-blur">
-                <div class="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
-                    <a href="{{ route('home') }}" class="flex items-center gap-3">
-                        <span class="inline-flex h-11 w-11 items-center justify-center rounded-2xl bg-stone-900 text-sm font-black uppercase tracking-[0.2em] text-amber-200">BD</span>
-                        <div>
-                            <p class="text-xs font-semibold uppercase tracking-[0.3em] text-stone-500">Bazar Digital</p>
-                            <p class="text-sm text-stone-700">Catalogo y compra diaria</p>
-                        </div>
-                    </a>
+                <div class="mx-auto flex max-w-7xl flex-col gap-4 px-4 py-4 sm:px-6 lg:grid lg:grid-cols-[auto_1fr_auto] lg:items-center lg:px-8">
+                    <div class="flex items-center justify-between gap-4">
+                        <a href="{{ route('home') }}" class="flex items-center gap-3">
+                            <span class="inline-flex h-11 w-11 items-center justify-center rounded-2xl bg-stone-900 text-sm font-black uppercase tracking-[0.2em] text-amber-200">BD</span>
+                            <div>
+                                <p class="text-xs font-semibold uppercase tracking-[0.3em] text-stone-500">Bazar Digital</p>
+                                <p class="text-sm text-stone-700">Catalogo y compra diaria</p>
+                            </div>
+                        </a>
+                    </div>
 
-                    <nav class="hidden items-center gap-6 text-sm font-medium text-stone-700 md:flex">
+                    <nav class="hidden items-center justify-center gap-6 text-sm font-medium text-stone-700 md:flex lg:flex">
                         <a href="{{ route('home') }}" class="transition hover:text-stone-950">Inicio</a>
                         <a href="{{ route('products.index') }}" class="transition hover:text-stone-950">Tienda</a>
                         <a href="{{ route('products.latest') }}" class="transition hover:text-stone-950">Novedades</a>
                     </nav>
 
-                    <div class="flex items-center gap-3">
+                    <div class="flex flex-wrap items-center justify-end gap-3">
+                            <div
+                                class="store-search-shell"
+                                data-global-search
+                                data-suggestions-url="{{ route('search.suggestions') }}"
+                                data-results-url="{{ route('products.index') }}"
+                            >
+                                <button
+                                    type="button"
+                                    class="{{ request()->filled('q') ? 'store-search-trigger store-search-trigger-active' : 'store-search-trigger' }}"
+                                    aria-label="Abrir buscador global"
+                                    aria-expanded="false"
+                                    aria-controls="store-global-search"
+                                    data-search-trigger
+                                >
+                                    <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-4.35-4.35m1.85-5.15a7 7 0 1 1-14 0 7 7 0 0 1 14 0Z" />
+                                    </svg>
+                                    <span class="sr-only">Buscar productos, categorias o codigo</span>
+                                </button>
+
+                                <div
+                                    id="store-global-search"
+                                    class="store-search-dropdown hidden"
+                                    data-search-dropdown
+                                >
+                                    <form method="GET" action="{{ route('products.index') }}" class="store-search-form" role="search">
+                                        <label for="store-global-search-input" class="sr-only">
+                                            Buscar productos, categorias o codigo de barras
+                                        </label>
+                                        <svg class="h-5 w-5 shrink-0 text-stone-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-4.35-4.35m1.85-5.15a7 7 0 1 1-14 0 7 7 0 0 1 14 0Z" />
+                                        </svg>
+                                        <input
+                                            id="store-global-search-input"
+                                            type="search"
+                                            name="q"
+                                            value="{{ request('q') }}"
+                                            class="store-search-input"
+                                            placeholder="Busca productos, categorias o codigo"
+                                            autocomplete="off"
+                                            spellcheck="false"
+                                            data-search-input
+                                        >
+                                        <button type="submit" class="store-button-primary shrink-0 px-4 py-2">
+                                            Buscar
+                                        </button>
+                                    </form>
+
+                                    <div class="store-search-panel hidden" data-search-panel></div>
+                                </div>
+                            </div>
+
                         @auth
                             @if (Auth::user()->isAdmin())
                                 <a href="{{ route('admin.index') }}" class="rounded-full bg-amber-200 px-4 py-2 text-sm font-semibold text-stone-900 transition hover:bg-amber-300">

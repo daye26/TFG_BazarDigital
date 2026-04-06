@@ -5,7 +5,11 @@
                 <p class="store-kicker">Productos del bazar</p>
                 <h1 class="store-heading">LA TIENDA</h1>
                 <p class="store-text mt-3 max-w-2xl">
-                    @if ($selectedCategory)
+                    @if ($searchQuery !== '' && $selectedCategory)
+                        Resultados para "{{ $searchQuery }}" dentro de la categoria {{ $selectedCategory->name }}.
+                    @elseif ($searchQuery !== '')
+                        Resultados para "{{ $searchQuery }}" en todo el catalogo.
+                    @elseif ($selectedCategory)
                         Mostrando productos de la categoria {{ $selectedCategory->name }}.
                     @else
                         Mostrando todos los productos del catalogo.
@@ -18,22 +22,49 @@
                 @endif
             </div>
 
-            <div class="mt-8 flex flex-wrap gap-3">
-                <a href="{{ route('products.index', ['sort' => $selectedSort !== 'default' ? $selectedSort : null]) }}" class="{{ $selectedCategory ? 'store-filter-pill' : 'store-filter-pill-active' }}">
-                    Todas
-                </a>
-                @foreach ($categories as $category)
-                    <a href="{{ route('products.index', ['category' => $category->url, 'sort' => $selectedSort !== 'default' ? $selectedSort : null]) }}" class="{{ $selectedCategory?->id === $category->id ? 'store-filter-pill-highlight' : 'store-filter-pill' }}">
-                        {{ $category->name }}
+            <div class="mt-8">
+                <p class="store-kicker">Filtros</p>
+                <div class="mt-4 flex flex-wrap gap-3">
+                    <a href="{{ route('products.index', ['q' => $searchQuery !== '' ? $searchQuery : null, 'sort' => $selectedSort !== 'default' ? $selectedSort : null]) }}" class="{{ $selectedCategory ? 'store-filter-pill' : 'store-filter-pill-active' }}">
+                        Todas
                     </a>
-                @endforeach
+                    @foreach ($categories as $category)
+                        <a href="{{ route('products.index', ['category' => $category->filter_key, 'q' => $searchQuery !== '' ? $searchQuery : null, 'sort' => $selectedSort !== 'default' ? $selectedSort : null]) }}" class="{{ $selectedCategory?->id === $category->id ? 'store-filter-pill-highlight' : 'store-filter-pill' }}">
+                            {{ $category->name }}
+                        </a>
+                    @endforeach
+                </div>
             </div>
         </div>
+
+        @if ($searchQuery !== '' && $relatedCategories->isNotEmpty())
+            <div class="store-panel mx-auto mt-6">
+                <p class="store-kicker">Categorias relacionadas</p>
+                <p class="store-text mt-3 max-w-2xl">
+                    Si eliges una categoria, entraras en la tienda para ver todos los productos de esa categoria.
+                </p>
+                <div class="store-search-related">
+                    @foreach ($relatedCategories as $category)
+                        <a
+                            href="{{ route('products.index', ['category' => $category->filter_key, 'sort' => $selectedSort !== 'default' ? $selectedSort : null]) }}"
+                            class="store-filter-pill"
+                            aria-label="Ver categoria {{ $category->name }}"
+                        >
+                            {{ $category->name }}
+                        </a>
+                    @endforeach
+                </div>
+            </div>
+        @endif
 
         <div class="store-controls-bar-spaced">
             <form method="GET" action="{{ route('products.index') }}" class="store-controls-inline">
                 @if ($selectedCategory)
-                    <input type="hidden" name="category" value="{{ $selectedCategory->url }}">
+                    <input type="hidden" name="category" value="{{ $selectedCategory->filter_key }}">
+                @endif
+
+                @if ($searchQuery !== '')
+                    <input type="hidden" name="q" value="{{ $searchQuery }}">
                 @endif
 
                 <label for="sort" class="store-sort-label">Ordenar por</label>
@@ -43,7 +74,7 @@
                     class="store-sort-select"
                     onchange="this.form.submit()"
                 >
-                    <option value="default" @selected($selectedSort === 'default')>Predeterminado</option>
+                    <option value="default" @selected($selectedSort === 'default')>{{ $searchQuery !== '' ? 'Relevancia' : 'Predeterminado' }}</option>
                     <option value="alphabetical" @selected($selectedSort === 'alphabetical')>Alfabetico A-Z</option>
                     <option value="alphabetical_desc" @selected($selectedSort === 'alphabetical_desc')>Alfabetico Z-A</option>
                     <option value="newest" @selected($selectedSort === 'newest')>Nuevos</option>
@@ -52,62 +83,27 @@
             </form>
         </div>
 
-        <div class="store-grid-auto mx-auto mt-8">
+        <div class="{{ $searchQuery !== '' ? 'store-search-results-list mx-auto mt-8' : 'store-grid-auto mx-auto mt-8' }}">
             @forelse ($products as $product)
-                <article class="store-product-card">
-                    @if ($product->has_discount)
-                        <div class="store-discount-stack">
-                            <span class="store-discount-pill">
-                                @if ($product->discount_type === 'percentage')
-                                    -{{ rtrim(rtrim(number_format((float) $product->discount_value, 2, '.', ''), '0'), '.') }}%
-                                @else
-                                    -{{ number_format((float) $product->discount_value, 2, ',', '.') }} &euro;
-                                @endif
-                            </span>
-                        </div>
-                    @endif
-
-                    <div class="store-media store-media-md overflow-hidden">
-                        @if ($product->image_url)
-                            <img src="{{ $product->image_url }}" alt="{{ $product->name }}" class="h-full w-full object-cover">
-                        @else
-                            <span class="text-sm font-semibold uppercase tracking-[0.25em] text-stone-500">Sin imagen</span>
-                        @endif
-                    </div>
-
-                    <div class="mt-5 flex-1">
-                        <div>
-                            <p class="store-kicker store-kicker-muted">{{ $product->category?->name ?? 'Sin categoria' }}</p>
-                            <h2 class="mt-2 store-title-lg">{{ $product->name }}</h2>
-                        </div>
-
-                        <p class="store-text mt-3 line-clamp-3">{{ $product->description }}</p>
-                    </div>
-
-                    <div class="mt-6 flex items-end justify-between gap-4">
-                        <div class="shrink-0">
-                            @if ($product->has_discount)
-                                <p class="store-price-old">{{ number_format((float) $product->sale_price, 2, ',', '.') }} &euro;</p>
-                            @endif
-                            <p class="store-price">{{ number_format((float) $product->discounted_price, 2, ',', '.') }} &euro;</p>
-                        </div>
-
-                        <div class="flex flex-wrap items-center justify-end gap-2">
-                            <x-store.add-to-cart-form
-                                :product="$product"
-                                button-label="Añadir"
-                                button-class="store-button-secondary"
-                            />
-
-                            <a href="{{ route('products.show', $product) }}" class="store-button-primary-highlight">
-                                Ver detalle
-                            </a>
-                        </div>
-                    </div>
-                </article>
+                @if ($searchQuery !== '')
+                    <x-store.product-card
+                        :product="$product"
+                        layout="search"
+                        category-class="store-kicker store-kicker-muted"
+                    />
+                @else
+                    <x-store.responsive-product-card
+                        :product="$product"
+                        category-class="store-kicker store-kicker-muted"
+                    />
+                @endif
             @empty
                 <div class="store-empty">
-                    No hay productos para este filtro.
+                    @if ($searchQuery !== '')
+                        No hay productos que coincidan con tu busqueda.
+                    @else
+                        No hay productos para este filtro.
+                    @endif
                 </div>
             @endforelse
         </div>

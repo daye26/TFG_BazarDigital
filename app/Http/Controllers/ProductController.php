@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use App\Models\Product;
+use App\Services\CatalogSearchService;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Response;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -55,34 +57,54 @@ class ProductController extends Controller
         ]);
     }
 
-    public function index(Request $request): View
+    public function index(Request $request, CatalogSearchService $catalogSearch): View|RedirectResponse
     {
         $selectedCategory = null;
         $sort = $request->string('sort')->toString();
+        $searchQuery = trim($request->string('q')->toString());
+        $categoryFilter = trim($request->string('category')->toString());
+        $relatedCategories = collect();
 
-        $productsQuery = Product::query()
-            ->where('is_active', true)
-            ->with('category')
-            ->when($request->filled('category'), function ($query) use ($request, &$selectedCategory) {
-                $selectedCategory = Category::query()
-                    ->where('is_active', true)
-                    ->where('url', $request->string('category'))
-                    ->first();
+        if ($searchQuery !== '' && $matchedBarcodeProduct = $catalogSearch->findProductByExactBarcode($searchQuery)) {
+            return redirect()->route('products.show', $matchedBarcodeProduct);
+        }
 
-                if ($selectedCategory) {
-                    $query->where('category_id', $selectedCategory->id);
-                }
-            });
+        if ($categoryFilter !== '') {
+            $selectedCategory = Category::query()
+                ->where('is_active', true)
+                ->when(
+                    ctype_digit($categoryFilter),
+                    fn ($query) => $query->whereKey((int) $categoryFilter),
+                    fn ($query) => $query->where('url', $categoryFilter),
+                )
+                ->first();
+        }
 
-        match ($sort) {
-            'alphabetical' => $productsQuery->orderBy('name'),
-            'alphabetical_desc' => $productsQuery->orderByDesc('name'),
-            'newest' => $productsQuery->latest(),
-            'price' => $productsQuery->orderByRaw('(sale_price - CASE WHEN discount_value > 0 AND discount_type = ? THEN sale_price * discount_value / 100 WHEN discount_value > 0 AND discount_type = ? THEN discount_value ELSE 0 END) asc', ['percentage', 'fixed']),
-            default => $productsQuery->orderBy('name'),
-        };
+        if ($searchQuery !== '') {
+            $searchResults = $catalogSearch->search(
+                $searchQuery,
+                categoryId: $selectedCategory?->id,
+                productSort: $sort,
+            );
 
-        $products = $productsQuery->get();
+            $products = $searchResults['products'];
+            $relatedCategories = $selectedCategory ? collect() : $searchResults['categories'];
+        } else {
+            $productsQuery = Product::query()
+                ->where('is_active', true)
+                ->with('category')
+                ->when($selectedCategory, fn ($query) => $query->where('category_id', $selectedCategory->id));
+
+            match ($sort) {
+                'alphabetical' => $productsQuery->orderBy('name'),
+                'alphabetical_desc' => $productsQuery->orderByDesc('name'),
+                'newest' => $productsQuery->latest(),
+                'price' => $productsQuery->orderByRaw('(sale_price - CASE WHEN discount_value > 0 AND discount_type = ? THEN sale_price * discount_value / 100 WHEN discount_value > 0 AND discount_type = ? THEN discount_value ELSE 0 END) asc', ['percentage', 'fixed']),
+                default => $productsQuery->orderBy('name'),
+            };
+
+            $products = $productsQuery->get();
+        }
 
         return view('products.index', [
             'products' => $products,
@@ -91,6 +113,8 @@ class ProductController extends Controller
                 ->orderBy('name')
                 ->get(),
             'selectedCategory' => $selectedCategory,
+            'searchQuery' => $searchQuery,
+            'relatedCategories' => $relatedCategories,
             'selectedSort' => in_array($sort, ['alphabetical', 'alphabetical_desc', 'newest', 'price'], true) ? $sort : 'default',
         ]);
     }

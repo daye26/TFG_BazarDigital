@@ -172,6 +172,10 @@
         @apply mt-10 rounded-[1.75rem] border border-stone-200 bg-gradient-to-br from-stone-50 via-white to-stone-100 p-8 shadow-md shadow-stone-200/70;
     }
 
+    .store-product-purchase-card {
+        @apply mt-8 p-5 sm:p-6;
+    }
+
     .store-detail-label {
         @apply text-xs font-semibold uppercase tracking-[0.2em] text-stone-500;
     }
@@ -210,6 +214,74 @@
         @apply mt-12 flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between;
     }
 
+    .store-search-shell {
+        @apply relative shrink-0;
+    }
+
+    .store-search-trigger {
+        @apply inline-flex h-11 w-11 items-center justify-center rounded-full border border-stone-300 bg-white text-stone-700 shadow-sm shadow-stone-200/50 transition hover:border-stone-900 hover:text-stone-950 focus:outline-none focus:ring-2 focus:ring-stone-300;
+    }
+
+    .store-search-trigger-active {
+        @apply border-amber-300 bg-amber-50 text-stone-950 ring-1 ring-amber-300;
+    }
+
+    .store-search-dropdown {
+        @apply absolute right-0 top-[calc(100%+0.75rem)] z-[80] w-[min(92vw,30rem)] max-w-[calc(100vw-2rem)];
+    }
+
+    .store-search-form {
+        @apply flex items-center gap-3 rounded-[1.5rem] border border-stone-200 bg-white/95 px-4 py-3 shadow-xl shadow-stone-200/70 backdrop-blur;
+    }
+
+    .store-search-input {
+        @apply w-full border-0 bg-transparent p-0 text-sm font-medium text-stone-800 placeholder:text-stone-400 focus:outline-none focus:ring-0;
+    }
+
+    .store-search-panel {
+        @apply mt-3 overflow-hidden rounded-none border border-stone-200 bg-white shadow-xl shadow-stone-300/25;
+    }
+
+    .store-search-panel-body {
+        @apply max-h-[28rem] overflow-y-auto p-0;
+    }
+
+    .store-search-section {
+        @apply border-b border-stone-200 last:border-b-0;
+    }
+
+    .store-search-section-label {
+        @apply bg-stone-50 px-4 py-2 text-xs font-bold uppercase tracking-[0.18em] text-stone-500;
+    }
+
+    .store-search-list {
+        @apply m-0 list-none p-0;
+    }
+
+    .store-search-item {
+        @apply border-b border-stone-200 last:border-b-0;
+    }
+
+    .store-search-option {
+        @apply block w-full bg-white px-4 py-3 text-base font-semibold leading-6 text-stone-800 transition hover:bg-stone-50 hover:text-stone-950;
+    }
+
+    .store-search-empty {
+        @apply px-4 py-5 text-sm text-stone-600;
+    }
+
+    .store-search-footer {
+        @apply border-t border-stone-200 bg-white px-0 py-0;
+    }
+
+    .store-search-footer-link {
+        @apply block w-full bg-white px-4 py-3 text-sm font-semibold text-stone-700 transition hover:bg-stone-50 hover:text-stone-950;
+    }
+
+    .store-search-related {
+        @apply mt-6 flex flex-wrap gap-3;
+    }
+
     .store-sort-label {
         @apply mr-2 text-sm font-semibold text-stone-500;
     }
@@ -221,11 +293,62 @@
 
     .store-grid-auto {
         @apply grid gap-4;
-        grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+        grid-template-columns: minmax(0, 1fr);
     }
 
     .store-product-card {
-        @apply relative flex h-full w-full max-w-[18rem] flex-col justify-self-center rounded-[1.5rem] border border-stone-200 bg-white p-5 shadow-lg shadow-stone-200/70;
+        @apply relative flex h-full w-full flex-col rounded-[1.5rem] border border-stone-200 bg-white p-5 shadow-lg shadow-stone-200/70;
+    }
+
+    .store-card-interactive {
+        @apply cursor-pointer transition duration-200 hover:-translate-y-1.5 hover:shadow-xl hover:shadow-stone-300/70 focus-within:-translate-y-1.5 focus-within:shadow-xl focus-within:shadow-stone-300/70;
+    }
+
+    .store-card-overlay-link {
+        @apply absolute inset-0 z-10 rounded-[1.5rem] focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-300 focus-visible:ring-offset-2;
+    }
+
+    .store-search-results-list {
+        @apply flex flex-col gap-5;
+    }
+
+    .store-search-result-card {
+        @apply relative grid items-start gap-4 rounded-[1.5rem] border border-stone-200 bg-white p-5 shadow-lg shadow-stone-200/70;
+        grid-template-columns: minmax(7rem, 8rem) minmax(0, 1fr);
+    }
+
+    .store-search-result-media {
+        @apply row-span-2 h-full min-h-[8.5rem];
+    }
+
+    .store-search-result-body {
+        @apply min-w-0;
+    }
+
+    .store-search-result-actions {
+        @apply col-start-2 flex flex-row items-end justify-between gap-4;
+    }
+
+    @screen lg {
+        .store-search-result-card {
+            grid-template-columns: minmax(0, 15rem) minmax(0, 1fr) auto;
+            align-items: center;
+        }
+
+        .store-search-result-media {
+            @apply row-auto h-32 min-h-0;
+        }
+
+        .store-search-result-actions {
+            @apply col-auto w-full max-w-[17rem];
+        }
+    }
+
+    @screen sm {
+        .store-grid-auto {
+            @apply justify-center;
+            grid-template-columns: repeat(auto-fit, minmax(16rem, 18rem));
+        }
     }
 
     .store-cart-compact-card {

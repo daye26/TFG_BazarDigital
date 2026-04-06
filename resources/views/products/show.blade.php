@@ -37,14 +37,13 @@
 
                 <p class="store-description-emphasis">{{ $product->description }}</p>
 
-                <div class="store-detail-card">
-                    <div class="mt-6">
+                <div class="store-detail-card store-product-purchase-card">
+                    <div>
                         <x-store.add-to-cart-form
                             :product="$product"
                             :show-quantity="true"
-                            button-label="Añadir al carrito"
                             button-class="store-button-primary"
-                            form-class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between"
+                            form-class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between"
                             toast-placement="inline"
                             toast-anchor-id="product-cart-toast-anchor"
                         />
@@ -55,7 +54,7 @@
                     <a href="{{ route('products.index') }}" class="store-button-primary px-5 py-3">
                         Volver al catalogo
                     </a>
-                    <a href="{{ route('products.index', ['category' => $product->category?->url]) }}" class="store-button-secondary px-5 py-3">
+                    <a href="{{ route('products.index', ['category' => $product->category?->filter_key]) }}" class="store-button-secondary px-5 py-3">
                         Ver categoria
                     </a>
                 </div>
@@ -73,26 +72,9 @@
             </div>
         </div>
 
-        <div class="grid gap-5 md:grid-cols-3">
+        <div class="store-grid-auto">
             @forelse ($relatedProducts as $relatedProduct)
-                <article class="store-card">
-                    <div class="store-media store-media-md overflow-hidden">
-                        @if ($relatedProduct->image_url)
-                            <img src="{{ $relatedProduct->image_url }}" alt="{{ $relatedProduct->name }}" class="h-full w-full object-cover">
-                        @else
-                            <span class="text-sm font-semibold uppercase tracking-[0.25em] text-stone-500">Sin imagen</span>
-                        @endif
-                    </div>
-                    <p class="store-kicker">{{ $relatedProduct->category?->name ?? 'Sin categoria' }}</p>
-                    <h3 class="mt-2 store-title-lg">{{ $relatedProduct->name }}</h3>
-                    <p class="store-text mt-3 line-clamp-3">{{ $relatedProduct->description }}</p>
-                    <div class="mt-6 flex items-end justify-between gap-4">
-                        <p class="store-price">{{ number_format((float) $relatedProduct->discounted_price, 2, ',', '.') }} &euro;</p>
-                        <a href="{{ route('products.show', $relatedProduct) }}" class="store-button-secondary">
-                            Abrir
-                        </a>
-                    </div>
-                </article>
+                <x-store.responsive-product-card :product="$relatedProduct" title-tag="h3" />
             @empty
                 <div class="store-empty">
                     No hay productos relacionados todavia.

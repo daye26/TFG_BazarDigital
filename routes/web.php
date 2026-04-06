@@ -4,6 +4,7 @@ use App\Http\Controllers\Admin\ProductManagementController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\SearchController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -12,6 +13,7 @@ Route::get('/', [ProductController::class, 'home'])->name('home');
 Route::get('/products', [ProductController::class, 'index'])->name('products.index');
 Route::get('/products/latest', [ProductController::class, 'latest'])->name('products.latest');
 Route::get('/products/{product}', [ProductController::class, 'show'])->name('products.show');
+Route::get('/search/suggestions', [SearchController::class, 'suggestions'])->name('search.suggestions');
 
 Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/admin', [ProductManagementController::class, 'index'])->name('admin.index');

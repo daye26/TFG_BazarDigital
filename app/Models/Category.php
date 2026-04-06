@@ -40,4 +40,9 @@ class Category extends Model
     {
         return $this->hasMany(Product::class);
     }
+
+    public function getFilterKeyAttribute(): string
+    {
+        return $this->url ?: (string) $this->getKey();
+    }
 }
