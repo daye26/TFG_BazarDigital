@@ -66,6 +66,29 @@ class CatalogSearchService
         ];
     }
 
+    public function searchAdminProducts(
+        string $query,
+        string $productSort = 'default',
+        ?int $productLimit = null,
+    ): Collection {
+        $normalizedQuery = $this->normalize($query);
+        $digitsQuery = $this->digitsOnly($query);
+
+        if ($normalizedQuery === '' && $digitsQuery === '') {
+            return collect();
+        }
+
+        $products = Product::query()
+            ->with('category')
+            ->get();
+
+        return $this->sortProducts(
+            $this->rankProducts($products, $normalizedQuery, $digitsQuery),
+            $productSort,
+            $productLimit,
+        );
+    }
+
     public function shouldProvideSuggestions(string $query): bool
     {
         $normalizedQuery = $this->normalize($query);

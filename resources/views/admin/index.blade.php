@@ -33,32 +33,40 @@
                                     Nuevo producto
                                 </a>
 
+                                <a href="{{ route('admin.products.manage') }}" class="app-button-primary">
+                                    Actualizar producto
+                                </a>
+
                                 <a href="{{ route('admin.categories.create') }}" class="app-button-primary">
                                     Nueva categoria
+                                </a>
+
+                                <a href="{{ route('admin.categories.manage') }}" class="app-button-primary">
+                                    Actualizar categoria
                                 </a>
                             </div>
                         </div>
 
                         <div class="grid gap-4 sm:grid-cols-2">
-                            <article class="app-stat-card">
+                            <a href="{{ route('admin.products.manage') }}" class="app-stat-card app-stat-card-link">
                                 <p class="app-stat-label">Productos totales</p>
                                 <p class="app-stat-value">{{ $stats['total_products'] }}</p>
-                            </article>
+                            </a>
 
-                            <article class="app-stat-card">
+                            <a href="{{ route('admin.products.manage', ['scope' => 'active']) }}" class="app-stat-card app-stat-card-link">
                                 <p class="app-stat-label">Productos activos</p>
                                 <p class="app-stat-value-success">{{ $stats['active_products'] }}</p>
-                            </article>
+                            </a>
 
-                            <article class="app-stat-card">
+                            <a href="{{ route('admin.products.manage', ['scope' => 'inactive']) }}" class="app-stat-card app-stat-card-link">
                                 <p class="app-stat-label">Productos ocultos</p>
                                 <p class="app-stat-value">{{ $stats['inactive_products'] }}</p>
-                            </article>
+                            </a>
 
-                            <article class="app-stat-card">
+                            <a href="{{ route('admin.categories.manage', ['scope' => 'active']) }}" class="app-stat-card app-stat-card-link">
                                 <p class="app-stat-label">Categorias activas</p>
                                 <p class="app-stat-value">{{ $stats['active_categories'] }}</p>
-                            </article>
+                            </a>
                         </div>
                     </section>
 
@@ -81,6 +89,11 @@
                                     <div class="app-mini-card-row">
                                         <span class="text-stone-500">{{ $product->category?->name ?? 'Sin categoria' }}</span>
                                         <span class="font-bold text-stone-950">{{ number_format((float) $product->sale_price, 2, ',', '.') }} &euro;</span>
+                                    </div>
+                                    <div class="mt-4">
+                                        <a href="{{ route('admin.products.manage', ['product' => $product->id]) }}" class="app-button-secondary">
+                                            Editar producto
+                                        </a>
                                     </div>
                                 </article>
                             @empty

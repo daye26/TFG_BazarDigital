@@ -20,7 +20,7 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         $validCategoryUrls = ['hogar', 'oficina'];
-        $validProductBarcodes = ['000000000001', '000000000002', '000000000003', '000000000004', '000000000005'];
+        $validProductBarcodes = ['000000000001', '000000000002', '000000000003', '000000000004', '000000000005', '000000000006'];
 
         User::updateOrCreate([
             'email' => 'test@example.com',
@@ -183,6 +183,25 @@ class DatabaseSeeder extends Seeder
                 'url' => null,
                 'category_id' => $officeCategory->id,
                 'is_active' => true,
+            ]
+        );
+
+        Product::updateOrCreate(
+            ['barcode' => '000000000006'],
+            [
+                'name' => 'Termometro de mercurio',
+                'description' => 'Termometro clasico de vidrio para botiquin domestico.',
+                'tax' => 21,
+                'cost_price' => 1.1500,
+                'sale_price' => 3.25,
+                'margin_multiplier' => 2.33,
+                'discount_value' => 0,
+                'discount_type' => 'fixed',
+                'qty' => 6,
+                'image' => null,
+                'url' => null,
+                'category_id' => $homeCategory->id,
+                'is_active' => false,
             ]
         );
 

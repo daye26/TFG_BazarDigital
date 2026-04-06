@@ -520,6 +520,26 @@
         @apply rounded-3xl border border-stone-200 bg-white p-6 shadow-sm;
     }
 
+    .app-product-picker-list {
+        @apply mt-6 rounded-[2rem] border border-stone-200 bg-stone-50/90 p-3;
+    }
+
+    .app-product-picker-card {
+        @apply block rounded-[1.35rem] border border-stone-300 bg-white px-4 py-3.5 shadow-sm shadow-stone-200/50 transition hover:-translate-y-0.5 hover:border-stone-900 hover:shadow-md;
+    }
+
+    .app-product-picker-card-active {
+        @apply border-stone-900 bg-gradient-to-r from-stone-950 via-stone-900 to-stone-800 text-white shadow-xl shadow-stone-300/30;
+    }
+
+    .app-product-picker-stat {
+        @apply min-w-[4rem] rounded-[1rem] border border-stone-200 bg-white/90 px-2.5 py-1.5 shadow-sm shadow-stone-200/30 backdrop-blur;
+    }
+
+    .app-product-picker-stat-active {
+        @apply border-white/15 bg-white/10 text-white shadow-none;
+    }
+
     .app-note-kicker {
         @apply text-sm font-semibold uppercase tracking-[0.2em] text-amber-700;
     }
@@ -546,6 +566,10 @@
 
     .app-stat-card {
         @apply flex min-h-[9.5rem] flex-col justify-between overflow-hidden rounded-3xl border border-stone-200 bg-white px-6 py-6 shadow-sm;
+    }
+
+    .app-stat-card-link {
+        @apply transition hover:-translate-y-0.5 hover:border-stone-900 hover:shadow-md;
     }
 
     .app-stat-label {

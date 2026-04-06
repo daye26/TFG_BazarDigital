@@ -17,10 +17,15 @@ Route::get('/search/suggestions', [SearchController::class, 'suggestions'])->nam
 
 Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/admin', [ProductManagementController::class, 'index'])->name('admin.index');
+    Route::get('/admin/products', [ProductManagementController::class, 'manage'])->name('admin.products.manage');
     Route::get('/admin/products/create', [ProductManagementController::class, 'create'])->name('admin.products.create');
     Route::post('/admin/products', [ProductManagementController::class, 'store'])->name('admin.products.store');
+    Route::patch('/admin/products/{product}/details', [ProductManagementController::class, 'updateDetails'])->name('admin.products.update.details');
+    Route::patch('/admin/products/{product}/pricing', [ProductManagementController::class, 'updatePricing'])->name('admin.products.update.pricing');
+    Route::get('/admin/categories', [ProductManagementController::class, 'manageCategories'])->name('admin.categories.manage');
     Route::get('/admin/categories/create', [ProductManagementController::class, 'createCategory'])->name('admin.categories.create');
     Route::post('/admin/categories', [ProductManagementController::class, 'storeCategory'])->name('admin.categories.store');
+    Route::patch('/admin/categories/{category}', [ProductManagementController::class, 'updateCategory'])->name('admin.categories.update');
 });
 
 Route::get('/dashboard', function (Request $request) {

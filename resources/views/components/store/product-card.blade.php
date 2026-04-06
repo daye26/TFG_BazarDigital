@@ -64,11 +64,20 @@
         </div>
 
         <div class="relative z-20 flex flex-wrap items-center justify-end gap-2">
-            <x-store.add-to-cart-form
-                :product="$product"
-                button-label="Añadir"
-                button-class="store-button-secondary"
-            />
+            @if (auth()->check() && auth()->user()->isAdmin())
+                <a
+                    href="{{ route('products.show', ['product' => $product, 'edit' => 1]) }}"
+                    class="store-button-secondary"
+                >
+                    Editar
+                </a>
+            @else
+                <x-store.add-to-cart-form
+                    :product="$product"
+                    button-label="Anadir"
+                    button-class="store-button-secondary"
+                />
+            @endif
         </div>
     </div>
 

@@ -119,18 +119,24 @@ class ProductController extends Controller
         ]);
     }
 
-    public function show(string $product): View|Response
+    public function show(Request $request, string $product): View|Response
     {
         $productModel = Product::query()
             ->with('category')
             ->find($product);
 
-        if (! $productModel || ! $productModel->is_active) {
+        if (! $productModel || (! $productModel->is_active && ! $request->user()?->isAdmin())) {
             return $this->missingProductResponse();
         }
 
         return view('products.show', [
             'product' => $productModel,
+            'adminCategories' => $request->user()?->isAdmin()
+                ? Category::query()
+                    ->orderByDesc('is_active')
+                    ->orderBy('name')
+                    ->get()
+                : collect(),
             'relatedProducts' => Product::query()
                 ->where('is_active', true)
                 ->whereKeyNot($productModel->id)

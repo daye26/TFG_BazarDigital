@@ -37,18 +37,22 @@
 
                 <p class="store-description-emphasis">{{ $product->description }}</p>
 
-                <div class="store-detail-card store-product-purchase-card">
-                    <div>
-                        <x-store.add-to-cart-form
-                            :product="$product"
-                            :show-quantity="true"
-                            button-class="store-button-primary"
-                            form-class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between"
-                            toast-placement="inline"
-                            toast-anchor-id="product-cart-toast-anchor"
-                        />
+                @if (auth()->check() && auth()->user()->isAdmin())
+                    @include('products.partials.admin-inline-editor')
+                @else
+                    <div class="store-detail-card store-product-purchase-card">
+                        <div>
+                            <x-store.add-to-cart-form
+                                :product="$product"
+                                :show-quantity="true"
+                                button-class="store-button-primary"
+                                form-class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between"
+                                toast-placement="inline"
+                                toast-anchor-id="product-cart-toast-anchor"
+                            />
+                        </div>
                     </div>
-                </div>
+                @endif
 
                 <div class="store-product-actions">
                     <a href="{{ route('products.index') }}" class="store-button-primary px-5 py-3">
@@ -82,4 +86,8 @@
             @endforelse
         </div>
     </section>
+
+    @if (auth()->check() && auth()->user()->isAdmin())
+        @include('admin.products.partials.pricing-form-script')
+    @endif
 </x-layouts.store>
