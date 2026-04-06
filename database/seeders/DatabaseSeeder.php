@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Enums\UserRole;
 use App\Models\Category;
+use App\Models\CartItem;
 use App\Models\Product;
 use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
@@ -41,6 +42,27 @@ class DatabaseSeeder extends Seeder
             'role' => UserRole::ADMIN->value,
         ]);
 
+        $cartUser = User::updateOrCreate([
+            'email' => 'maria@bazardigital.com',
+        ], [
+            'name' => 'Maria Cliente',
+            'phone' => '+34600000003',
+            'email_verified_at' => now(),
+            'password' => '1234',
+            'role' => UserRole::USER->value,
+        ]);
+
+        User::updateOrCreate([
+            'email' => 'carlos@bazardigital.com',
+        ], [
+            'name' => 'Carlos Cliente',
+            'phone' => '+34600000004',
+            'email_verified_at' => now(),
+            'password' => '1234',
+            'role' => UserRole::USER->value,
+            'cart_created_at' => now(),
+        ]);
+
         Product::query()
             ->whereNotIn('barcode', $validProductBarcodes)
             ->delete();
@@ -69,7 +91,7 @@ class DatabaseSeeder extends Seeder
             ]
         );
 
-        Product::updateOrCreate(
+        $glassBottle = Product::updateOrCreate(
             ['barcode' => '000000000001'],
             [
                 'name' => 'Botella de cristal 500ml',
@@ -107,7 +129,7 @@ class DatabaseSeeder extends Seeder
             ]
         );
 
-        Product::updateOrCreate(
+        $notebook = Product::updateOrCreate(
             ['barcode' => '000000000003'],
             [
                 'name' => 'Cuaderno A5',
@@ -163,5 +185,31 @@ class DatabaseSeeder extends Seeder
                 'is_active' => true,
             ]
         );
+
+        $seededCartItems = [
+            $glassBottle->id => 2,
+            $notebook->id => 3,
+        ];
+
+        CartItem::query()
+            ->where('user_id', $cartUser->id)
+            ->whereNotIn('product_id', array_keys($seededCartItems))
+            ->delete();
+
+        foreach ($seededCartItems as $productId => $quantity) {
+            CartItem::updateOrCreate(
+                [
+                    'user_id' => $cartUser->id,
+                    'product_id' => $productId,
+                ],
+                [
+                    'quantity' => $quantity,
+                ]
+            );
+        }
+
+        $cartUser->forceFill([
+            'cart_created_at' => now(),
+        ])->save();
     }
 }
