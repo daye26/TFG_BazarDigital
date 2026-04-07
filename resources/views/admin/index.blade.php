@@ -1,8 +1,6 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="app-page-title">
-            Panel de control
-        </h2>
+        <x-admin.panel-header title="Panel de control" active="dashboard" />
     </x-slot>
 
     <div class="app-page">
@@ -12,7 +10,7 @@
                     <p class="app-hero-kicker">Zona admin</p>
                     <h3 class="app-hero-title">Panel de control</h3>
                     <p class="app-hero-copy">
-                        Desde aqui puedes entrar al alta de productos y categorias cuando haga falta y seguir ampliando el panel con mas utilidades de gestion.
+                        Pedidos, catalogo y categorias quedan centralizados aqui. La cabecera del panel te deja saltar a pedidos al instante y seguir el trabajo diario sin perder tiempo.
                     </p>
                 </div>
 
@@ -25,14 +23,10 @@
 
                     <section class="grid gap-5 lg:grid-cols-[minmax(0,1.35fr)_minmax(320px,0.85fr)]">
                         <div class="app-card-muted">
-                            <p class="app-section-kicker">Panel admin</p>
+                            <p class="app-section-kicker">Catalogo y mantenimiento</p>
                             <h4 class="app-section-title">Acciones rapidas</h4>
 
                             <div class="mt-6 flex flex-wrap gap-3">
-                                <a href="{{ route('admin.orders.index') }}" class="app-button-primary">
-                                    Gestionar pedidos
-                                </a>
-
                                 <a href="{{ route('admin.products.create') }}" class="app-button-primary">
                                     Nuevo producto
                                 </a>
@@ -52,6 +46,16 @@
                         </div>
 
                         <div class="grid gap-4 sm:grid-cols-2">
+                            <a href="{{ route('admin.orders.index', ['scope' => 'pending']) }}" class="app-stat-card app-stat-card-link">
+                                <p class="app-stat-label">Pedidos pendientes</p>
+                                <p class="app-stat-value">{{ $stats['pending_orders'] }}</p>
+                            </a>
+
+                            <a href="{{ route('admin.orders.index', ['scope' => 'ready']) }}" class="app-stat-card app-stat-card-link">
+                                <p class="app-stat-label">Pedidos listos</p>
+                                <p class="app-stat-value-success">{{ $stats['ready_orders'] }}</p>
+                            </a>
+
                             <a href="{{ route('admin.products.manage') }}" class="app-stat-card app-stat-card-link">
                                 <p class="app-stat-label">Productos totales</p>
                                 <p class="app-stat-value">{{ $stats['total_products'] }}</p>

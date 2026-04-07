@@ -18,7 +18,7 @@ class OrderManagementController extends Controller
         $scope = $request->string('scope')->toString();
 
         $orders = Order::query()
-            ->with(['user', 'items'])
+            ->with(['user', 'items.product'])
             ->when(
                 $scope === 'pending',
                 fn ($query) => $query->where('status', OrderStatus::PENDING)
@@ -37,6 +37,13 @@ class OrderManagementController extends Controller
         return view('admin.orders.index', [
             'orders' => $orders,
             'scope' => in_array($scope, ['pending', 'ready', 'cancelled'], true) ? $scope : 'all',
+        ]);
+    }
+
+    public function show(Order $order): View
+    {
+        return view('admin.orders.show', [
+            'order' => $order->load(['user', 'items.product']),
         ]);
     }
 

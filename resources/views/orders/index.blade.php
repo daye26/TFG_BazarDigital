@@ -57,7 +57,7 @@
                                     LISTO PARA RECOGER
                                 </span>
                                 <span class="store-status-pill {{ $order->isPaid() ? 'store-status-pill-success' : 'store-status-pill-neutral' }}">
-                                    PAGO {{ strtoupper($order->payment_status->value) }}
+                                    Pago {{ $order->payment_status->label() }}
                                 </span>
                             </div>
                         </div>
@@ -103,10 +103,10 @@
 
                             <div class="flex flex-wrap gap-2">
                                 <span class="store-status-pill {{ match ($order->status->value) { 'completed' => 'store-status-pill-success', 'cancelled' => 'store-status-pill-danger', default => 'store-status-pill-neutral' } }}">
-                                    {{ strtoupper($order->status->value) }}
+                                    {{ $order->status->label() }}
                                 </span>
                                 <span class="store-status-pill {{ $order->isPaid() ? 'store-status-pill-success' : 'store-status-pill-neutral' }}">
-                                    PAGO {{ strtoupper($order->payment_status->value) }}
+                                    Pago {{ $order->payment_status->label() }}
                                 </span>
                             </div>
                         </div>

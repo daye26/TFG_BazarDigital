@@ -18,6 +18,24 @@ use Mockery\MockInterface;
 use Stripe\Checkout\Session;
 use Tests\TestCase;
 
+class FakeStripeCheckoutSession
+{
+    public static function constructFrom(array $attributes): self
+    {
+        $session = new self();
+
+        foreach ($attributes as $key => $value) {
+            $session->{$key} = $value;
+        }
+
+        return $session;
+    }
+}
+
+if (! class_exists(Session::class)) {
+    class_alias(FakeStripeCheckoutSession::class, Session::class);
+}
+
 class OrderFlowTest extends TestCase
 {
     use RefreshDatabase;

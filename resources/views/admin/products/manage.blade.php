@@ -1,9 +1,11 @@
 <x-app-layout>
     <x-slot name="header">
-        <div class="app-page-header">
-            <h2 class="app-page-title">Actualizar producto</h2>
-            <a href="{{ route('admin.index') }}" class="app-button-secondary">Volver al panel</a>
-        </div>
+        <x-admin.panel-header
+            title="Actualizar producto"
+            active="products"
+            :back-href="route('admin.index')"
+            back-label="Volver al panel"
+        />
     </x-slot>
 
     <div class="app-page">

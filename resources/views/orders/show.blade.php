@@ -50,17 +50,17 @@
 
                 <div class="mt-6 flex flex-wrap gap-2">
                     <span class="store-status-pill {{ match ($order->status->value) { 'ready' => 'store-status-pill-warning', 'completed' => 'store-status-pill-success', 'cancelled' => 'store-status-pill-danger', default => 'store-status-pill-neutral' } }}">
-                        {{ strtoupper($order->status->value) }}
+                        {{ $order->status->label() }}
                     </span>
                     <span class="store-status-pill {{ $order->isPaid() ? 'store-status-pill-success' : 'store-status-pill-neutral' }}">
-                        PAGO {{ strtoupper($order->payment_status->value) }}
+                        Pago {{ $order->payment_status->label() }}
                     </span>
                 </div>
 
                 <div class="mt-8 space-y-4">
                     <div class="flex items-center justify-between gap-4 text-sm text-stone-600">
                         <span>Metodo de pago</span>
-                        <span class="font-semibold text-stone-900">{{ strtoupper($order->payment_method->value) }}</span>
+                        <span class="font-semibold text-stone-900">{{ $order->payment_method->label() }}</span>
                     </div>
                     <div class="flex items-center justify-between gap-4 text-sm text-stone-600">
                         <span>Subtotal</span>

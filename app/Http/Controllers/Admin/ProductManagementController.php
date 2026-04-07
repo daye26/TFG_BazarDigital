@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Enums\OrderStatus;
 use App\Http\Controllers\Controller;
 use App\Models\Category;
+use App\Models\Order;
 use App\Models\Product;
 use App\Services\CatalogSearchService;
 use Illuminate\Http\RedirectResponse;
@@ -18,6 +20,8 @@ class ProductManagementController extends Controller
     {
         $totalProducts = Product::query()->count();
         $activeProducts = Product::query()->where('is_active', true)->count();
+        $pendingOrders = Order::query()->where('status', OrderStatus::PENDING)->count();
+        $readyOrders = Order::query()->where('status', OrderStatus::READY)->count();
 
         return view('admin.index', [
             'latestProducts' => Product::query()
@@ -26,6 +30,8 @@ class ProductManagementController extends Controller
                 ->take(8)
                 ->get(),
             'stats' => [
+                'pending_orders' => $pendingOrders,
+                'ready_orders' => $readyOrders,
                 'total_products' => $totalProducts,
                 'active_products' => $activeProducts,
                 'inactive_products' => max($totalProducts - $activeProducts, 0),

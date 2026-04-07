@@ -1,13 +1,11 @@
 <x-app-layout>
     <x-slot name="header">
-        <div class="app-page-header">
-            <h2 class="app-page-title">
-                Gestion de pedidos
-            </h2>
-            <a href="{{ route('admin.index') }}" class="app-button-secondary">
-                Volver al panel
-            </a>
-        </div>
+        <x-admin.panel-header
+            title="Gestion de pedidos"
+            active="orders"
+            :back-href="route('admin.index')"
+            back-label="Volver al panel"
+        />
     </x-slot>
 
     <div class="app-page">
@@ -17,7 +15,7 @@
                     <p class="app-hero-kicker">Preparacion de pedidos</p>
                     <h3 class="app-hero-title">Pedidos del bazar</h3>
                     <p class="app-hero-copy">
-                        Los pedidos en tienda pueden prepararse desde que se crean. Los pedidos online aparecen bloqueados hasta que Stripe confirme el pago.
+                        Cada tarjeta permite revisar el contenido del pedido, abrir el detalle completo y avanzar su estado sin salir del panel.
                     </p>
                 </div>
 
@@ -41,62 +39,84 @@
                         <a href="{{ route('admin.orders.index', ['scope' => 'cancelled']) }}" class="{{ $scope === 'cancelled' ? 'app-button-primary' : 'app-button-secondary' }}">Cancelados</a>
                     </div>
 
-                    <div class="space-y-4">
+                    <div class="space-y-3">
                         @forelse ($orders as $order)
-                            <article class="app-card">
-                                <div class="flex flex-col gap-4 xl:flex-row xl:items-start xl:justify-between">
-                                    <div>
-                                        <p class="app-section-kicker">{{ $order->order_number }}</p>
-                                        <h4 class="mt-2 text-2xl font-black tracking-tight text-stone-950">
-                                            {{ $order->pickup_name }}
-                                        </h4>
-                                        <p class="mt-3 text-sm text-stone-600">
-                                            {{ $order->user?->name ?? 'Sin usuario' }} · {{ $order->items->count() }} lineas · {{ number_format((float) $order->total, 2, ',', '.') }} &euro;
-                                        </p>
-                                    </div>
+                            @php
+                                $totalUnits = (int) $order->items->sum('quantity');
+                            @endphp
 
+                            <article class="app-card app-order-summary-card">
+                                <details class="app-order-disclosure">
+                                    <summary class="app-order-disclosure-summary app-order-summary-head">
+                                        <div>
+                                            <p class="app-section-kicker">{{ $order->order_number }}</p>
+                                            <h4 class="app-order-summary-title">
+                                                {{ $order->pickup_name }}
+                                            </h4>
+                                            <div class="app-order-summary-meta">
+                                                <span>{{ $order->created_at?->format('d/m/Y H:i') ?? 'Sin fecha' }}</span>
+                                                <span>{{ $order->items->count() }} lineas / {{ $totalUnits }} uds</span>
+                                                <span>{{ number_format((float) $order->total, 2, ',', '.') }} &euro; ({{ $order->payment_method->label() }})</span>
+                                            </div>
+                                        </div>
+
+                                        <div class="app-order-summary-side">
+                                            <div class="app-order-summary-status-row">
+                                                <span class="store-status-pill {{ match ($order->status->value) { 'ready' => 'store-status-pill-warning', 'completed' => 'store-status-pill-success', 'cancelled' => 'store-status-pill-danger', default => 'store-status-pill-neutral' } }}">
+                                                    {{ $order->status->label() }}
+                                                </span>
+
+                                                <svg class="app-order-disclosure-chevron h-5 w-5 text-stone-400" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                                    <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.94a.75.75 0 011.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clip-rule="evenodd" />
+                                                </svg>
+                                            </div>
+
+                                            @if ($order->usesOnlinePayment() && ! $order->isPaid() && $order->status->value !== 'cancelled')
+                                                <p class="app-order-summary-note">Esperando pago online</p>
+                                            @elseif ($order->isPaid())
+                                                <p class="app-order-summary-note">Pago confirmado</p>
+                                            @endif
+                                        </div>
+                                    </summary>
+
+                                    <div class="app-order-disclosure-body">
+                                        <x-admin.order-items-panel :order="$order" :show-meta="false" />
+                                    </div>
+                                </details>
+
+                                <div class="app-order-summary-actions">
                                     <div class="flex flex-wrap gap-2">
-                                        <span class="store-status-pill {{ match ($order->status->value) { 'ready' => 'store-status-pill-warning', 'completed' => 'store-status-pill-success', 'cancelled' => 'store-status-pill-danger', default => 'store-status-pill-neutral' } }}">
-                                            {{ strtoupper($order->status->value) }}
-                                        </span>
-                                        <span class="store-status-pill {{ $order->isPaid() ? 'store-status-pill-success' : 'store-status-pill-neutral' }}">
-                                            PAGO {{ strtoupper($order->payment_status->value) }}
-                                        </span>
-                                        <span class="store-status-pill store-status-pill-neutral">
-                                            {{ strtoupper($order->payment_method->value) }}
-                                        </span>
+                                        <a href="{{ route('admin.orders.show', $order) }}" class="app-button-secondary-compact">
+                                            Abrir pedido completo
+                                        </a>
+
+                                        @if ($order->status->value === 'pending' && $order->canBePrepared())
+                                            <form method="POST" action="{{ route('admin.orders.ready', $order) }}">
+                                                @csrf
+                                                @method('PATCH')
+
+                                                <button type="submit" class="app-button-primary-compact">
+                                                    Marcar como listo
+                                                </button>
+                                            </form>
+                                        @elseif ($order->status->value === 'ready')
+                                            <form method="POST" action="{{ route('admin.orders.complete', $order) }}">
+                                                @csrf
+                                                @method('PATCH')
+
+                                                <button type="submit" class="app-button-primary-compact">
+                                                    Marcar como entregado
+                                                </button>
+                                            </form>
+                                        @endif
                                     </div>
+
+                                    @if ($order->status->value === 'pending' && ! $order->canBePrepared())
+                                        <p class="app-order-summary-note">
+                                            Este pedido online sigue esperando confirmacion de pago antes de entrar en preparacion.
+                                        </p>
+                                    @endif
                                 </div>
-
-                                @if ($order->status->value === 'cancelled' && $order->cancel_reason)
-                                    <p class="mt-4 text-sm text-rose-700">
-                                        Motivo de cancelacion: {{ $order->cancel_reason }}
-                                    </p>
-                                @endif
-
-                                @if ($order->status->value === 'pending' && $order->canBePrepared())
-                                    <form method="POST" action="{{ route('admin.orders.ready', $order) }}" class="mt-6">
-                                        @csrf
-                                        @method('PATCH')
-
-                                        <button type="submit" class="app-button-primary">
-                                            Marcar como listo
-                                        </button>
-                                    </form>
-                                @elseif ($order->status->value === 'pending')
-                                    <p class="mt-6 text-sm text-stone-500">
-                                        Este pedido online sigue esperando confirmacion de pago antes de entrar en preparacion.
-                                    </p>
-                                @elseif ($order->status->value === 'ready')
-                                    <form method="POST" action="{{ route('admin.orders.complete', $order) }}" class="mt-6">
-                                        @csrf
-                                        @method('PATCH')
-
-                                        <button type="submit" class="app-button-primary">
-                                            Marcar como entregado
-                                        </button>
-                                    </form>
-                                @endif
                             </article>
                         @empty
                             <div class="app-card">

@@ -21,6 +21,7 @@ Route::get('/search/suggestions', [SearchController::class, 'suggestions'])->nam
 Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/admin', [ProductManagementController::class, 'index'])->name('admin.index');
     Route::get('/admin/orders', [OrderManagementController::class, 'index'])->name('admin.orders.index');
+    Route::get('/admin/orders/{order}', [OrderManagementController::class, 'show'])->name('admin.orders.show');
     Route::patch('/admin/orders/{order}/ready', [OrderManagementController::class, 'ready'])->name('admin.orders.ready');
     Route::patch('/admin/orders/{order}/complete', [OrderManagementController::class, 'complete'])->name('admin.orders.complete');
     Route::get('/admin/products', [ProductManagementController::class, 'manage'])->name('admin.products.manage');

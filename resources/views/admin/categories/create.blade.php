@@ -1,13 +1,11 @@
 <x-app-layout>
     <x-slot name="header">
-        <div class="app-page-header">
-            <h2 class="app-page-title">
-                Nueva categoria
-            </h2>
-            <a href="{{ route('admin.index') }}" class="app-button-secondary">
-                Volver al panel
-            </a>
-        </div>
+        <x-admin.panel-header
+            title="Nueva categoria"
+            active="categories"
+            :back-href="route('admin.index')"
+            back-label="Volver al panel"
+        />
     </x-slot>
 
     <div class="app-page">
