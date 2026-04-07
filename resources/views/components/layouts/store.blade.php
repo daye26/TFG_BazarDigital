@@ -32,6 +32,11 @@
                         <a href="{{ route('home') }}" class="transition hover:text-stone-950">Inicio</a>
                         <a href="{{ route('products.index') }}" class="transition hover:text-stone-950">Tienda</a>
                         <a href="{{ route('products.latest') }}" class="transition hover:text-stone-950">Novedades</a>
+                        @auth
+                            @unless (Auth::user()->isAdmin())
+                                <a href="{{ route('orders.index') }}" class="transition hover:text-stone-950">Pedidos</a>
+                            @endunless
+                        @endauth
                     </nav>
 
                     <div class="flex flex-wrap items-center justify-end gap-3">
@@ -93,6 +98,9 @@
                                     Panel de control
                                 </a>
                             @else
+                                <a href="{{ route('orders.index') }}" class="rounded-full border border-stone-300 bg-white px-4 py-2 text-sm font-semibold text-stone-800 transition hover:border-stone-900 hover:text-stone-950">
+                                    Pedidos
+                                </a>
                                 <a href="{{ route('cart.show') }}" class="rounded-full border border-stone-300 bg-white px-4 py-2 text-sm font-semibold text-stone-800 transition hover:border-stone-900 hover:text-stone-950">
                                     Carrito (<span data-cart-count>{{ $storeCartItemsCount ?? 0 }}</span>)
                                 </a>

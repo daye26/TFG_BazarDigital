@@ -125,10 +125,53 @@
                 </div>
 
                 <p class="store-text mt-6">
-                    El carrito usa el precio con descuento y el stock actual del producto. Cuando anadas pedidos reales, aqui podras enlazar checkout y reserva de stock.
+                    El carrito usa el precio con descuento y el stock actual del producto. Al confirmar el pedido, el stock quedara reservado para la recogida.
                 </p>
 
                 <div class="mt-8 flex flex-col gap-3">
+                    @if ($items->isNotEmpty() && ! $hasAvailabilityIssues)
+                        <form method="POST" action="{{ route('orders.store') }}" class="space-y-4">
+                            @csrf
+
+                            <div>
+                                <label for="pickup_name" class="store-detail-label">Nombre de recogida</label>
+                                <input
+                                    id="pickup_name"
+                                    type="text"
+                                    name="pickup_name"
+                                    value="{{ old('pickup_name', auth()->user()->name) }}"
+                                    class="form-input mt-2 block w-full"
+                                    required
+                                >
+                            </div>
+
+                            <fieldset>
+                                <legend class="store-detail-label">Forma de pago</legend>
+                                <div class="mt-3 space-y-3">
+                                    <label class="store-choice-card">
+                                        <input type="radio" name="payment_method" value="store" @checked(old('payment_method', 'store') === 'store')>
+                                        <span>
+                                            <span class="block font-bold text-stone-950">Pagar en tienda</span>
+                                            <span class="store-text mt-1 block">El pedido se crea, se prepara y se paga al recoger.</span>
+                                        </span>
+                                    </label>
+
+                                    <label class="store-choice-card">
+                                        <input type="radio" name="payment_method" value="online" @checked(old('payment_method') === 'online')>
+                                        <span>
+                                            <span class="block font-bold text-stone-950">Pagar online con Stripe</span>
+                                            <span class="store-text mt-1 block">Al confirmar se abrira Stripe Checkout para completar el pago.</span>
+                                        </span>
+                                    </label>
+                                </div>
+                            </fieldset>
+
+                            <button type="submit" class="store-button-primary w-full justify-center">
+                                Confirmar pedido
+                            </button>
+                        </form>
+                    @endif
+
                     <a href="{{ route('products.index') }}" class="store-button-primary text-center">
                         Seguir comprando
                     </a>

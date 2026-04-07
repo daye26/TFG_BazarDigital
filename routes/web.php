@@ -1,10 +1,13 @@
 <?php
 
+use App\Http\Controllers\Admin\OrderManagementController;
 use App\Http\Controllers\Admin\ProductManagementController;
 use App\Http\Controllers\CartController;
+use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SearchController;
+use App\Http\Controllers\StripeCheckoutController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -17,6 +20,9 @@ Route::get('/search/suggestions', [SearchController::class, 'suggestions'])->nam
 
 Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/admin', [ProductManagementController::class, 'index'])->name('admin.index');
+    Route::get('/admin/orders', [OrderManagementController::class, 'index'])->name('admin.orders.index');
+    Route::patch('/admin/orders/{order}/ready', [OrderManagementController::class, 'ready'])->name('admin.orders.ready');
+    Route::patch('/admin/orders/{order}/complete', [OrderManagementController::class, 'complete'])->name('admin.orders.complete');
     Route::get('/admin/products', [ProductManagementController::class, 'manage'])->name('admin.products.manage');
     Route::get('/admin/products/create', [ProductManagementController::class, 'create'])->name('admin.products.create');
     Route::post('/admin/products', [ProductManagementController::class, 'store'])->name('admin.products.store');
@@ -38,6 +44,15 @@ Route::middleware('auth')->group(function () {
     Route::patch('/cart/items/{item}', [CartController::class, 'update'])->name('cart.items.update');
     Route::delete('/cart/items/{item}', [CartController::class, 'destroy'])->name('cart.items.destroy');
     Route::delete('/cart', [CartController::class, 'clear'])->name('cart.clear');
+
+    Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
+    Route::post('/orders', [OrderController::class, 'store'])->name('orders.store');
+    Route::get('/orders/{order}', [OrderController::class, 'show'])->name('orders.show');
+    Route::patch('/orders/{order}/cancel', [OrderController::class, 'cancel'])->name('orders.cancel');
+
+    Route::post('/orders/{order}/checkout', [StripeCheckoutController::class, 'pay'])->name('checkout.pay');
+    Route::get('/orders/{order}/checkout/success', [StripeCheckoutController::class, 'success'])->name('checkout.success');
+    Route::get('/orders/{order}/checkout/cancel', [StripeCheckoutController::class, 'cancel'])->name('checkout.cancel');
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');

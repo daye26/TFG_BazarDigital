@@ -29,6 +29,10 @@
                             <h4 class="app-section-title">Acciones rapidas</h4>
 
                             <div class="mt-6 flex flex-wrap gap-3">
+                                <a href="{{ route('admin.orders.index') }}" class="app-button-primary">
+                                    Gestionar pedidos
+                                </a>
+
                                 <a href="{{ route('admin.products.create') }}" class="app-button-primary">
                                     Nuevo producto
                                 </a>
