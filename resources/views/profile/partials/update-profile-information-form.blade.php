@@ -47,27 +47,11 @@
             @endif
         </div>
 
-        @php
-            $storedPhone = old('phone', $user->phone);
-            $phoneCountryCode = old('phone_country_code');
-            $phoneNumber = old('phone_number');
-
-            if ($phoneCountryCode === null || $phoneNumber === null) {
-                if (preg_match('/^(\+\d{1,4})(\d+)$/', (string) $storedPhone, $matches)) {
-                    $phoneCountryCode ??= $matches[1];
-                    $phoneNumber ??= $matches[2];
-                } else {
-                    $phoneCountryCode ??= '+34';
-                    $phoneNumber ??= '';
-                }
-            }
-        @endphp
-
         <div>
             <x-input-label for="phone_country_code" :value="__('Telefono')" />
             <div class="form-phone-row">
-                <x-text-input id="phone_country_code" name="phone_country_code" type="text" class="form-phone-code" :value="$phoneCountryCode" required autocomplete="tel-country-code" maxlength="4" />
-                <x-text-input id="phone_number" name="phone_number" type="tel" class="block flex-1" :value="$phoneNumber" required autocomplete="tel-national" placeholder="612345678" />
+                <x-text-input id="phone_country_code" name="phone_country_code" type="text" class="form-phone-code" :value="old('phone_country_code', $phoneParts['phone_country_code'])" required autocomplete="tel-country-code" maxlength="4" />
+                <x-text-input id="phone_number" name="phone_number" type="tel" class="block flex-1" :value="old('phone_number', $phoneParts['phone_number'])" required autocomplete="tel-national" placeholder="612345678" />
             </div>
             <x-input-error class="mt-2" :messages="$errors->get('phone_country_code')" />
             <x-input-error class="mt-2" :messages="$errors->get('phone_number')" />
