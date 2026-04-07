@@ -35,4 +35,15 @@ return [
         ],
     ],
 
+    'stripe' => [
+        'key' => env('STRIPE_KEY'),
+        'secret' => env('STRIPE_SECRET'),
+        'webhook_secret' => env('STRIPE_WEBHOOK_SECRET'),
+        'currency' => env('STRIPE_CURRENCY', 'eur'),
+        'checkout' => [
+            'success_url' => env('STRIPE_CHECKOUT_SUCCESS_URL'),
+            'cancel_url' => env('STRIPE_CHECKOUT_CANCEL_URL'),
+        ],
+    ],
+
 ];
