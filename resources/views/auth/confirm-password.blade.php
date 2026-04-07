@@ -1,6 +1,6 @@
 <x-guest-layout>
     <div class="form-copy">
-        {{ __('Esta es una zona segura de la aplicacion. Confirma tu contrasena antes de continuar.') }}
+        {{ __('Esta es una zona segura de la aplicacion. Confirma tu contraseña antes de continuar.') }}
     </div>
 
     <form method="POST" action="{{ route('password.confirm') }}">
@@ -8,7 +8,7 @@
 
         <!-- Password -->
         <div>
-            <x-input-label for="password" :value="__('Contrasena')" />
+            <x-input-label for="password" :value="__('Contraseña')" />
 
             <x-text-input id="password" class="block mt-1 w-full"
                             type="password"

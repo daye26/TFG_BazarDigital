@@ -1,6 +1,6 @@
 <x-guest-layout>
     <div class="form-copy">
-        {{ __('Has olvidado tu contrasena? No pasa nada. Indicanos tu correo electronico y te enviaremos un enlace para restablecerla.') }}
+        {{ __('Has olvidado tu contraseña? No pasa nada. Indicanos tu correo electronico y te enviaremos un enlace para restablecerla.') }}
     </div>
 
     <!-- Session Status -->

@@ -24,18 +24,18 @@
             </h2>
 
             <p class="form-section-copy">
-                {{ __('Una vez eliminada tu cuenta, todos sus recursos y datos se borraran de forma permanente. Introduce tu contrasena para confirmar que quieres eliminar tu cuenta definitivamente.') }}
+                {{ __('Una vez eliminada tu cuenta, todos sus recursos y datos se borraran de forma permanente. Introduce tu contraseña para confirmar que quieres eliminar tu cuenta definitivamente.') }}
             </p>
 
             <div class="mt-6">
-                <x-input-label for="password" value="{{ __('Contrasena') }}" class="sr-only" />
+                <x-input-label for="password" value="{{ __('Contraseña') }}" class="sr-only" />
 
                 <x-text-input
                     id="password"
                     name="password"
                     type="password"
                     class="mt-1 block w-3/4"
-                    placeholder="{{ __('Contrasena') }}"
+                    placeholder="{{ __('Contraseña') }}"
                 />
 
                 <x-input-error :messages="$errors->userDeletion->get('password')" class="mt-2" />

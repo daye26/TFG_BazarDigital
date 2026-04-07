@@ -14,7 +14,7 @@
 
         <!-- Password -->
         <div class="mt-4">
-            <x-input-label for="password" :value="__('Contrasena')" />
+            <x-input-label for="password" :value="__('Contraseña')" />
 
             <x-text-input id="password" class="block mt-1 w-full"
                             type="password"
@@ -35,7 +35,7 @@
         <div class="form-actions-end">
             @if (Route::has('password.request'))
                 <a class="form-link-muted" href="{{ route('password.request') }}">
-                    {{ __('Has olvidado tu contrasena?') }}
+                    {{ __('Has olvidado tu contraseña?') }}
                 </a>
             @endif
 
