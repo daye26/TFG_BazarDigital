@@ -1,11 +1,11 @@
 <x-guest-layout>
     <div class="form-copy">
-        {{ __('Thanks for signing up! Before getting started, could you verify your email address by clicking on the link we just emailed to you? If you didn\'t receive the email, we will gladly send you another.') }}
+        {{ __('Gracias por registrarte. Antes de empezar, confirma tu direccion de correo electronico haciendo clic en el enlace que te hemos enviado. Si no lo has recibido, te enviaremos otro.') }}
     </div>
 
     @if (session('status') == 'verification-link-sent')
         <div class="mb-4 form-status-success">
-            {{ __('A new verification link has been sent to the email address you provided during registration.') }}
+            {{ __('Hemos enviado un nuevo enlace de verificacion al correo electronico indicado durante el registro.') }}
         </div>
     @endif
 
@@ -15,7 +15,7 @@
 
             <div>
                 <x-primary-button>
-                    {{ __('Resend Verification Email') }}
+                    {{ __('Reenviar correo de verificacion') }}
                 </x-primary-button>
             </div>
         </form>
@@ -24,7 +24,7 @@
             @csrf
 
             <button type="submit" class="form-link-muted">
-                {{ __('Log Out') }}
+                {{ __('Cerrar sesion') }}
             </button>
         </form>
     </div>

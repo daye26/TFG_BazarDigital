@@ -1,6 +1,6 @@
 <x-guest-layout>
     <div class="form-copy">
-        {{ __('Forgot your password? No problem. Just let us know your email address and we will email you a password reset link that will allow you to choose a new one.') }}
+        {{ __('Has olvidado tu contrasena? No pasa nada. Indicanos tu correo electronico y te enviaremos un enlace para restablecerla.') }}
     </div>
 
     <!-- Session Status -->
@@ -11,14 +11,14 @@
 
         <!-- Email Address -->
         <div>
-            <x-input-label for="email" :value="__('Email')" />
+            <x-input-label for="email" :value="__('Correo electronico')" />
             <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autofocus />
             <x-input-error :messages="$errors->get('email')" class="mt-2" />
         </div>
 
         <div class="form-actions-end">
             <x-primary-button>
-                {{ __('Email Password Reset Link') }}
+                {{ __('Enviar enlace de restablecimiento') }}
             </x-primary-button>
         </div>
     </form>

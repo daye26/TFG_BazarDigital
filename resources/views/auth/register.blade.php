@@ -9,14 +9,14 @@
             <x-input-error :messages="$errors->get('name')" class="mt-2" />
         </div>
 
-        <!-- Email Address -->
+        <!-- Correo electronico -->
         <div class="mt-4">
-            <x-input-label for="email" :value="__('Email')" />
+            <x-input-label for="email" :value="__('Correo electronico')" />
             <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autocomplete="username" />
             <x-input-error :messages="$errors->get('email')" class="mt-2" />
         </div>
 
-        <!-- Phone -->
+        <!-- Telefono -->
         <div class="mt-4">
             <x-input-label for="phone_country_code" :value="__('Telefono')" />
             <div class="form-phone-row">
@@ -30,7 +30,7 @@
 
         <!-- Contrasena -->
         <div class="mt-4">
-            <x-input-label for="password" :value="__('Contraseña')" />
+            <x-input-label for="password" :value="__('Contrasena')" />
 
             <x-text-input id="password" class="block mt-1 w-full"
                             type="password"
@@ -40,9 +40,9 @@
             <x-input-error :messages="$errors->get('password')" class="mt-2" />
         </div>
 
-        <!-- Confirmar Contrasena -->
+        <!-- Confirmar contrasena -->
         <div class="mt-4">
-            <x-input-label for="password_confirmation" :value="__('Confirmar contraseña')" />
+            <x-input-label for="password_confirmation" :value="__('Confirmar contrasena')" />
 
             <x-text-input id="password_confirmation" class="block mt-1 w-full"
                             type="password"
@@ -53,11 +53,11 @@
 
         <div class="form-actions-end">
             <a class="form-link-muted" href="{{ route('login') }}">
-                {{ __('¿Ya tienes cuenta?') }}
+                {{ __('Ya tienes cuenta?') }}
             </a>
 
             <x-primary-button class="ms-4">
-                {{ __('Registrarse') }}
+                {{ __('Crear cuenta') }}
             </x-primary-button>
         </div>
     </form>
