@@ -6,9 +6,14 @@
     display: none !important;
 }
 
+:root {
+    --page-shell-max: clamp(80rem, 96vw, 120rem);
+}
+
 @layer components {
     .store-shell {
-        @apply mx-auto max-w-7xl px-4 sm:px-6 lg:px-8;
+        @apply mx-auto w-full px-4 sm:px-6 lg:px-8;
+        max-width: var(--page-shell-max);
     }
 
     .store-panel {
@@ -480,24 +485,165 @@
         @apply flex min-h-screen flex-col items-center bg-gray-100 pt-6 sm:justify-center sm:pt-0;
     }
 
+    .guest-layout-body {
+        @apply font-sans text-gray-900 antialiased;
+    }
+
+    .guest-brand {
+        @apply flex justify-center;
+    }
+
+    .guest-brand-logo {
+        @apply h-20 w-20 fill-current text-gray-500;
+    }
+
     .guest-card {
         @apply mt-6 w-full overflow-hidden bg-white px-6 py-4 shadow-md sm:max-w-md sm:rounded-lg;
+    }
+
+    .app-layout-body {
+        @apply font-sans antialiased;
+    }
+
+    .app-layout-page {
+        @apply min-h-screen bg-gray-100;
+    }
+
+    .app-layout-header {
+        @apply bg-white shadow;
+    }
+
+    .app-layout-header-shell {
+        @apply mx-auto w-full px-4 py-6 sm:px-6 lg:px-8;
+        max-width: var(--page-shell-max);
+    }
+
+    .app-layout-main {
+        @apply min-h-0;
     }
 
     .app-page {
         @apply py-12;
     }
 
+    .app-nav {
+        @apply border-b border-gray-100 bg-white;
+    }
+
+    .app-nav-shell {
+        @apply mx-auto w-full px-4 sm:px-6 lg:px-8;
+        max-width: var(--page-shell-max);
+    }
+
+    .app-nav-row {
+        @apply flex h-16 justify-between;
+    }
+
+    .app-nav-brand-group {
+        @apply flex;
+    }
+
+    .app-nav-logo {
+        @apply flex shrink-0 items-center;
+    }
+
+    .app-nav-links {
+        @apply hidden space-x-8 sm:-my-px sm:ms-10 sm:flex;
+    }
+
+    .app-nav-user {
+        @apply hidden sm:flex sm:items-center sm:ms-6;
+    }
+
+    .app-nav-user-trigger {
+        @apply inline-flex items-center rounded-md border border-transparent bg-white px-3 py-2 text-sm font-medium leading-4 text-gray-500 transition duration-150 ease-in-out hover:text-gray-700 focus:outline-none;
+    }
+
+    .app-nav-toggle-shell {
+        @apply -me-2 flex items-center sm:hidden;
+    }
+
+    .app-nav-toggle {
+        @apply inline-flex items-center justify-center rounded-md p-2 text-gray-400 transition duration-150 ease-in-out hover:bg-gray-100 hover:text-gray-500 focus:bg-gray-100 focus:text-gray-500 focus:outline-none;
+    }
+
+    .app-nav-mobile-links {
+        @apply space-y-1 pb-3 pt-2;
+    }
+
+    .app-nav-mobile-user {
+        @apply border-t border-gray-200 pb-1 pt-4;
+    }
+
+    .app-nav-mobile-user-name {
+        @apply px-4 text-base font-medium text-gray-800;
+    }
+
+    .app-nav-mobile-user-email {
+        @apply px-4 text-sm font-medium text-gray-500;
+    }
+
+    .app-nav-mobile-user-links {
+        @apply mt-3 space-y-1;
+    }
+
+    .app-nav-link {
+        @apply inline-flex items-center border-b-2 border-transparent px-1 pt-1 text-sm font-medium leading-5 text-gray-500 transition duration-150 ease-in-out hover:border-gray-300 hover:text-gray-700 focus:border-gray-300 focus:outline-none focus:text-gray-700;
+    }
+
+    .app-nav-link-active {
+        @apply border-indigo-400 text-gray-900 focus:border-indigo-700;
+    }
+
+    .app-nav-mobile-link {
+        @apply block w-full border-l-4 border-transparent py-2 pe-4 ps-3 text-start text-base font-medium text-gray-600 transition duration-150 ease-in-out hover:border-gray-300 hover:bg-gray-50 hover:text-gray-800 focus:border-gray-300 focus:bg-gray-50 focus:outline-none focus:text-gray-800;
+    }
+
+    .app-nav-mobile-link-active {
+        @apply border-indigo-400 bg-indigo-50 text-indigo-700 focus:border-indigo-700 focus:bg-indigo-100 focus:text-indigo-800;
+    }
+
+    .app-dropdown-panel {
+        @apply absolute z-50 mt-2 rounded-md shadow-lg;
+    }
+
+    .app-dropdown-surface {
+        @apply rounded-md ring-1 ring-black ring-opacity-5;
+    }
+
+    .app-dropdown-link {
+        @apply block w-full px-4 py-2 text-start text-sm leading-5 text-gray-700 transition duration-150 ease-in-out hover:bg-gray-100 focus:bg-gray-100 focus:outline-none;
+    }
+
+    .app-modal-shell {
+        @apply fixed inset-0 z-50 overflow-y-auto px-4 py-6 sm:px-0;
+    }
+
+    .app-modal-backdrop {
+        @apply fixed inset-0 transform transition-all;
+    }
+
+    .app-modal-overlay {
+        @apply absolute inset-0 bg-gray-500 opacity-75;
+    }
+
+    .app-modal-dialog {
+        @apply mb-6 overflow-hidden rounded-lg bg-white shadow-xl transform transition-all sm:mx-auto sm:w-full;
+    }
+
     .app-shell {
-        @apply mx-auto max-w-7xl sm:px-6 lg:px-8;
+        @apply mx-auto w-full sm:px-6 lg:px-8;
+        max-width: var(--page-shell-max);
     }
 
     .app-shell-stack {
-        @apply mx-auto max-w-7xl space-y-8 sm:px-6 lg:px-8;
+        @apply mx-auto w-full space-y-8 sm:px-6 lg:px-8;
+        max-width: var(--page-shell-max);
     }
 
     .app-shell-stack-sm {
-        @apply mx-auto max-w-7xl space-y-6 sm:px-6 lg:px-8;
+        @apply mx-auto w-full space-y-6 sm:px-6 lg:px-8;
+        max-width: var(--page-shell-max);
     }
 
     .app-surface {
@@ -748,6 +894,22 @@
         @apply bg-white p-4 shadow sm:rounded-lg sm:p-8;
     }
 
+    .profile-section-content {
+        @apply max-w-xl;
+    }
+
+    .form-field {
+        @apply mt-4;
+    }
+
+    .form-control-full {
+        @apply mt-1 block w-full;
+    }
+
+    .form-control-fill {
+        @apply block flex-1;
+    }
+
     .form-input {
         @apply rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500;
     }
@@ -801,12 +963,36 @@
         width: 80px;
     }
 
+    .form-note {
+        @apply mt-2 text-sm text-gray-800;
+    }
+
     .form-actions-end {
         @apply mt-4 flex items-center justify-end;
     }
 
     .form-actions-between {
         @apply mt-4 flex items-center justify-between;
+    }
+
+    .form-actions-inline {
+        @apply flex items-center gap-4;
+    }
+
+    .form-actions-auth {
+        @apply mt-6 flex items-center justify-end gap-4;
+    }
+
+    .form-actions-modal {
+        @apply mt-6 flex justify-end;
+    }
+
+    .form-button-offset {
+        @apply ms-3;
+    }
+
+    .form-modal-input {
+        @apply mt-1 block w-3/4;
     }
 
     .form-status-inline {

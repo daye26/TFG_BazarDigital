@@ -34,19 +34,19 @@
                     id="password"
                     name="password"
                     type="password"
-                    class="mt-1 block w-3/4"
+                    class="form-modal-input"
                     placeholder="{{ __('Contraseña') }}"
                 />
 
                 <x-input-error :messages="$errors->userDeletion->get('password')" class="mt-2" />
             </div>
 
-            <div class="mt-6 flex justify-end">
+            <div class="form-actions-modal">
                 <x-secondary-button x-on:click="$dispatch('close')">
                     {{ __('Cancelar') }}
                 </x-secondary-button>
 
-                <x-danger-button class="ms-3">
+                <x-danger-button class="form-button-offset">
                     {{ __('Eliminar cuenta') }}
                 </x-danger-button>
             </div>

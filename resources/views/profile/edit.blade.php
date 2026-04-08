@@ -8,19 +8,19 @@
     <div class="app-page">
         <div class="app-shell-stack-sm">
             <div class="profile-card">
-                <div class="max-w-xl">
+                <div class="profile-section-content">
                     @include('profile.partials.update-profile-information-form')
                 </div>
             </div>
 
             <div class="profile-card">
-                <div class="max-w-xl">
+                <div class="profile-section-content">
                     @include('profile.partials.update-password-form')
                 </div>
             </div>
 
             <div class="profile-card">
-                <div class="max-w-xl">
+                <div class="profile-section-content">
                     @include('profile.partials.delete-user-form')
                 </div>
             </div>

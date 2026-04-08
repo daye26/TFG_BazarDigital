@@ -8,15 +8,15 @@
         <!-- Email Address -->
         <div>
             <x-input-label for="email" :value="__('Correo electronico')" />
-            <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autofocus autocomplete="username" />
+            <x-text-input id="email" class="form-control-full" type="email" name="email" :value="old('email')" required autofocus autocomplete="username" />
             <x-input-error :messages="$errors->get('email')" class="mt-2" />
         </div>
 
         <!-- Password -->
-        <div class="mt-4">
+        <div class="form-field">
             <x-input-label for="password" :value="__('Contraseña')" />
 
-            <x-text-input id="password" class="block mt-1 w-full"
+            <x-text-input id="password" class="form-control-full"
                             type="password"
                             name="password"
                             required autocomplete="current-password" />
@@ -32,14 +32,14 @@
             </label>
         </div>
 
-        <div class="form-actions-end">
+        <div class="form-actions-auth">
             @if (Route::has('password.request'))
                 <a class="form-link-muted" href="{{ route('password.request') }}">
                     {{ __('Has olvidado tu contraseña?') }}
                 </a>
             @endif
 
-            <x-primary-button class="ms-3">
+            <x-primary-button>
                 {{ __('Iniciar sesion') }}
             </x-primary-button>
         </div>

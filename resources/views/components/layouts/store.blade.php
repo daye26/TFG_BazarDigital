@@ -17,7 +17,7 @@
             <div class="absolute inset-x-0 top-0 h-80 bg-gradient-to-br from-amber-200 via-orange-100 to-stone-100"></div>
 
             <header class="relative z-50 border-b border-stone-200/80 bg-white/80 backdrop-blur">
-                <div class="mx-auto flex max-w-7xl flex-col gap-4 px-4 py-4 sm:px-6 lg:grid lg:grid-cols-[auto_1fr_auto] lg:items-center lg:px-8">
+                <div class="store-shell flex flex-col gap-4 py-4 lg:grid lg:grid-cols-[auto_1fr_auto] lg:items-center">
                     <div class="flex items-center justify-between gap-4">
                         <a href="{{ route('home') }}" class="flex items-center gap-3">
                             <span class="inline-flex h-11 w-11 items-center justify-center rounded-2xl bg-stone-900 text-sm font-black uppercase tracking-[0.2em] text-amber-200">BD</span>
@@ -166,7 +166,7 @@
             </main>
 
             <footer class="relative mt-16 border-t border-stone-200 bg-white">
-                <div class="mx-auto flex max-w-7xl flex-col gap-3 px-4 py-8 text-sm text-stone-600 sm:px-6 lg:flex-row lg:items-center lg:justify-between lg:px-8">
+                <div class="store-shell flex flex-col gap-3 py-8 text-sm text-stone-600 lg:flex-row lg:items-center lg:justify-between">
                     <p>Bazar Digital. Base inicial del catalogo.</p>
                     <p>Laravel, catalogo publico y estructura lista para crecer.</p>
                 </div>
