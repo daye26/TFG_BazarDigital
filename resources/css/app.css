@@ -715,39 +715,55 @@
     }
 
     .app-order-summary-head {
-        @apply flex flex-col gap-3 md:flex-row md:items-start md:justify-between;
+        @apply grid cursor-pointer gap-4 md:grid-cols-[minmax(0,1fr)_auto] md:items-center;
+    }
+
+    .app-order-summary-main {
+        @apply min-w-0 flex-1;
+    }
+
+    .app-order-summary-order-row {
+        @apply flex flex-wrap items-center gap-3;
+    }
+
+    .app-order-summary-title-row {
+        @apply mt-2 flex flex-wrap items-baseline gap-x-3 gap-y-1;
     }
 
     .app-order-summary-title {
-        @apply mt-1 text-lg font-black tracking-tight text-stone-950;
+        @apply text-lg font-black tracking-tight text-stone-950;
     }
 
     .app-order-summary-meta {
-        @apply mt-1.5 flex flex-wrap gap-x-2.5 gap-y-1 text-xs text-stone-500;
+        @apply flex flex-wrap gap-x-2.5 gap-y-1 text-xs text-stone-500;
     }
 
     .app-order-summary-side {
-        @apply flex flex-col items-start gap-2 md:items-end;
+        @apply flex shrink-0 items-center justify-end self-center;
     }
 
-    .app-order-summary-status-row {
-        @apply flex items-center gap-2;
+    .app-order-summary-head:focus-visible {
+        @apply outline-none ring-2 ring-stone-300 ring-offset-2;
     }
 
     .app-order-summary-note {
         @apply text-[11px] font-medium text-stone-500;
     }
 
-    .app-order-summary-actions {
-        @apply mt-3 flex flex-col gap-2 lg:flex-row lg:items-center lg:justify-between;
+    .app-order-summary-actions-row {
+        @apply flex items-center gap-3;
+    }
+
+    .app-order-summary-controls {
+        @apply flex flex-wrap items-center justify-end gap-2;
     }
 
     .app-button-primary-compact {
-        @apply inline-flex items-center justify-center rounded-full bg-stone-900 px-4 py-2 text-xs font-bold text-white transition hover:bg-stone-700;
+        @apply inline-flex items-center justify-center rounded-full bg-stone-900 px-5 py-2.5 text-sm font-bold text-white transition hover:bg-stone-700;
     }
 
     .app-button-secondary-compact {
-        @apply inline-flex items-center justify-center rounded-full border border-stone-300 px-3.5 py-2 text-xs font-bold text-stone-700 transition hover:border-stone-900 hover:text-stone-950;
+        @apply inline-flex items-center justify-center rounded-full border border-stone-300 px-4 py-2.5 text-sm font-bold text-stone-700 transition hover:border-stone-900 hover:text-stone-950;
     }
 
     .app-order-item-card {
@@ -766,8 +782,48 @@
         @apply rounded-2xl border border-stone-200 bg-stone-50 px-4 py-4;
     }
 
+    .app-order-lines-panel {
+        @apply divide-y divide-stone-200;
+    }
+
+    .app-order-line-row {
+        @apply flex flex-col gap-4 py-4 first:pt-0 last:pb-0 lg:flex-row lg:items-center lg:justify-between;
+    }
+
+    .app-order-line-main {
+        @apply min-w-0;
+    }
+
+    .app-order-line-title {
+        @apply text-lg font-black tracking-tight text-stone-950;
+    }
+
+    .app-order-line-link {
+        @apply inline-flex items-center rounded-full border border-stone-300 px-3.5 py-1.5 text-sm font-bold text-stone-700 transition hover:border-stone-900 hover:text-stone-950;
+    }
+
+    .app-order-line-meta {
+        @apply mt-2 text-sm text-stone-500;
+    }
+
+    .app-order-line-pricing {
+        @apply flex shrink-0 flex-col items-start gap-1 lg:min-w-[11rem] lg:items-end;
+    }
+
+    .app-order-line-total {
+        @apply text-xl font-black tracking-tight text-stone-950;
+    }
+
+    .app-order-summary-panel {
+        @apply p-5;
+    }
+
     .app-order-disclosure {
         @apply block;
+    }
+
+    .app-order-disclosure-toggle {
+        @apply inline-flex h-8 w-8 items-center justify-center rounded-full border border-stone-200 bg-stone-50 text-stone-500 transition hover:border-stone-300 hover:bg-white hover:text-stone-700;
     }
 
     .app-order-disclosure-summary {

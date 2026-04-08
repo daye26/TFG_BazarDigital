@@ -130,6 +130,107 @@ class OrderFlowTest extends TestCase
         $this->assertDatabaseCount('cart_items', 0);
     }
 
+    public function test_stripe_webhook_marks_an_online_order_as_paid(): void
+    {
+        config([
+            'services.stripe.webhook_secret' => 'whsec_test_123',
+        ]);
+
+        $customer = User::factory()->create();
+
+        $order = Order::create([
+            'order_number' => 'WEB-20260408-000001',
+            'user_id' => $customer->id,
+            'source' => 'web',
+            'pickup_name' => 'Cliente Webhook',
+            'status' => OrderStatus::PENDING,
+            'payment_method' => PaymentMethod::ONLINE,
+            'payment_status' => PaymentStatus::PENDING,
+            'subtotal' => '9.99',
+            'discount_total' => '0.00',
+            'tax_total' => '1.73',
+            'total' => '9.99',
+        ]);
+
+        $payload = json_encode([
+            'id' => 'evt_test_123',
+            'type' => 'checkout.session.completed',
+            'data' => [
+                'object' => [
+                    'id' => 'cs_test_123',
+                    'client_reference_id' => (string) $order->id,
+                    'payment_intent' => 'pi_test_123',
+                    'payment_status' => 'paid',
+                    'metadata' => [
+                        'order_id' => (string) $order->id,
+                        'order_number' => $order->order_number,
+                    ],
+                ],
+            ],
+        ], JSON_THROW_ON_ERROR);
+
+        $response = $this->call(
+            'POST',
+            route('stripe.webhook'),
+            [],
+            [],
+            [],
+            [
+                'CONTENT_TYPE' => 'application/json',
+                'HTTP_STRIPE_SIGNATURE' => $this->fakeStripeSignature($payload, 'whsec_test_123'),
+            ],
+            $payload,
+        );
+
+        $response->assertOk()->assertJson([
+            'received' => true,
+        ]);
+
+        $freshOrder = $order->fresh();
+
+        $this->assertSame('paid', $freshOrder->payment_status->value);
+        $this->assertSame('pi_test_123', $freshOrder->payment_reference);
+        $this->assertNotNull($freshOrder->paid_at);
+    }
+
+    public function test_stripe_webhook_rejects_an_invalid_signature(): void
+    {
+        config([
+            'services.stripe.webhook_secret' => 'whsec_test_123',
+        ]);
+
+        $payload = json_encode([
+            'id' => 'evt_test_invalid',
+            'type' => 'checkout.session.completed',
+            'data' => [
+                'object' => [
+                    'id' => 'cs_test_invalid',
+                    'payment_status' => 'paid',
+                    'metadata' => [
+                        'order_id' => '999',
+                    ],
+                ],
+            ],
+        ], JSON_THROW_ON_ERROR);
+
+        $response = $this->call(
+            'POST',
+            route('stripe.webhook'),
+            [],
+            [],
+            [],
+            [
+                'CONTENT_TYPE' => 'application/json',
+                'HTTP_STRIPE_SIGNATURE' => 't='.now()->timestamp.',v1=invalid',
+            ],
+            $payload,
+        );
+
+        $response->assertStatus(400)->assertJson([
+            'message' => 'No se ha podido verificar la firma del webhook de Stripe.',
+        ]);
+    }
+
     public function test_customer_can_cancel_a_pending_order_and_restore_stock(): void
     {
         $user = User::factory()->create();
@@ -250,6 +351,53 @@ class OrderFlowTest extends TestCase
         $this->assertSame('pending', $order->fresh()->status->value);
     }
 
+    public function test_orders_index_keeps_ready_orders_first_without_priority_banner_and_shows_online_pay(): void
+    {
+        $user = User::factory()->create();
+
+        $readyOrder = Order::create([
+            'order_number' => 'WEB-20260408-000004',
+            'user_id' => $user->id,
+            'source' => 'web',
+            'pickup_name' => 'Pedido listo',
+            'status' => OrderStatus::READY,
+            'payment_method' => PaymentMethod::STORE,
+            'payment_status' => PaymentStatus::PENDING,
+            'subtotal' => '9.99',
+            'discount_total' => '0.00',
+            'tax_total' => '1.73',
+            'total' => '9.99',
+        ]);
+
+        $onlinePendingOrder = Order::create([
+            'order_number' => 'WEB-20260408-000005',
+            'user_id' => $user->id,
+            'source' => 'web',
+            'pickup_name' => 'Pedido pago online',
+            'status' => OrderStatus::PENDING,
+            'payment_method' => PaymentMethod::ONLINE,
+            'payment_status' => PaymentStatus::PENDING,
+            'subtotal' => '14.99',
+            'discount_total' => '0.00',
+            'tax_total' => '2.60',
+            'total' => '14.99',
+        ]);
+
+        $response = $this
+            ->actingAs($user)
+            ->get(route('orders.index'));
+
+        $response->assertOk();
+        $response->assertDontSee('Prioridad de recogida');
+        $response->assertDontSee('Ver listos para recoger');
+        $response->assertSeeInOrder([
+            $readyOrder->order_number,
+            $onlinePendingOrder->order_number,
+        ]);
+        $response->assertSee('Pago online');
+        $response->assertSee(route('checkout.pay', $onlinePendingOrder, absolute: false), false);
+    }
+
     protected function createProduct(array $attributes = []): Product
     {
         $category = Category::create([
@@ -274,5 +422,12 @@ class OrderFlowTest extends TestCase
             'category_id' => $category->id,
             'is_active' => true,
         ], $attributes));
+    }
+
+    protected function fakeStripeSignature(string $payload, string $secret, ?int $timestamp = null): string
+    {
+        $timestamp ??= now()->timestamp;
+
+        return 't='.$timestamp.',v1='.hash_hmac('sha256', $timestamp.'.'.$payload, $secret);
     }
 }

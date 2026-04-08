@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Enums\PaymentMethod;
 use App\Enums\PaymentStatus;
 use App\Models\Order;
+use Illuminate\Support\Facades\DB;
 use RuntimeException;
 use Stripe\Checkout\Session;
 
@@ -61,20 +62,54 @@ class StripeCheckoutService
         $client = $this->stripeService->client();
         $session = $client->checkout->sessions->retrieve($sessionId);
 
+        return $this->syncSuccessfulCheckoutData($order, [
+            'id' => $session->id,
+            'client_reference_id' => $session->client_reference_id,
+            'payment_intent' => $session->payment_intent,
+            'payment_status' => $session->payment_status,
+            'metadata' => (array) $session->metadata,
+        ]);
+    }
+
+    public function syncSuccessfulCheckoutPayload(array $sessionPayload): Order
+    {
+        $orderId = $sessionPayload['metadata']['order_id'] ?? $sessionPayload['client_reference_id'] ?? null;
+
+        if (! filled((string) $orderId)) {
+            throw new RuntimeException('La sesion de Stripe no referencia ningun pedido.');
+        }
+
+        $order = Order::query()->findOrFail($orderId);
+
+        return $this->syncSuccessfulCheckoutData($order, $sessionPayload);
+    }
+
+    protected function syncSuccessfulCheckoutData(Order $order, array $sessionPayload): Order
+    {
         if (
-            ($session->metadata['order_id'] ?? null) !== (string) $order->id
-            || $session->payment_status !== 'paid'
+            ($sessionPayload['metadata']['order_id'] ?? null) !== (string) $order->id
+            || ($sessionPayload['payment_status'] ?? null) !== 'paid'
         ) {
             throw new RuntimeException('El pago todavia no figura como completado en Stripe.');
         }
 
-        $order->forceFill([
-            'payment_status' => PaymentStatus::PAID,
-            'paid_at' => $order->paid_at ?? now(),
-            'payment_reference' => $session->payment_intent ?: $session->id,
-        ])->save();
+        return DB::transaction(function () use ($order, $sessionPayload): Order {
+            $lockedOrder = Order::query()
+                ->lockForUpdate()
+                ->findOrFail($order->id);
 
-        return $order->fresh(['items.product', 'user']);
+            if ($lockedOrder->payment_method !== PaymentMethod::ONLINE) {
+                throw new RuntimeException('Solo se pueden confirmar pagos de Stripe para pedidos online.');
+            }
+
+            $lockedOrder->forceFill([
+                'payment_status' => PaymentStatus::PAID,
+                'paid_at' => $lockedOrder->paid_at ?? now(),
+                'payment_reference' => $sessionPayload['payment_intent'] ?: $sessionPayload['id'],
+            ])->save();
+
+            return $lockedOrder->fresh(['items.product', 'user']);
+        });
     }
 
     /**

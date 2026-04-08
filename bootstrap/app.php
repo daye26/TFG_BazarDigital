@@ -15,6 +15,9 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->redirectUsersTo(fn (Request $request) => route(
             $request->user()?->redirectRouteName() ?? 'home'
         ));
+        $middleware->validateCsrfTokens([
+            'stripe/webhook',
+        ]);
 
         $middleware->alias([
             'role' => \App\Http\Middleware\CheckRole::class,

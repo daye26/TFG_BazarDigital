@@ -15,24 +15,6 @@
         </div>
 
         @if ($readyOrders->isNotEmpty())
-            <div class="mt-8 rounded-[2rem] border border-amber-300 bg-amber-50 px-6 py-6 shadow-lg shadow-amber-200/60">
-                <p class="store-kicker text-stone-700">Prioridad de recogida</p>
-                <div class="mt-3 flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
-                    <div>
-                        <h2 class="store-title-lg">
-                            Tienes {{ $readyOrders->count() }} pedido{{ $readyOrders->count() > 1 ? 's' : '' }} listo{{ $readyOrders->count() > 1 ? 's' : '' }} para recoger.
-                        </h2>
-                        <p class="store-text mt-2 max-w-2xl text-stone-700">
-                            Estos pedidos aparecen primero para que no se pierdan entre el historial y puedas revisar rapido su detalle antes de pasar por tienda.
-                        </p>
-                    </div>
-
-                    <a href="#ready-orders" class="store-button-accent">
-                        Ver listos para recoger
-                    </a>
-                </div>
-            </div>
-
             <div id="ready-orders" class="mt-8 space-y-4">
                 <div class="store-toolbar">
                     <div>
@@ -52,20 +34,32 @@
                                 </p>
                             </div>
 
-                            <div class="flex flex-wrap gap-2">
-                                <span class="store-status-pill store-status-pill-warning">
-                                    LISTO PARA RECOGER
-                                </span>
-                                <span class="store-status-pill {{ $order->isPaid() ? 'store-status-pill-success' : 'store-status-pill-neutral' }}">
-                                    Pago {{ $order->payment_status->label() }}
-                                </span>
-                            </div>
-                        </div>
+                            <div class="flex flex-col gap-4 lg:items-end">
+                                <div class="flex flex-wrap gap-2 lg:justify-end">
+                                    <span class="store-status-pill store-status-pill-warning">
+                                        LISTO PARA RECOGER
+                                    </span>
+                                    <span class="store-status-pill {{ $order->isPaid() ? 'store-status-pill-success' : 'store-status-pill-neutral' }}">
+                                        Pago {{ $order->payment_status->label() }}
+                                    </span>
+                                </div>
 
-                        <div class="mt-6 flex flex-wrap gap-3">
-                            <a href="{{ route('orders.show', $order) }}" class="store-button-accent">
-                                Ver pedido
-                            </a>
+                                <div class="flex flex-wrap gap-3 lg:justify-end">
+                                    @if ($order->usesOnlinePayment() && ! $order->isPaid())
+                                        <form method="POST" action="{{ route('checkout.pay', $order) }}">
+                                            @csrf
+
+                                            <button type="submit" class="store-button-accent">
+                                                Pago online
+                                            </button>
+                                        </form>
+                                    @endif
+
+                                    <a href="{{ route('orders.show', $order) }}" class="store-button-secondary">
+                                        Ver pedido
+                                    </a>
+                                </div>
+                            </div>
                         </div>
                     </article>
                 @endforeach
@@ -101,20 +95,32 @@
                                 </p>
                             </div>
 
-                            <div class="flex flex-wrap gap-2">
-                                <span class="store-status-pill {{ match ($order->status->value) { 'completed' => 'store-status-pill-success', 'cancelled' => 'store-status-pill-danger', default => 'store-status-pill-neutral' } }}">
-                                    {{ $order->status->label() }}
-                                </span>
-                                <span class="store-status-pill {{ $order->isPaid() ? 'store-status-pill-success' : 'store-status-pill-neutral' }}">
-                                    Pago {{ $order->payment_status->label() }}
-                                </span>
-                            </div>
-                        </div>
+                            <div class="flex flex-col gap-4 lg:items-end">
+                                <div class="flex flex-wrap gap-2 lg:justify-end">
+                                    <span class="store-status-pill {{ match ($order->status->value) { 'completed' => 'store-status-pill-success', 'cancelled' => 'store-status-pill-danger', default => 'store-status-pill-neutral' } }}">
+                                        {{ $order->status->label() }}
+                                    </span>
+                                    <span class="store-status-pill {{ $order->isPaid() ? 'store-status-pill-success' : 'store-status-pill-neutral' }}">
+                                        Pago {{ $order->payment_status->label() }}
+                                    </span>
+                                </div>
 
-                        <div class="mt-6 flex flex-wrap gap-3">
-                            <a href="{{ route('orders.show', $order) }}" class="store-button-primary-highlight">
-                                Ver pedido
-                            </a>
+                                <div class="flex flex-wrap gap-3 lg:justify-end">
+                                    @if ($order->usesOnlinePayment() && ! $order->isPaid() && $order->status->value !== 'cancelled' && $order->status->value !== 'completed')
+                                        <form method="POST" action="{{ route('checkout.pay', $order) }}">
+                                            @csrf
+
+                                            <button type="submit" class="store-button-primary-highlight">
+                                                Pago online
+                                            </button>
+                                        </form>
+                                    @endif
+
+                                    <a href="{{ route('orders.show', $order) }}" class="store-button-secondary">
+                                        Ver pedido
+                                    </a>
+                                </div>
+                            </div>
                         </div>
                     </article>
                 @endforeach

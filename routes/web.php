@@ -8,10 +8,12 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SearchController;
 use App\Http\Controllers\StripeCheckoutController;
+use App\Http\Controllers\StripeWebhookController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [ProductController::class, 'home'])->name('home');
+Route::post('/stripe/webhook', StripeWebhookController::class)->name('stripe.webhook');
 
 Route::get('/products', [ProductController::class, 'index'])->name('products.index');
 Route::get('/products/latest', [ProductController::class, 'latest'])->name('products.latest');

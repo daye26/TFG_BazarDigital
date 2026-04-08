@@ -13,8 +13,14 @@
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
     <body class="min-h-screen bg-stone-100 text-stone-900 antialiased">
+        @php
+            $storeGlowClasses = request()->routeIs('orders.index')
+                ? 'absolute inset-x-0 top-0 h-56 bg-gradient-to-b from-amber-100/70 via-amber-50/35 to-transparent'
+                : 'absolute inset-x-0 top-0 h-80 bg-gradient-to-br from-amber-200 via-orange-100 to-stone-100';
+        @endphp
+
         <div class="relative overflow-hidden">
-            <div class="absolute inset-x-0 top-0 h-80 bg-gradient-to-br from-amber-200 via-orange-100 to-stone-100"></div>
+            <div class="{{ $storeGlowClasses }}"></div>
 
             <header class="relative z-50 border-b border-stone-200/80 bg-white/80 backdrop-blur">
                 <div class="store-shell flex flex-col gap-4 py-4 lg:grid lg:grid-cols-[auto_1fr_auto] lg:items-center">
@@ -32,11 +38,6 @@
                         <a href="{{ route('home') }}" class="transition hover:text-stone-950">Inicio</a>
                         <a href="{{ route('products.index') }}" class="transition hover:text-stone-950">Tienda</a>
                         <a href="{{ route('products.latest') }}" class="transition hover:text-stone-950">Novedades</a>
-                        @auth
-                            @unless (Auth::user()->isAdmin())
-                                <a href="{{ route('orders.index') }}" class="transition hover:text-stone-950">Pedidos</a>
-                            @endunless
-                        @endauth
                     </nav>
 
                     <div class="flex flex-wrap items-center justify-end gap-3">

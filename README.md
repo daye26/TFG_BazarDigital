@@ -7,6 +7,25 @@
 <a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
 </p>
 
+## Stripe Testing
+
+The project uses Stripe Checkout for online payments and a webhook at `/stripe/webhook`.
+
+Useful test cards:
+
+- Successful payment: `4242 4242 4242 4242`
+- Declined payment: `4000 0000 0000 0002`
+
+For test payments, use any future expiration date, any 3-digit CVC, and any postal code.
+
+For local webhook testing with Stripe CLI:
+
+```bash
+stripe listen --forward-to http://your-local-url/stripe/webhook
+```
+
+Copy the `whsec_...` value shown by `stripe listen` into `STRIPE_WEBHOOK_SECRET` in `.env`.
+
 ## About Laravel
 
 Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
