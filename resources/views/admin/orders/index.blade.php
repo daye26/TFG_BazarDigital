@@ -32,12 +32,55 @@
                         </div>
                     @endif
 
-                    <div class="mb-6 flex flex-wrap gap-3">
-                        <a href="{{ route('admin.orders.index') }}" class="{{ $scope === 'all' ? 'app-button-primary' : 'app-button-secondary' }}">Todos</a>
-                        <a href="{{ route('admin.orders.index', ['scope' => 'pending']) }}" class="{{ $scope === 'pending' ? 'app-button-primary' : 'app-button-secondary' }}">Pendientes</a>
-                        <a href="{{ route('admin.orders.index', ['scope' => 'ready']) }}" class="{{ $scope === 'ready' ? 'app-button-primary' : 'app-button-secondary' }}">Listos</a>
-                        <a href="{{ route('admin.orders.index', ['scope' => 'cancelled']) }}" class="{{ $scope === 'cancelled' ? 'app-button-primary' : 'app-button-secondary' }}">Cancelados</a>
+                    <div class="mb-6 space-y-4">
+                        <form method="GET" action="{{ route('admin.orders.index') }}" class="flex flex-col gap-3 lg:flex-row lg:flex-wrap lg:items-center">
+                            @if ($scope !== 'all')
+                                <input type="hidden" name="scope" value="{{ $scope }}">
+                            @endif
+
+                            <label for="admin-order-search" class="sr-only">Buscar por codigo de pedido</label>
+                            <input
+                                id="admin-order-search"
+                                name="q"
+                                type="search"
+                                value="{{ $searchQuery }}"
+                                class="form-input w-full rounded-full border-stone-300 px-4 py-2 text-sm text-stone-800 placeholder:text-stone-400 lg:w-auto lg:min-w-[22rem]"
+                                placeholder="Codigo de pedido"
+                            >
+
+                            <label for="admin-order-date" class="sr-only">Filtrar pedidos por fecha</label>
+                            <input
+                                id="admin-order-date"
+                                name="date"
+                                type="date"
+                                value="{{ $selectedDate ?? '' }}"
+                                class="form-input w-full rounded-full border-stone-300 px-4 py-2 text-sm text-stone-700 lg:w-auto"
+                            >
+
+                            <div class="flex flex-wrap gap-3">
+                                <button type="submit" class="app-button-secondary">
+                                    Filtrar
+                                </button>
+
+                                @if ($searchQuery !== '' || $selectedDate)
+                                    <a href="{{ route('admin.orders.index', array_filter(['scope' => $scope !== 'all' ? $scope : null])) }}" class="app-button-secondary">
+                                        Limpiar
+                                    </a>
+                                @endif
+                            </div>
+                        </form>
+
+                        <div class="flex flex-wrap gap-3">
+                            <a href="{{ route('admin.orders.index', array_filter(['q' => $searchQuery !== '' ? $searchQuery : null, 'date' => $selectedDate])) }}" class="{{ $scope === 'all' ? 'app-button-primary' : 'app-button-secondary' }}">Todos</a>
+                            <a href="{{ route('admin.orders.index', array_filter(['scope' => 'pending', 'q' => $searchQuery !== '' ? $searchQuery : null, 'date' => $selectedDate])) }}" class="{{ $scope === 'pending' ? 'app-button-primary' : 'app-button-secondary' }}">Pendientes</a>
+                            <a href="{{ route('admin.orders.index', array_filter(['scope' => 'ready', 'q' => $searchQuery !== '' ? $searchQuery : null, 'date' => $selectedDate])) }}" class="{{ $scope === 'ready' ? 'app-button-primary' : 'app-button-secondary' }}">Listos</a>
+                            <a href="{{ route('admin.orders.index', array_filter(['scope' => 'cancelled', 'q' => $searchQuery !== '' ? $searchQuery : null, 'date' => $selectedDate])) }}" class="{{ $scope === 'cancelled' ? 'app-button-primary' : 'app-button-secondary' }}">Cancelados</a>
+                        </div>
                     </div>
+
+                    @php
+                        $currentPage = $orders->currentPage();
+                    @endphp
 
                     <div class="space-y-3">
                         @forelse ($orders as $order)
@@ -93,7 +136,13 @@
                                     <div class="app-order-summary-side">
                                         <div class="app-order-summary-actions-row">
                                             <div class="app-order-summary-controls" data-no-toggle>
-                                                <a href="{{ route('admin.orders.show', $order) }}" class="app-button-secondary-compact">
+                                                <a href="{{ route('admin.orders.show', array_filter([
+                                                    'order' => $order->id,
+                                                    'scope' => $scope !== 'all' ? $scope : null,
+                                                    'q' => $searchQuery !== '' ? $searchQuery : null,
+                                                    'date' => $selectedDate,
+                                                    'page' => $currentPage > 1 ? $currentPage : null,
+                                                ])) }}" class="app-button-secondary-compact">
                                                     Detalle
                                                 </a>
 
@@ -101,6 +150,11 @@
                                                     <form method="POST" action="{{ route('admin.orders.ready', $order) }}">
                                                         @csrf
                                                         @method('PATCH')
+                                                        <input type="hidden" name="return_context" value="index">
+                                                        <input type="hidden" name="return_scope" value="{{ $scope }}">
+                                                        <input type="hidden" name="return_q" value="{{ $searchQuery }}">
+                                                        <input type="hidden" name="return_date" value="{{ $selectedDate ?? '' }}">
+                                                        <input type="hidden" name="return_page" value="{{ $currentPage }}">
 
                                                         <button type="submit" class="app-button-primary-compact">
                                                             Listo
@@ -110,6 +164,11 @@
                                                     <form method="POST" action="{{ route('admin.orders.complete', $order) }}">
                                                         @csrf
                                                         @method('PATCH')
+                                                        <input type="hidden" name="return_context" value="index">
+                                                        <input type="hidden" name="return_scope" value="{{ $scope }}">
+                                                        <input type="hidden" name="return_q" value="{{ $searchQuery }}">
+                                                        <input type="hidden" name="return_date" value="{{ $selectedDate ?? '' }}">
+                                                        <input type="hidden" name="return_page" value="{{ $currentPage }}">
 
                                                         <button type="submit" class="app-button-primary-compact">
                                                             Entregado
@@ -141,10 +200,18 @@
                             </article>
                         @empty
                             <div class="app-card">
-                                <p class="text-sm text-stone-500">Todavia no hay pedidos para este filtro.</p>
+                                <p class="text-sm text-stone-500">
+                                    {{ $searchQuery !== '' || $selectedDate ? 'No hay pedidos para los filtros seleccionados.' : 'Todavia no hay pedidos para este filtro.' }}
+                                </p>
                             </div>
                         @endforelse
                     </div>
+
+                    @if ($orders->hasPages())
+                        <div class="mt-8">
+                            {{ $orders->links() }}
+                        </div>
+                    @endif
                 </div>
             </section>
         </div>

@@ -107,5 +107,11 @@
                 </div>
             @endforelse
         </div>
+
+        @if ($products->hasPages())
+            <div class="mx-auto mt-8 max-w-6xl">
+                {{ $products->links() }}
+            </div>
+        @endif
     </section>
 </x-layouts.store>

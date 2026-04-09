@@ -41,6 +41,9 @@
                         $activeEditorTab = collect($pricingFields)->contains(fn ($field) => $errors->has($field))
                             ? 'price'
                             : 'general';
+                        $currentProductsPage = method_exists($products, 'currentPage')
+                            ? $products->currentPage()
+                            : 1;
                     @endphp
 
                     <div class="grid gap-8 xl:grid-cols-[minmax(290px,0.68fr)_minmax(0,1.32fr)] 2xl:grid-cols-[minmax(300px,0.64fr)_minmax(0,1.36fr)]">
@@ -53,6 +56,10 @@
                                 </p>
 
                                 <form method="GET" action="{{ route('admin.products.manage') }}" class="mt-6 space-y-4">
+                                    @if ($productScope !== 'all')
+                                        <input type="hidden" name="scope" value="{{ $productScope }}">
+                                    @endif
+
                                     <label for="admin-product-search" class="sr-only">Buscar productos para editar</label>
                                     <div class="rounded-2xl border border-stone-300 bg-white px-4 py-3 shadow-sm shadow-stone-200/50">
                                         <input
@@ -69,7 +76,7 @@
                                         <button type="submit" class="app-button-primary">Buscar producto</button>
 
                                         @if ($searchQuery !== '')
-                                            <a href="{{ route('admin.products.manage') }}" class="app-button-secondary">Limpiar busqueda</a>
+                                            <a href="{{ route('admin.products.manage', array_filter(['scope' => $productScope !== 'all' ? $productScope : null])) }}" class="app-button-secondary">Limpiar busqueda</a>
                                         @endif
                                     </div>
                                 </form>
@@ -93,7 +100,7 @@
                                     </div>
                                     <div class="flex flex-wrap gap-3">
                                         @if ($productScope !== 'all')
-                                            <a href="{{ route('admin.products.manage') }}" class="app-button-secondary">Ver todos</a>
+                                            <a href="{{ route('admin.products.manage', array_filter(['q' => $searchQuery !== '' ? $searchQuery : null])) }}" class="app-button-secondary">Ver todos</a>
                                         @endif
                                         <a href="{{ route('admin.products.create') }}" class="app-button-secondary">Nuevo producto</a>
                                     </div>
@@ -114,7 +121,12 @@
                                         @endphp
                                         <div>
                                             <a
-                                                href="{{ route('admin.products.manage', array_filter(['product' => $listedProduct->id, 'q' => $searchQuery !== '' ? $searchQuery : null])) }}"
+                                                href="{{ route('admin.products.manage', array_filter([
+                                                    'product' => $listedProduct->id,
+                                                    'q' => $searchQuery !== '' ? $searchQuery : null,
+                                                    'scope' => $productScope !== 'all' ? $productScope : null,
+                                                    'page' => $currentProductsPage > 1 ? $currentProductsPage : null,
+                                                ])) }}"
                                                 class="{{ $isSelected ? 'app-product-picker-card app-product-picker-card-active' : 'app-product-picker-card' }}"
                                             >
                                                 <div class="grid grid-cols-[minmax(0,1fr)_auto] items-start gap-x-3 gap-y-2">
@@ -169,6 +181,12 @@
                                         </div>
                                     @endforelse
                                     </div>
+
+                                    @if ($products->hasPages())
+                                        <div class="border-t border-stone-200 pt-5">
+                                            {{ $products->links() }}
+                                        </div>
+                                    @endif
                                 </div>
                             </section>
                         </aside>
@@ -237,6 +255,8 @@
                                         @csrf
                                         @method('PATCH')
                                         <input type="hidden" name="return_query" value="{{ $searchQuery }}">
+                                        <input type="hidden" name="return_scope" value="{{ $productScope }}">
+                                        <input type="hidden" name="return_page" value="{{ $currentProductsPage }}">
 
                                         <div class="grid gap-6 md:grid-cols-2">
                                             <div>
@@ -358,6 +378,8 @@
                                         @csrf
                                         @method('PATCH')
                                         <input type="hidden" name="return_query" value="{{ $searchQuery }}">
+                                        <input type="hidden" name="return_scope" value="{{ $productScope }}">
+                                        <input type="hidden" name="return_page" value="{{ $currentProductsPage }}">
 
                                         <div class="grid gap-6 md:grid-cols-2">
                                             <div>

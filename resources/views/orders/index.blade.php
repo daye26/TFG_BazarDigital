@@ -66,14 +66,14 @@
             </div>
         @endif
 
-        @if ($readyOrders->isEmpty() && $otherOrders->isEmpty())
+        @if ($readyOrders->isEmpty() && $otherOrders->count() === 0)
             <div class="mt-8 store-empty">
                 <p class="store-title-lg">Todavia no has hecho ningun pedido.</p>
                 <p class="store-text mt-3">Cuando conviertas tu carrito en pedido, aparecera aqui con su estado y forma de pago.</p>
             </div>
         @endif
 
-        @if ($otherOrders->isNotEmpty())
+        @if ($otherOrders->count() > 0)
             <div class="{{ $readyOrders->isNotEmpty() ? 'mt-10' : 'mt-8' }} space-y-4">
                 @if ($readyOrders->isNotEmpty())
                     <div class="store-toolbar">
@@ -124,6 +124,12 @@
                         </div>
                     </article>
                 @endforeach
+
+                @if ($otherOrders->hasPages())
+                    <div class="pt-2">
+                        {{ $otherOrders->links() }}
+                    </div>
+                @endif
             </div>
         @endif
     </section>

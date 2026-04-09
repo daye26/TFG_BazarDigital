@@ -10,6 +10,8 @@ use App\Models\Product;
 use App\Services\CatalogSearchService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
 use Illuminate\View\View;
@@ -43,7 +45,7 @@ class ProductManagementController extends Controller
     public function manage(Request $request, CatalogSearchService $catalogSearch): View
     {
         $searchQuery = trim($request->string('q')->toString());
-        $productScope = $request->string('scope')->toString();
+        $productScope = $this->normalizeProductScope($request->string('scope')->toString());
         $selectedProduct = null;
 
         if ($request->filled('product')) {
@@ -65,8 +67,10 @@ class ProductManagementController extends Controller
                 )
                 ->orderByDesc('updated_at')
                 ->orderByDesc('created_at')
-                ->get()
-            : $catalogSearch->searchAdminProducts($searchQuery)
+                ->paginate(12)
+                ->withQueryString()
+            : $this->paginateCollection(
+                $catalogSearch->searchAdminProducts($searchQuery)
                 ->when(
                     $productScope === 'active',
                     fn ($collection) => $collection->where('is_active', true)
@@ -75,7 +79,10 @@ class ProductManagementController extends Controller
                     $productScope === 'inactive',
                     fn ($collection) => $collection->where('is_active', false)
                 )
-                ->values();
+                ->values(),
+                12,
+                $request,
+            );
 
         return view('admin.products.manage', [
             'products' => $products,
@@ -85,7 +92,7 @@ class ProductManagementController extends Controller
                 ->orderBy('name')
                 ->get(),
             'searchQuery' => $searchQuery,
-            'productScope' => in_array($productScope, ['active', 'inactive'], true) ? $productScope : 'all',
+            'productScope' => $productScope,
         ]);
     }
 
@@ -195,6 +202,8 @@ class ProductManagementController extends Controller
             'category_id' => ['nullable', 'integer', 'exists:categories,id'],
             'is_active' => ['nullable', 'boolean'],
             'return_query' => ['nullable', 'string'],
+            'return_scope' => ['nullable', 'in:all,active,inactive'],
+            'return_page' => ['nullable', 'integer', 'min:1'],
             'return_context' => ['nullable', 'in:manage,show'],
             'return_tab' => ['nullable', 'in:general,price'],
         ]);
@@ -228,6 +237,8 @@ class ProductManagementController extends Controller
         return $this->redirectToManage(
             $product,
             $validated['return_query'] ?? '',
+            $validated['return_scope'] ?? 'all',
+            $validated['return_page'] ?? null,
             'Caracteristicas del producto actualizadas correctamente.',
             $validated['return_context'] ?? 'manage',
             $validated['return_tab'] ?? 'general',
@@ -245,6 +256,8 @@ class ProductManagementController extends Controller
             'discount_value' => ['nullable', 'numeric', 'min:0'],
             'discount_type' => ['required', 'in:fixed,percentage'],
             'return_query' => ['nullable', 'string'],
+            'return_scope' => ['nullable', 'in:all,active,inactive'],
+            'return_page' => ['nullable', 'integer', 'min:1'],
             'return_context' => ['nullable', 'in:manage,show'],
             'return_tab' => ['nullable', 'in:general,price'],
         ]);
@@ -263,6 +276,8 @@ class ProductManagementController extends Controller
         return $this->redirectToManage(
             $product,
             $validated['return_query'] ?? '',
+            $validated['return_scope'] ?? 'all',
+            $validated['return_page'] ?? null,
             'Precio del producto actualizado correctamente.',
             $validated['return_context'] ?? 'manage',
             $validated['return_tab'] ?? 'price',
@@ -335,7 +350,15 @@ class ProductManagementController extends Controller
         ];
     }
 
-    private function redirectToManage(Product $product, string $searchQuery, string $status, string $returnContext = 'manage', string $returnTab = 'general'): RedirectResponse
+    private function redirectToManage(
+        Product $product,
+        string $searchQuery,
+        string $productScope,
+        ?int $page,
+        string $status,
+        string $returnContext = 'manage',
+        string $returnTab = 'general',
+    ): RedirectResponse
     {
         if ($returnContext === 'show') {
             return redirect()
@@ -353,7 +376,30 @@ class ProductManagementController extends Controller
             ->route('admin.products.manage', array_filter([
                 'product' => $product->id,
                 'q' => $query !== '' ? $query : null,
+                'scope' => $productScope !== 'all' ? $productScope : null,
+                'page' => $page,
             ]))
             ->with('status', $status);
+    }
+
+    private function normalizeProductScope(string $productScope): string
+    {
+        return in_array($productScope, ['active', 'inactive'], true) ? $productScope : 'all';
+    }
+
+    private function paginateCollection(Collection $items, int $perPage, Request $request, string $pageName = 'page'): LengthAwarePaginator
+    {
+        $page = max(LengthAwarePaginator::resolveCurrentPage($pageName), 1);
+
+        return (new LengthAwarePaginator(
+            $items->forPage($page, $perPage)->values(),
+            $items->count(),
+            $perPage,
+            $page,
+            [
+                'path' => $request->url(),
+                'pageName' => $pageName,
+            ],
+        ))->appends($request->except($pageName));
     }
 }

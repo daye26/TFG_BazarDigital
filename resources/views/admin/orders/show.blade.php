@@ -3,7 +3,7 @@
         <x-admin.panel-header
             title="Detalle del pedido"
             active="orders"
-            :back-href="route('admin.orders.index')"
+            :back-href="$backUrl"
             back-label="Volver a pedidos"
         />
     </x-slot>
@@ -50,6 +50,11 @@
                                 <form method="POST" action="{{ route('admin.orders.ready', $order) }}">
                                     @csrf
                                     @method('PATCH')
+                                    <input type="hidden" name="return_context" value="show">
+                                    <input type="hidden" name="return_scope" value="{{ $returnScope }}">
+                                    <input type="hidden" name="return_q" value="{{ $returnSearchQuery }}">
+                                    <input type="hidden" name="return_date" value="{{ $returnSelectedDate ?? '' }}">
+                                    <input type="hidden" name="return_page" value="{{ $returnPage }}">
 
                                     <button type="submit" class="app-button-primary">
                                         Marcar como listo
@@ -59,6 +64,11 @@
                                 <form method="POST" action="{{ route('admin.orders.complete', $order) }}">
                                     @csrf
                                     @method('PATCH')
+                                    <input type="hidden" name="return_context" value="show">
+                                    <input type="hidden" name="return_scope" value="{{ $returnScope }}">
+                                    <input type="hidden" name="return_q" value="{{ $returnSearchQuery }}">
+                                    <input type="hidden" name="return_date" value="{{ $returnSelectedDate ?? '' }}">
+                                    <input type="hidden" name="return_page" value="{{ $returnPage }}">
 
                                     <button type="submit" class="app-button-primary">
                                         Marcar como entregado
@@ -66,7 +76,7 @@
                                 </form>
                             @endif
 
-                            <a href="{{ route('admin.orders.index') }}" class="app-button-secondary">
+                            <a href="{{ $backUrl }}" class="app-button-secondary">
                                 Volver al listado
                             </a>
                         </div>

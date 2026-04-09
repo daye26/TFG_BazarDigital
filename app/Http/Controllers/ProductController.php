@@ -6,8 +6,10 @@ use App\Models\Category;
 use App\Models\Product;
 use App\Services\CatalogSearchService;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Http\Response;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 use Illuminate\View\View;
 
 class ProductController extends Controller
@@ -87,7 +89,7 @@ class ProductController extends Controller
                 productSort: $sort,
             );
 
-            $products = $searchResults['products'];
+            $products = $this->paginateCollection($searchResults['products'], 16, $request);
             $relatedCategories = $selectedCategory ? collect() : $searchResults['categories'];
         } else {
             $productsQuery = Product::query()
@@ -103,7 +105,9 @@ class ProductController extends Controller
                 default => $productsQuery->orderBy('name'),
             };
 
-            $products = $productsQuery->get();
+            $products = $productsQuery
+                ->paginate(20)
+                ->withQueryString();
         }
 
         return view('products.index', [
@@ -117,6 +121,22 @@ class ProductController extends Controller
             'relatedCategories' => $relatedCategories,
             'selectedSort' => in_array($sort, ['alphabetical', 'alphabetical_desc', 'newest', 'price'], true) ? $sort : 'default',
         ]);
+    }
+
+    private function paginateCollection(Collection $items, int $perPage, Request $request, string $pageName = 'page'): LengthAwarePaginator
+    {
+        $page = max(LengthAwarePaginator::resolveCurrentPage($pageName), 1);
+
+        return (new LengthAwarePaginator(
+            $items->forPage($page, $perPage)->values(),
+            $items->count(),
+            $perPage,
+            $page,
+            [
+                'path' => $request->url(),
+                'pageName' => $pageName,
+            ],
+        ))->appends($request->except($pageName));
     }
 
     public function show(Request $request, string $product): View|Response

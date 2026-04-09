@@ -19,15 +19,20 @@ class OrderController extends Controller
     {
         $this->ensureCustomer($request);
 
-        $orders = $request->user()
+        $readyOrders = $request->user()
             ->orders()
             ->withCount('items')
+            ->where('status', OrderStatus::READY)
             ->latest()
             ->get();
 
-        [$readyOrders, $otherOrders] = $orders->partition(
-            fn (Order $order) => $order->status === OrderStatus::READY,
-        );
+        $otherOrders = $request->user()
+            ->orders()
+            ->withCount('items')
+            ->where('status', '!=', OrderStatus::READY)
+            ->latest()
+            ->simplePaginate(10)
+            ->withQueryString();
 
         return view('orders.index', [
             'readyOrders' => $readyOrders,
