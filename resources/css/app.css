@@ -634,8 +634,13 @@
         z-index: 1;
     }
 
-    body.overflow-y-hidden .store-site-header,
-    body.overflow-y-hidden .store-site-footer {
+    .store-site-header,
+    .store-site-footer {
+        transition: background-color 200ms ease, border-color 200ms ease, box-shadow 200ms ease, backdrop-filter 200ms ease;
+    }
+
+    body.store-modal-active .store-site-header,
+    body.store-modal-active .store-site-footer {
         background-color: transparent;
         border-color: transparent;
         box-shadow: none;
@@ -691,6 +696,10 @@
 
     .app-hero {
         @apply border-b border-stone-200 bg-gradient-to-r from-stone-950 via-stone-900 to-amber-500/80 px-6 py-8 text-white;
+    }
+
+    .app-hero-header {
+        @apply flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between;
     }
 
     .app-hero-kicker {
@@ -919,6 +928,10 @@
 
     .app-button-danger {
         @apply inline-flex items-center justify-center rounded-full bg-rose-600 px-4 py-2 text-sm font-bold text-white transition hover:bg-rose-500;
+    }
+
+    .app-button-secondary-light {
+        @apply inline-flex items-center justify-center rounded-full border border-white/20 bg-white/10 px-4 py-2 text-sm font-bold text-white transition hover:border-white/35 hover:bg-white/15;
     }
 
     .app-stat-card {

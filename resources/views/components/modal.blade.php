@@ -17,6 +17,9 @@ $maxWidth = [
 <div
     x-data="{
         show: @js($show),
+        leaveDuration: 200,
+        closeTimer: null,
+        bodyStateApplied: false,
         focusables() {
             // All focusable element types...
             let selector = 'a, button, input:not([type=\'hidden\']), textarea, select, details, [tabindex]:not([tabindex=\'-1\'])'
@@ -30,13 +33,66 @@ $maxWidth = [
         prevFocusable() { return this.focusables()[this.prevFocusableIndex()] || this.lastFocusable() },
         nextFocusableIndex() { return (this.focusables().indexOf(document.activeElement) + 1) % (this.focusables().length + 1) },
         prevFocusableIndex() { return Math.max(0, this.focusables().indexOf(document.activeElement)) -1 },
+        applyBodyState() {
+            if (this.closeTimer) {
+                clearTimeout(this.closeTimer);
+                this.closeTimer = null;
+            }
+
+            if (this.bodyStateApplied) {
+                return;
+            }
+
+            const openCount = Number(document.body.dataset.modalOpenCount || 0);
+
+            document.body.dataset.modalOpenCount = String(openCount + 1);
+            document.body.classList.add('overflow-y-hidden', 'store-modal-active');
+
+            this.bodyStateApplied = true;
+        },
+        scheduleBodyRelease() {
+            if (! this.bodyStateApplied) {
+                return;
+            }
+
+            if (this.closeTimer) {
+                clearTimeout(this.closeTimer);
+            }
+
+            this.closeTimer = setTimeout(() => {
+                if (! this.show) {
+                    this.releaseBodyState();
+                }
+            }, this.leaveDuration);
+        },
+        releaseBodyState() {
+            if (! this.bodyStateApplied) {
+                return;
+            }
+
+            const openCount = Math.max(0, Number(document.body.dataset.modalOpenCount || 0) - 1);
+
+            if (openCount === 0) {
+                document.body.classList.remove('overflow-y-hidden', 'store-modal-active');
+                delete document.body.dataset.modalOpenCount;
+            } else {
+                document.body.dataset.modalOpenCount = String(openCount);
+            }
+
+            this.bodyStateApplied = false;
+            this.closeTimer = null;
+        },
     }"
-    x-init="$watch('show', value => {
+    x-init="if (show) {
+        applyBodyState();
+    }
+
+    $watch('show', value => {
         if (value) {
-            document.body.classList.add('overflow-y-hidden');
+            applyBodyState();
             {{ $attributes->has('focusable') ? 'setTimeout(() => firstFocusable().focus(), 100)' : '' }}
         } else {
-            document.body.classList.remove('overflow-y-hidden');
+            scheduleBodyRelease();
         }
     })"
     x-on:open-modal.window="$event.detail == '{{ $name }}' ? show = true : null"

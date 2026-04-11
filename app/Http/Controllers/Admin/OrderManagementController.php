@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Enums\OrderStatus;
+use App\Enums\PaymentMethod;
+use App\Enums\PaymentStatus;
 use App\Http\Controllers\Controller;
 use App\Models\Order;
 use App\Services\OrderService;
@@ -33,6 +35,16 @@ class OrderManagementController extends Controller
             ->when(
                 $scope === 'pending',
                 fn ($query) => $query->where('status', OrderStatus::PENDING)
+            )
+            ->when(
+                $scope === 'preparable',
+                fn ($query) => $query
+                    ->where('status', OrderStatus::PENDING)
+                    ->where(function ($nestedQuery) {
+                        $nestedQuery
+                            ->where('payment_method', PaymentMethod::STORE->value)
+                            ->orWhere('payment_status', PaymentStatus::PAID->value);
+                    })
             )
             ->when(
                 $scope === 'ready',
@@ -118,7 +130,7 @@ class OrderManagementController extends Controller
 
     private function normalizeScope(string $scope): string
     {
-        return in_array($scope, ['pending', 'ready', 'cancelled'], true) ? $scope : 'all';
+        return in_array($scope, ['pending', 'preparable', 'ready', 'cancelled'], true) ? $scope : 'all';
     }
 
     private function normalizeDateFilter(string $selectedDate): ?string

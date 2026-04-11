@@ -1,23 +1,14 @@
 <x-app-layout>
-    <x-slot name="header">
-        <x-admin.panel-header
-            title="Actualizar producto"
-            active="products"
-            :back-href="route('admin.index')"
-            back-label="Volver al panel"
-        />
-    </x-slot>
-
     <div class="app-page">
         <div class="mx-auto max-w-[95rem] space-y-8 sm:px-6 lg:px-8 2xl:max-w-[102rem]">
             <section class="app-surface">
-                <div class="app-hero">
-                    <p class="app-hero-kicker">Gestion de productos</p>
-                    <h3 class="app-hero-title">Actualizar producto</h3>
-                    <p class="app-hero-copy">
-                        Busca por codigo de barras, nombre o categoria, abre productos activos o inactivos y separa la edicion entre ficha y precio.
-                    </p>
-                </div>
+                <x-admin.page-hero
+                    kicker="Gestion de productos"
+                    title="Actualizar producto"
+                    description="Busca por codigo de barras, nombre o categoria, abre productos activos o inactivos y separa la edicion entre ficha y precio."
+                    :back-href="route('admin.index')"
+                    back-label="Volver al panel"
+                />
 
                 <div class="app-surface-body">
                     @if (session('status'))

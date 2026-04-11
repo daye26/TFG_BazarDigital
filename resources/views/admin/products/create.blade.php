@@ -1,23 +1,14 @@
 <x-app-layout>
-    <x-slot name="header">
-        <x-admin.panel-header
-            title="Nuevo producto"
-            active="products"
-            :back-href="route('admin.index')"
-            back-label="Volver al panel"
-        />
-    </x-slot>
-
     <div class="app-page">
         <div class="app-shell-stack">
             <section class="app-surface">
-                <div class="app-hero">
-                    <p class="app-hero-kicker">Gestion de productos</p>
-                    <h3 class="app-hero-title">Crear producto</h3>
-                    <p class="app-hero-copy">
-                        Completa la ficha, revisa la imagen y valida el precio antes de guardar el producto en el catalogo.
-                    </p>
-                </div>
+                <x-admin.page-hero
+                    kicker="Gestion de productos"
+                    title="Crear producto"
+                    description="Completa la ficha, revisa la imagen y valida el precio antes de guardar el producto en el catalogo."
+                    :back-href="route('admin.index')"
+                    back-label="Volver al panel"
+                />
 
                 <div
                     x-data="productPricingForm({

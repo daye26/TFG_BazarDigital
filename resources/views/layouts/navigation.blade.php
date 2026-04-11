@@ -1,4 +1,14 @@
 <nav x-data="{ open: false }" class="app-nav">
+    @php
+        $isAdmin = Auth::user()?->isAdmin();
+        $adminLinks = [
+            ['label' => 'Panel', 'href' => route('admin.index'), 'active' => request()->routeIs('admin.index')],
+            ['label' => 'Pedidos', 'href' => route('admin.orders.index'), 'active' => request()->routeIs('admin.orders.*')],
+            ['label' => 'Productos', 'href' => route('admin.products.manage'), 'active' => request()->routeIs('admin.products.*')],
+            ['label' => 'Categorias', 'href' => route('admin.categories.manage'), 'active' => request()->routeIs('admin.categories.*')],
+        ];
+    @endphp
+
     <!-- Primary Navigation Menu -->
     <div class="app-nav-shell">
         <div class="app-nav-row">
@@ -12,16 +22,12 @@
 
                 <!-- Navigation Links -->
                 <div class="app-nav-links">
-                    <x-nav-link :href="route('home')" :active="request()->routeIs('home') || request()->routeIs('products.*')">
-                        {{ __('Tienda') }}
-                    </x-nav-link>
-                    <x-nav-link :href="route('profile.edit')" :active="request()->routeIs('profile.*')">
-                        {{ __('Perfil') }}
-                    </x-nav-link>
-                    @if (Auth::user()?->isAdmin())
-                        <x-nav-link :href="route('admin.index')" :active="request()->routeIs('admin.*')">
-                            {{ __('Admin') }}
-                        </x-nav-link>
+                    @if ($isAdmin)
+                        @foreach ($adminLinks as $link)
+                            <x-nav-link :href="$link['href']" :active="$link['active']">
+                                {{ __($link['label']) }}
+                            </x-nav-link>
+                        @endforeach
                     @endif
                 </div>
             </div>
@@ -75,16 +81,12 @@
         <!-- Responsive Navigation Menu -->
     <div :class="{'block': open, 'hidden': ! open}" class="hidden sm:hidden">
         <div class="app-nav-mobile-links">
-            <x-responsive-nav-link :href="route('home')" :active="request()->routeIs('home') || request()->routeIs('products.*')">
-                {{ __('Tienda') }}
-            </x-responsive-nav-link>
-            <x-responsive-nav-link :href="route('profile.edit')" :active="request()->routeIs('profile.*')">
-                {{ __('Perfil') }}
-            </x-responsive-nav-link>
-            @if (Auth::user()?->isAdmin())
-                <x-responsive-nav-link :href="route('admin.index')" :active="request()->routeIs('admin.*')">
-                    {{ __('Admin') }}
-                </x-responsive-nav-link>
+            @if ($isAdmin)
+                @foreach ($adminLinks as $link)
+                    <x-responsive-nav-link :href="$link['href']" :active="$link['active']">
+                        {{ __($link['label']) }}
+                    </x-responsive-nav-link>
+                @endforeach
             @endif
         </div>
 

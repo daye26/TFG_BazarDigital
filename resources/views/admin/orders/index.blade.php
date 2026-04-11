@@ -1,23 +1,14 @@
 <x-app-layout>
-    <x-slot name="header">
-        <x-admin.panel-header
-            title="Gestion de pedidos"
-            active="orders"
-            :back-href="route('admin.index')"
-            back-label="Volver al panel"
-        />
-    </x-slot>
-
     <div class="app-page">
         <div class="app-shell-stack">
             <section class="app-surface">
-                <div class="app-hero">
-                    <p class="app-hero-kicker">Preparacion de pedidos</p>
-                    <h3 class="app-hero-title">Pedidos del bazar</h3>
-                    <p class="app-hero-copy">
-                        Cada tarjeta permite revisar el contenido del pedido, abrir el detalle completo y avanzar su estado sin salir del panel.
-                    </p>
-                </div>
+                <x-admin.page-hero
+                    kicker="Preparacion de pedidos"
+                    title="Pedidos del bazar"
+                    description="Cada tarjeta permite revisar el contenido del pedido, abrir el detalle completo y avanzar su estado sin salir del panel."
+                    :back-href="route('admin.index')"
+                    back-label="Volver al panel"
+                />
 
                 <div class="app-surface-body">
                     @if (session('status'))
@@ -71,6 +62,7 @@
                         <div class="flex flex-wrap gap-3">
                             <a href="{{ route('admin.orders.index', array_filter(['q' => $searchQuery !== '' ? $searchQuery : null, 'date' => $selectedDate])) }}" class="{{ $scope === 'all' ? 'app-button-primary' : 'app-button-secondary' }}">Todos</a>
                             <a href="{{ route('admin.orders.index', array_filter(['scope' => 'pending', 'q' => $searchQuery !== '' ? $searchQuery : null, 'date' => $selectedDate])) }}" class="{{ $scope === 'pending' ? 'app-button-primary' : 'app-button-secondary' }}">Pendientes</a>
+                            <a href="{{ route('admin.orders.index', array_filter(['scope' => 'preparable', 'q' => $searchQuery !== '' ? $searchQuery : null, 'date' => $selectedDate])) }}" class="{{ $scope === 'preparable' ? 'app-button-primary' : 'app-button-secondary' }}">Por preparar</a>
                             <a href="{{ route('admin.orders.index', array_filter(['scope' => 'ready', 'q' => $searchQuery !== '' ? $searchQuery : null, 'date' => $selectedDate])) }}" class="{{ $scope === 'ready' ? 'app-button-primary' : 'app-button-secondary' }}">Listos</a>
                             <a href="{{ route('admin.orders.index', array_filter(['scope' => 'cancelled', 'q' => $searchQuery !== '' ? $searchQuery : null, 'date' => $selectedDate])) }}" class="{{ $scope === 'cancelled' ? 'app-button-primary' : 'app-button-secondary' }}">Cancelados</a>
                         </div>

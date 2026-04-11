@@ -1,23 +1,14 @@
 <x-app-layout>
-    <x-slot name="header">
-        <x-admin.panel-header
-            title="Detalle del pedido"
-            active="orders"
-            :back-href="$backUrl"
-            back-label="Volver a pedidos"
-        />
-    </x-slot>
-
     <div class="app-page">
         <div class="app-shell-stack">
             <section class="app-surface">
-                <div class="app-hero">
-                    <p class="app-hero-kicker">Pedido administracion</p>
-                    <h3 class="app-hero-title">{{ $order->order_number }}</h3>
-                    <p class="app-hero-copy">
-                        Recogida a nombre de {{ $order->pickup_name }}. Desde aqui puedes revisar el contenido completo del pedido sin salir del panel.
-                    </p>
-                </div>
+                <x-admin.page-hero
+                    kicker="Pedido administracion"
+                    :title="$order->order_number"
+                    :description="'Recogida a nombre de ' . $order->pickup_name . '. Desde aqui puedes revisar el contenido completo del pedido sin salir del panel.'"
+                    :back-href="$backUrl"
+                    back-label="Volver a pedidos"
+                />
 
                 <div class="app-surface-body">
                     @if (session('status'))

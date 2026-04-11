@@ -1,23 +1,14 @@
 <x-app-layout>
-    <x-slot name="header">
-        <x-admin.panel-header
-            title="Nueva categoria"
-            active="categories"
-            :back-href="route('admin.index')"
-            back-label="Volver al panel"
-        />
-    </x-slot>
-
     <div class="app-page">
         <div class="app-shell-stack">
             <section class="app-surface">
-                <div class="app-hero">
-                    <p class="app-hero-kicker">Gestion de categorias</p>
-                    <h3 class="app-hero-title">Crear categoria</h3>
-                    <p class="app-hero-copy">
-                        Da de alta una categoria nueva para organizar mejor el catalogo y usarla despues en el alta de productos.
-                    </p>
-                </div>
+                <x-admin.page-hero
+                    kicker="Gestion de categorias"
+                    title="Crear categoria"
+                    description="Da de alta una categoria nueva para organizar mejor el catalogo y usarla despues en el alta de productos."
+                    :back-href="route('admin.index')"
+                    back-label="Volver al panel"
+                />
 
                 <div class="app-surface-body">
                     @if ($errors->any())

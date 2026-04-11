@@ -1,23 +1,14 @@
 <x-app-layout>
-    <x-slot name="header">
-        <x-admin.panel-header
-            title="Actualizar categoria"
-            active="categories"
-            :back-href="route('admin.index')"
-            back-label="Volver al panel"
-        />
-    </x-slot>
-
     <div class="app-page">
         <div class="app-shell-stack">
             <section class="app-surface">
-                <div class="app-hero">
-                    <p class="app-hero-kicker">Gestion de categorias</p>
-                    <h3 class="app-hero-title">Actualizar categoria</h3>
-                    <p class="app-hero-copy">
-                        Edita las categorias del catalogo desde una vista sencilla y revisa cuántos productos tiene asociada cada una.
-                    </p>
-                </div>
+                <x-admin.page-hero
+                    kicker="Gestion de categorias"
+                    title="Actualizar categoria"
+                    description="Edita las categorias del catalogo desde una vista sencilla y revisa cuántos productos tiene asociada cada una."
+                    :back-href="route('admin.index')"
+                    back-label="Volver al panel"
+                />
 
                 <div class="app-surface-body">
                     @if (session('status'))

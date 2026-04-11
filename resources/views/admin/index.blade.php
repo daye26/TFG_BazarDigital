@@ -1,18 +1,12 @@
 <x-app-layout>
-    <x-slot name="header">
-        <x-admin.panel-header title="Panel de control" active="dashboard" />
-    </x-slot>
-
     <div class="app-page">
         <div class="app-shell-stack">
             <section class="app-surface">
-                <div class="app-hero">
-                    <p class="app-hero-kicker">Zona admin</p>
-                    <h3 class="app-hero-title">Panel de control</h3>
-                    <p class="app-hero-copy">
-                        Pedidos, catalogo y categorias quedan centralizados aqui. La cabecera del panel te deja saltar a pedidos al instante y seguir el trabajo diario sin perder tiempo.
-                    </p>
-                </div>
+                <x-admin.page-hero
+                    kicker="Zona admin"
+                    title="Panel de control"
+                    description="Pedidos, catalogo y categorias quedan centralizados aqui. La cabecera del panel te deja saltar a pedidos al instante y seguir el trabajo diario sin perder tiempo."
+                />
 
                 <div class="app-surface-body">
                     @if (session('status'))
@@ -21,7 +15,7 @@
                         </div>
                     @endif
 
-                    <section class="grid gap-5 lg:grid-cols-[minmax(0,1.35fr)_minmax(320px,0.85fr)]">
+                    <section class="grid gap-5 lg:grid-cols-[minmax(0,1.12fr)_minmax(320px,0.88fr)]">
                         <div class="app-card-muted">
                             <p class="app-section-kicker">Catalogo y mantenimiento</p>
                             <h4 class="app-section-title">Acciones rapidas</h4>
@@ -45,7 +39,7 @@
                             </div>
                         </div>
 
-                        <div class="grid gap-4 sm:grid-cols-2">
+                        <div class="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
                             <a href="{{ route('admin.orders.index', ['scope' => 'pending']) }}" class="app-stat-card app-stat-card-link">
                                 <p class="app-stat-label">Pedidos pendientes</p>
                                 <p class="app-stat-value">{{ $stats['pending_orders'] }}</p>
@@ -54,6 +48,11 @@
                             <a href="{{ route('admin.orders.index', ['scope' => 'ready']) }}" class="app-stat-card app-stat-card-link">
                                 <p class="app-stat-label">Pedidos listos</p>
                                 <p class="app-stat-value-success">{{ $stats['ready_orders'] }}</p>
+                            </a>
+
+                            <a href="{{ route('admin.categories.manage', ['scope' => 'active']) }}" class="app-stat-card app-stat-card-link">
+                                <p class="app-stat-label">Categorias activas</p>
+                                <p class="app-stat-value">{{ $stats['active_categories'] }}</p>
                             </a>
 
                             <a href="{{ route('admin.products.manage') }}" class="app-stat-card app-stat-card-link">
@@ -69,11 +68,6 @@
                             <a href="{{ route('admin.products.manage', ['scope' => 'inactive']) }}" class="app-stat-card app-stat-card-link">
                                 <p class="app-stat-label">Productos ocultos</p>
                                 <p class="app-stat-value">{{ $stats['inactive_products'] }}</p>
-                            </a>
-
-                            <a href="{{ route('admin.categories.manage', ['scope' => 'active']) }}" class="app-stat-card app-stat-card-link">
-                                <p class="app-stat-label">Categorias activas</p>
-                                <p class="app-stat-value">{{ $stats['active_categories'] }}</p>
                             </a>
                         </div>
                     </section>
