@@ -616,19 +616,30 @@
     }
 
     .app-modal-shell {
-        @apply fixed inset-0 z-50 overflow-y-auto px-4 py-6 sm:px-0;
+        @apply fixed inset-0 flex items-start justify-center overflow-y-auto px-4 py-6 sm:items-center sm:px-0;
+        z-index: 100;
     }
 
     .app-modal-backdrop {
         @apply fixed inset-0 transform transition-all;
+        z-index: 0;
     }
 
     .app-modal-overlay {
-        @apply absolute inset-0 bg-gray-500 opacity-75;
+        @apply absolute inset-0 bg-stone-950/55;
     }
 
     .app-modal-dialog {
-        @apply mb-6 overflow-hidden rounded-lg bg-white shadow-xl transform transition-all sm:mx-auto sm:w-full;
+        @apply relative mb-6 overflow-hidden rounded-lg bg-white shadow-2xl shadow-stone-950/20 ring-1 ring-stone-950/5 transform transition-all sm:mx-auto sm:mb-0 sm:w-full;
+        z-index: 1;
+    }
+
+    body.overflow-y-hidden .store-site-header,
+    body.overflow-y-hidden .store-site-footer {
+        background-color: transparent;
+        border-color: transparent;
+        box-shadow: none;
+        backdrop-filter: none;
     }
 
     .app-shell {
@@ -766,6 +777,14 @@
         @apply inline-flex items-center justify-center rounded-full border border-stone-300 px-4 py-2.5 text-sm font-bold text-stone-700 transition hover:border-stone-900 hover:text-stone-950;
     }
 
+    .app-button-success-compact {
+        @apply inline-flex items-center justify-center rounded-full bg-emerald-600 px-5 py-2.5 text-sm font-bold text-white transition hover:bg-emerald-500;
+    }
+
+    .app-button-danger-compact {
+        @apply inline-flex items-center justify-center rounded-full bg-rose-600 px-4 py-2.5 text-sm font-bold text-white transition hover:bg-rose-500;
+    }
+
     .app-order-item-card {
         @apply rounded-3xl border border-stone-200 bg-white p-5 shadow-sm;
     }
@@ -892,6 +911,14 @@
 
     .app-button-secondary {
         @apply inline-flex items-center justify-center rounded-full border border-stone-300 px-4 py-2 text-sm font-bold text-stone-700 transition hover:border-stone-900 hover:text-stone-950;
+    }
+
+    .app-button-success {
+        @apply inline-flex items-center justify-center rounded-full bg-emerald-600 px-5 py-3 text-sm font-bold text-white transition hover:bg-emerald-500;
+    }
+
+    .app-button-danger {
+        @apply inline-flex items-center justify-center rounded-full bg-rose-600 px-4 py-2 text-sm font-bold text-white transition hover:bg-rose-500;
     }
 
     .app-stat-card {

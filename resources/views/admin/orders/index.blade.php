@@ -145,7 +145,7 @@
                                                 </a>
 
                                                 @if ($order->status->value === 'pending' && $order->canBePrepared())
-                                                    <form method="POST" action="{{ route('admin.orders.ready', $order) }}">
+                                                    <form method="POST" action="{{ route('admin.orders.ready', $order) }}" x-data="{ confirming: false }" class="flex items-center gap-2">
                                                         @csrf
                                                         @method('PATCH')
                                                         <input type="hidden" name="return_context" value="index">
@@ -154,12 +154,21 @@
                                                         <input type="hidden" name="return_date" value="{{ $selectedDate ?? '' }}">
                                                         <input type="hidden" name="return_page" value="{{ $currentPage }}">
 
-                                                        <button type="submit" class="app-button-primary-compact">
+                                                        <button type="button" class="app-button-primary-compact" x-show="!confirming" @click="confirming = true">
                                                             Listo
                                                         </button>
+
+                                                        <div x-cloak x-show="confirming" class="flex items-center gap-2">
+                                                            <button type="submit" class="app-button-success-compact">
+                                                                Confirmar
+                                                            </button>
+                                                            <button type="button" class="app-button-danger-compact" @click="confirming = false">
+                                                                Cancelar
+                                                            </button>
+                                                        </div>
                                                     </form>
                                                 @elseif ($order->status->value === 'ready')
-                                                    <form method="POST" action="{{ route('admin.orders.complete', $order) }}">
+                                                    <form method="POST" action="{{ route('admin.orders.complete', $order) }}" x-data="{ confirming: false }" class="flex items-center gap-2">
                                                         @csrf
                                                         @method('PATCH')
                                                         <input type="hidden" name="return_context" value="index">
@@ -168,9 +177,18 @@
                                                         <input type="hidden" name="return_date" value="{{ $selectedDate ?? '' }}">
                                                         <input type="hidden" name="return_page" value="{{ $currentPage }}">
 
-                                                        <button type="submit" class="app-button-primary-compact">
+                                                        <button type="button" class="app-button-primary-compact" x-show="!confirming" @click="confirming = true">
                                                             Entregado
                                                         </button>
+
+                                                        <div x-cloak x-show="confirming" class="flex items-center gap-2">
+                                                            <button type="submit" class="app-button-success-compact">
+                                                                Confirmar
+                                                            </button>
+                                                            <button type="button" class="app-button-danger-compact" @click="confirming = false">
+                                                                Cancelar
+                                                            </button>
+                                                        </div>
                                                     </form>
                                                 @endif
                                             </div>

@@ -22,7 +22,7 @@
         <div class="relative overflow-hidden">
             <div class="{{ $storeGlowClasses }}"></div>
 
-            <header class="relative z-50 border-b border-stone-200/80 bg-white/80 backdrop-blur">
+            <header class="store-site-header relative z-50 border-b border-stone-200/80 bg-white/80 backdrop-blur">
                 <div class="store-shell flex flex-col gap-4 py-4 lg:grid lg:grid-cols-[auto_1fr_auto] lg:items-center">
                     <div class="flex items-center justify-between gap-4">
                         <a href="{{ route('home') }}" class="flex items-center gap-3">
@@ -166,7 +166,7 @@
                 {{ $slot }}
             </main>
 
-            <footer class="relative mt-16 border-t border-stone-200 bg-white">
+            <footer class="store-site-footer relative mt-16 border-t border-stone-200 bg-white">
                 <div class="store-shell flex flex-col gap-3 py-8 text-sm text-stone-600 lg:flex-row lg:items-center lg:justify-between">
                     <p>Bazar Digital. Base inicial del catalogo.</p>
                     <p>Laravel, catalogo publico y estructura lista para crecer.</p>

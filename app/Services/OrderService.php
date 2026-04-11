@@ -230,8 +230,8 @@ class OrderService
     protected function generateOrderNumber(Order $order): string
     {
         return sprintf(
-            'WEB-%s-%06d',
-            $order->created_at->format('YmdHis'),
+            'WEB-%s-%09d',
+            $order->created_at->format('Ymd'),
             $order->id
         );
     }

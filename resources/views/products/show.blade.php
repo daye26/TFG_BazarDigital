@@ -59,7 +59,7 @@
                                 <p class="store-detail-label">Pedido pendiente</p>
                                 <h2 class="store-title-lg">Este producto ya esta en un pedido con pago online</h2>
                                 <p class="store-text mt-3">
-                                    Si todavia no has pagado ese pedido, puedes cambiarlo ahora a pago en tienda. Despues no se podra volver a pago online.
+                                    Si todavia no has pagado ese pedido, puedes cambiarlo ahora a pago en tienda.
                                 </p>
                             </div>
 

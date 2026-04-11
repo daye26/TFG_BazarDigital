@@ -1,4 +1,8 @@
 <x-layouts.store :title="$order->order_number . ' | Bazar Digital'">
+    @php
+        $cancelModalName = 'cancel-order-' . $order->getKey();
+    @endphp
+
     <section class="store-shell pb-16 pt-10">
         <div class="store-toolbar">
             <div>
@@ -57,7 +61,7 @@
                 @endforeach
             </div>
 
-            <aside class="store-panel h-fit lg:sticky lg:top-6" x-data="{ cancelOpen: false }">
+            <aside class="store-panel h-fit lg:sticky lg:top-6">
                 <p class="store-kicker">Resumen</p>
                 <h2 class="store-heading">ESTADO ACTUAL</h2>
 
@@ -115,45 +119,49 @@
                         />
 
                         <p class="store-text text-xs">
-                            Si todavia no lo has pagado, puedes pasar este pedido a pago en tienda. El cambio solo funciona en este sentido.
+                            Si todavia no lo has pagado, puedes pasar este pedido a pago en tienda.
                         </p>
                     @endif
 
                     @if ($order->canBeCancelled())
-                        <button type="button" class="store-button-secondary w-full justify-center" @click="cancelOpen = true">
+                        <button
+                            type="button"
+                            x-data=""
+                            x-on:click.prevent="$dispatch('open-modal', '{{ $cancelModalName }}')"
+                            class="store-button-secondary w-full justify-center"
+                        >
                             Cancelar pedido
                         </button>
                     @endif
                 </div>
 
                 @if ($order->canBeCancelled())
-                    <div x-cloak x-show="cancelOpen" class="store-modal-backdrop" @click.self="cancelOpen = false">
-                        <div class="store-modal-card">
+                    <x-modal :name="$cancelModalName" :show="$errors->has('cancel_reason')" maxWidth="lg" focusable>
+                        <form method="POST" action="{{ route('orders.cancel', $order) }}" class="p-6 space-y-4">
+                            @csrf
+                            @method('PATCH')
+
                             <h3 class="store-title-lg">Cancelar pedido</h3>
                             <p class="store-text mt-3">
                                 Indica el motivo de la cancelacion. Al confirmarla, el stock reservado volvera a estar disponible.
                             </p>
 
-                            <form method="POST" action="{{ route('orders.cancel', $order) }}" class="mt-6 space-y-4">
-                                @csrf
-                                @method('PATCH')
+                            <div>
+                                <label for="cancel_reason" class="store-detail-label">Motivo de cancelacion</label>
+                                <textarea id="cancel_reason" name="cancel_reason" rows="4" class="form-textarea mt-2 w-full" required>{{ old('cancel_reason') }}</textarea>
+                                <x-input-error :messages="$errors->get('cancel_reason')" class="mt-2" />
+                            </div>
 
-                                <div>
-                                    <label for="cancel_reason" class="store-detail-label">Motivo de cancelacion</label>
-                                    <textarea id="cancel_reason" name="cancel_reason" rows="4" class="form-textarea mt-2 w-full" required>{{ old('cancel_reason') }}</textarea>
-                                </div>
-
-                                <div class="flex flex-wrap gap-3">
-                                    <button type="button" class="store-button-secondary" @click="cancelOpen = false">
-                                        Volver
-                                    </button>
-                                    <button type="submit" class="store-button-primary">
-                                        Confirmar cancelacion
-                                    </button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
+                            <div class="flex flex-wrap gap-3">
+                                <button type="button" class="store-button-secondary" x-on:click="$dispatch('close')">
+                                    Volver
+                                </button>
+                                <button type="submit" class="store-button-primary">
+                                    Confirmar cancelacion
+                                </button>
+                            </div>
+                        </form>
+                    </x-modal>
                 @endif
             </aside>
         </div>

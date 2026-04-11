@@ -671,9 +671,9 @@ class DatabaseSeeder extends Seeder
     protected function generateSeedOrderNumber(string $source, $createdAt, int $seedIndex): string
     {
         return sprintf(
-            '%s-%s-%06d',
+            '%s-%s-%09d',
             strtoupper($source),
-            $createdAt->format('YmdHis'),
+            $createdAt->format('Ymd'),
             $seedIndex
         );
     }

@@ -47,7 +47,7 @@
 
                         <div class="flex flex-wrap gap-3">
                             @if ($order->status->value === 'pending' && $order->canBePrepared())
-                                <form method="POST" action="{{ route('admin.orders.ready', $order) }}">
+                                <form method="POST" action="{{ route('admin.orders.ready', $order) }}" x-data="{ confirming: false }" class="flex flex-wrap gap-3">
                                     @csrf
                                     @method('PATCH')
                                     <input type="hidden" name="return_context" value="show">
@@ -56,12 +56,21 @@
                                     <input type="hidden" name="return_date" value="{{ $returnSelectedDate ?? '' }}">
                                     <input type="hidden" name="return_page" value="{{ $returnPage }}">
 
-                                    <button type="submit" class="app-button-primary">
+                                    <button type="button" class="app-button-primary" x-show="!confirming" @click="confirming = true">
                                         Marcar como listo
                                     </button>
+
+                                    <div x-cloak x-show="confirming" class="flex flex-wrap gap-3">
+                                        <button type="submit" class="app-button-success">
+                                            Confirmar
+                                        </button>
+                                        <button type="button" class="app-button-danger" @click="confirming = false">
+                                            Cancelar
+                                        </button>
+                                    </div>
                                 </form>
                             @elseif ($order->status->value === 'ready')
-                                <form method="POST" action="{{ route('admin.orders.complete', $order) }}">
+                                <form method="POST" action="{{ route('admin.orders.complete', $order) }}" x-data="{ confirming: false }" class="flex flex-wrap gap-3">
                                     @csrf
                                     @method('PATCH')
                                     <input type="hidden" name="return_context" value="show">
@@ -70,9 +79,18 @@
                                     <input type="hidden" name="return_date" value="{{ $returnSelectedDate ?? '' }}">
                                     <input type="hidden" name="return_page" value="{{ $returnPage }}">
 
-                                    <button type="submit" class="app-button-primary">
+                                    <button type="button" class="app-button-primary" x-show="!confirming" @click="confirming = true">
                                         Marcar como entregado
                                     </button>
+
+                                    <div x-cloak x-show="confirming" class="flex flex-wrap gap-3">
+                                        <button type="submit" class="app-button-success">
+                                            Confirmar
+                                        </button>
+                                        <button type="button" class="app-button-danger" @click="confirming = false">
+                                            Cancelar
+                                        </button>
+                                    </div>
                                 </form>
                             @endif
 

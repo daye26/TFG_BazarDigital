@@ -94,7 +94,7 @@
                     <div class="store-empty">
                         <p class="store-title-lg">Tu carrito esta vacio.</p>
                         <p class="store-text mt-3">
-                            Todavia no has anadido productos. Puedes volver al catalogo y empezar a preparar la compra.
+                            Todavia no has añadido productos. Puedes volver al catalogo y empezar a preparar la compra.
                         </p>
                         <div class="mt-6">
                             <a href="{{ route('products.index') }}" class="store-button-primary">

@@ -74,7 +74,7 @@
             @else
                 <x-store.add-to-cart-form
                     :product="$product"
-                    button-label="Anadir"
+                    button-label="Añadir"
                     button-class="store-button-secondary"
                 />
             @endif

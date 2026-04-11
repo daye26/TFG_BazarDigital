@@ -61,11 +61,11 @@
                 const maxSizeInBytes = 2 * 1024 * 1024;
 
                 if (! allowedExtensions.includes(extension) || ! allowedMimeTypes.includes(file.type)) {
-                    return 'La imagen no es valida. Solo se permiten archivos JPG, PNG o WEBP.';
+                    return 'La imagen no es válida. Solo se permiten archivos JPG, PNG o WEBP.';
                 }
 
                 if (file.size > maxSizeInBytes) {
-                    return 'La imagen supera el tamano maximo permitido de 2 MB.';
+                    return 'La imagen supera el tamaño máximo permitido de 2 MB.';
                 }
 
                 return await this.validateImageDimensions(file);
@@ -79,12 +79,12 @@
                         const isValid = image.naturalWidth <= 3000 && image.naturalHeight <= 3000;
                         URL.revokeObjectURL(probeUrl);
 
-                        resolve(isValid ? '' : 'La imagen supera el maximo permitido de 3000 x 3000 px.');
+                        resolve(isValid ? '' : 'La imagen supera el máximo permitido de 3000 x 3000 px.');
                     };
 
                     image.onerror = () => {
                         URL.revokeObjectURL(probeUrl);
-                        resolve('No se ha podido procesar el archivo como una imagen valida.');
+                        resolve('No se ha podido procesar el archivo como una imagen válida.');
                     };
 
                     image.src = probeUrl;
