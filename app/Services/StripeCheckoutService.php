@@ -13,8 +13,7 @@ class StripeCheckoutService
 {
     public function __construct(
         protected StripeService $stripeService,
-    ) {
-    }
+    ) {}
 
     public function createSession(Order $order): Session
     {
@@ -67,27 +66,23 @@ class StripeCheckoutService
             'client_reference_id' => $session->client_reference_id,
             'payment_intent' => $session->payment_intent,
             'payment_status' => $session->payment_status,
-            'metadata' => (array) $session->metadata,
+            'metadata' => $this->normalizeMetadata($session->metadata ?? null),
         ]);
     }
 
     public function syncSuccessfulCheckoutPayload(array $sessionPayload): Order
     {
-        $orderId = $sessionPayload['metadata']['order_id'] ?? $sessionPayload['client_reference_id'] ?? null;
-
-        if (! filled((string) $orderId)) {
-            throw new RuntimeException('La sesion de Stripe no referencia ningun pedido.');
-        }
-
-        $order = Order::query()->findOrFail($orderId);
+        $order = $this->resolveOrderFromSessionPayload($sessionPayload);
 
         return $this->syncSuccessfulCheckoutData($order, $sessionPayload);
     }
 
     protected function syncSuccessfulCheckoutData(Order $order, array $sessionPayload): Order
     {
+        $metadata = $this->normalizeMetadata($sessionPayload['metadata'] ?? null);
+
         if (
-            ($sessionPayload['metadata']['order_id'] ?? null) !== (string) $order->id
+            ! $this->sessionReferencesOrder($order, $sessionPayload, $metadata)
             || ($sessionPayload['payment_status'] ?? null) !== 'paid'
         ) {
             throw new RuntimeException('El pago todavia no figura como completado en Stripe.');
@@ -127,5 +122,85 @@ class StripeCheckoutService
                 ? $configuredUrls['cancel_url'].'?order='.$order->id
                 : route('checkout.cancel', ['order' => $order]),
         ];
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    protected function normalizeMetadata(mixed $metadata): array
+    {
+        if (is_array($metadata)) {
+            return $metadata;
+        }
+
+        if (is_object($metadata) && method_exists($metadata, 'toArray')) {
+            $metadata = $metadata->toArray();
+
+            return is_array($metadata) ? $metadata : [];
+        }
+
+        if ($metadata instanceof \Traversable) {
+            return iterator_to_array($metadata);
+        }
+
+        return [];
+    }
+
+    protected function resolveOrderFromSessionPayload(array $sessionPayload): Order
+    {
+        $metadata = $this->normalizeMetadata($sessionPayload['metadata'] ?? null);
+
+        foreach ($this->sessionReferences($sessionPayload, $metadata) as $reference) {
+            $order = Order::query()
+                ->where(function ($query) use ($reference): void {
+                    $query
+                        ->whereKey($reference)
+                        ->orWhere('order_number', $reference);
+                })
+                ->first();
+
+            if ($order) {
+                return $order;
+            }
+        }
+
+        throw new RuntimeException('La sesion de Stripe no referencia ningun pedido.');
+    }
+
+    /**
+     * @param  array<string, mixed>  $metadata
+     */
+    protected function sessionReferencesOrder(Order $order, array $sessionPayload, array $metadata): bool
+    {
+        $expectedReferences = array_filter([
+            (string) $order->id,
+            (string) $order->order_number,
+        ]);
+
+        foreach ($this->sessionReferences($sessionPayload, $metadata) as $reference) {
+            if (in_array($reference, $expectedReferences, true)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * @param  array<string, mixed>  $metadata
+     * @return list<string>
+     */
+    protected function sessionReferences(array $sessionPayload, array $metadata): array
+    {
+        $references = [
+            (string) ($metadata['order_id'] ?? ''),
+            (string) ($sessionPayload['client_reference_id'] ?? ''),
+            (string) ($metadata['order_number'] ?? ''),
+        ];
+
+        return array_values(array_unique(array_filter(
+            $references,
+            static fn (string $reference): bool => $reference !== ''
+        )));
     }
 }

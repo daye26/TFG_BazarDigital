@@ -6,8 +6,6 @@
                     kicker="Gestion de productos"
                     title="Actualizar producto"
                     description="Busca por codigo de barras, nombre o categoria, abre productos activos o inactivos y separa la edicion entre ficha y precio."
-                    :back-href="route('admin.index')"
-                    back-label="Volver al panel"
                 />
 
                 <div class="app-surface-body">

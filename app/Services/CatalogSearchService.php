@@ -161,8 +161,11 @@ class CatalogSearchService
             'newest' => $products
                 ->sortBy(fn (Product $product) => $product->created_at?->getTimestamp() ?? 0, SORT_NUMERIC, true)
                 ->values(),
-            'price' => $products
+            'price_asc', 'price' => $products
                 ->sortBy(fn (Product $product) => $this->discountedPriceValue($product), SORT_NUMERIC)
+                ->values(),
+            'price_desc' => $products
+                ->sortBy(fn (Product $product) => $this->discountedPriceValue($product), SORT_NUMERIC, true)
                 ->values(),
             default => $products
                 ->sort(function (Product $left, Product $right) {

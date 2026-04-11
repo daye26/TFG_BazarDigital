@@ -6,8 +6,6 @@
                     kicker="Gestion de categorias"
                     title="Actualizar categoria"
                     description="Edita las categorias del catalogo desde una vista sencilla y revisa cuántos productos tiene asociada cada una."
-                    :back-href="route('admin.index')"
-                    back-label="Volver al panel"
                 />
 
                 <div class="app-surface-body">

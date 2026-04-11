@@ -567,9 +567,9 @@ class DatabaseSeeder extends Seeder
                 'status' => OrderStatus::PENDING,
                 'payment_method' => PaymentMethod::ONLINE,
                 'payment_status' => PaymentStatus::PAID,
-                'payment_reference' => 'seed_stripe_paid_013',
+                'payment_reference' => 'seed_stripe_admin_ready_013',
                 'paid_at' => $seedNow->copy()->subDays(2)->setTime(12, 15),
-                'notes' => 'Seeder demo: pedido pendiente pero con pago online confirmado.',
+                'notes' => 'Seeder demo: pedido de Test User ya pagado online y pendiente para marcar como listo por el admin.',
                 'created_at' => $seedNow->copy()->subDays(2)->setTime(11, 45),
                 'updated_at' => $seedNow->copy()->subDays(2)->setTime(12, 15),
                 'items' => [

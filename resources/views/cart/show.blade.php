@@ -159,8 +159,8 @@
                                     <label class="store-choice-card">
                                         <input type="radio" name="payment_method" value="online" @checked(old('payment_method') === 'online')>
                                         <span>
-                                            <span class="block font-bold text-stone-950">Pagar online con Stripe</span>
-                                            <span class="store-text mt-1 block">Al confirmar se abrira Stripe Checkout para completar el pago.</span>
+                                            <span class="block font-bold text-stone-950">Pao online</span>
+                                            <span class="store-text mt-1 block">Se te redirigirá a Stripe Checkout para completar el pago.</span>
                                         </span>
                                     </label>
                                 </div>

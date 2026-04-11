@@ -5,7 +5,7 @@
                 <p class="store-kicker">Los productos mas recientes</p>
                 <h1 class="store-heading">LO + NUEVO</h1>
                 <p class="store-text mt-3 max-w-2xl">
-                    Aqui se muestran los 20 ultimos productos creados.
+                    Los 5 últimos
                 </p>
             </div>
         </div>
@@ -22,7 +22,8 @@
                     <option value="default" @selected($selectedSort === 'default')>Predeterminado</option>
                     <option value="alphabetical" @selected($selectedSort === 'alphabetical')>Alfabetico A-Z</option>
                     <option value="alphabetical_desc" @selected($selectedSort === 'alphabetical_desc')>Alfabetico Z-A</option>
-                    <option value="price" @selected($selectedSort === 'price')>Precio</option>
+                    <option value="price_asc" @selected($selectedSort === 'price_asc')>Precio: menor a mayor</option>
+                    <option value="price_desc" @selected($selectedSort === 'price_desc')>Precio: mayor a menor</option>
                 </select>
             </form>
         </div>

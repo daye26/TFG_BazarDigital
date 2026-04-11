@@ -5,7 +5,6 @@
                 <x-admin.page-hero
                     kicker="Zona admin"
                     title="Panel de control"
-                    description="Pedidos, catalogo y categorias quedan centralizados aqui. La cabecera del panel te deja saltar a pedidos al instante y seguir el trabajo diario sin perder tiempo."
                 />
 
                 <div class="app-surface-body">

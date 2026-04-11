@@ -19,53 +19,32 @@ class ProductController extends Controller
 {
     public function home(): View
     {
+        $latestProductsPreview = $this->latestActiveProducts(4);
+
         return view('store.home', [
             'categories' => Category::query()
                 ->where('is_active', true)
                 ->orderBy('name')
                 ->get(),
-            'featuredProducts' => Product::query()
-                ->where('is_active', true)
-                ->with('category')
-                ->latest()
-                ->take(4)
-                ->get(),
-            'latestProductsPreview' => Product::query()
-                ->where('is_active', true)
-                ->with('category')
-                ->latest()
-                ->take(4)
-                ->get(),
+            'featuredProducts' => $latestProductsPreview,
+            'latestProductsPreview' => $latestProductsPreview,
         ]);
     }
 
     public function latest(Request $request): View
     {
-        $sort = $request->string('sort')->toString();
-
-        $productsQuery = Product::query()
-            ->where('is_active', true)
-            ->with('category');
-
-        match ($sort) {
-            'alphabetical' => $productsQuery->orderBy('name'),
-            'alphabetical_desc' => $productsQuery->orderByDesc('name'),
-            'price' => $productsQuery->orderByRaw('(sale_price - CASE WHEN discount_value > 0 AND discount_type = ? THEN sale_price * discount_value / 100 WHEN discount_value > 0 AND discount_type = ? THEN discount_value ELSE 0 END) asc', ['percentage', 'fixed']),
-            default => $productsQuery->latest(),
-        };
+        $sort = $this->normalizeSort($request->string('sort')->toString());
 
         return view('products.latest', [
-            'products' => $productsQuery
-                ->take(20)
-                ->get(),
-            'selectedSort' => in_array($sort, ['alphabetical', 'alphabetical_desc', 'price'], true) ? $sort : 'default',
+            'products' => $this->sortProductCollection($this->latestActiveProducts(5), $sort),
+            'selectedSort' => in_array($sort, ['alphabetical', 'alphabetical_desc', 'price_asc', 'price_desc'], true) ? $sort : 'default',
         ]);
     }
 
     public function index(Request $request, CatalogSearchService $catalogSearch): View|RedirectResponse
     {
         $selectedCategory = null;
-        $sort = $request->string('sort')->toString();
+        $sort = $this->normalizeSort($request->string('sort')->toString());
         $searchQuery = trim($request->string('q')->toString());
         $categoryFilter = trim($request->string('category')->toString());
         $relatedCategories = collect();
@@ -104,7 +83,8 @@ class ProductController extends Controller
                 'alphabetical' => $productsQuery->orderBy('name'),
                 'alphabetical_desc' => $productsQuery->orderByDesc('name'),
                 'newest' => $productsQuery->latest(),
-                'price' => $productsQuery->orderByRaw('(sale_price - CASE WHEN discount_value > 0 AND discount_type = ? THEN sale_price * discount_value / 100 WHEN discount_value > 0 AND discount_type = ? THEN discount_value ELSE 0 END) asc', ['percentage', 'fixed']),
+                'price_asc' => $productsQuery->orderByRaw($this->discountedPriceSortExpression().' asc', ['percentage', 'fixed']),
+                'price_desc' => $productsQuery->orderByRaw($this->discountedPriceSortExpression().' desc', ['percentage', 'fixed']),
                 default => $productsQuery->orderBy('name'),
             };
 
@@ -122,8 +102,64 @@ class ProductController extends Controller
             'selectedCategory' => $selectedCategory,
             'searchQuery' => $searchQuery,
             'relatedCategories' => $relatedCategories,
-            'selectedSort' => in_array($sort, ['alphabetical', 'alphabetical_desc', 'newest', 'price'], true) ? $sort : 'default',
+            'selectedSort' => in_array($sort, ['alphabetical', 'alphabetical_desc', 'newest', 'price_asc', 'price_desc'], true) ? $sort : 'default',
         ]);
+    }
+
+    private function normalizeSort(string $sort): string
+    {
+        return $sort === 'price' ? 'price_asc' : $sort;
+    }
+
+    private function latestActiveProducts(int $limit): Collection
+    {
+        return Product::query()
+            ->where('is_active', true)
+            ->with('category')
+            ->orderByDesc('created_at')
+            ->orderByDesc('id')
+            ->take($limit)
+            ->get();
+    }
+
+    private function sortProductCollection(Collection $products, string $sort): Collection
+    {
+        return match ($sort) {
+            'alphabetical' => $products
+                ->sortBy(fn (Product $product) => mb_strtolower($product->name), SORT_NATURAL)
+                ->values(),
+            'alphabetical_desc' => $products
+                ->sortBy(fn (Product $product) => mb_strtolower($product->name), SORT_NATURAL, true)
+                ->values(),
+            'price_asc' => $products
+                ->sortBy(fn (Product $product) => $this->discountedPriceValue($product), SORT_NUMERIC)
+                ->values(),
+            'price_desc' => $products
+                ->sortBy(fn (Product $product) => $this->discountedPriceValue($product), SORT_NUMERIC, true)
+                ->values(),
+            default => $products->values(),
+        };
+    }
+
+    private function discountedPriceValue(Product $product): float
+    {
+        $salePrice = (float) $product->sale_price;
+        $discountValue = (float) $product->discount_value;
+
+        if ($discountValue <= 0) {
+            return $salePrice;
+        }
+
+        return match ($product->discount_type) {
+            'percentage' => max($salePrice - ($salePrice * $discountValue / 100), 0),
+            'fixed' => max($salePrice - $discountValue, 0),
+            default => $salePrice,
+        };
+    }
+
+    private function discountedPriceSortExpression(): string
+    {
+        return '(sale_price - CASE WHEN discount_value > 0 AND discount_type = ? THEN sale_price * discount_value / 100 WHEN discount_value > 0 AND discount_type = ? THEN discount_value ELSE 0 END)';
     }
 
     private function paginateCollection(Collection $items, int $perPage, Request $request, string $pageName = 'page'): LengthAwarePaginator
@@ -187,12 +223,7 @@ class ProductController extends Controller
     protected function missingProductResponse(): Response
     {
         return response()->view('products.not-found', [
-            'suggestedProducts' => Product::query()
-                ->where('is_active', true)
-                ->with('category')
-                ->latest()
-                ->take(3)
-                ->get(),
+            'suggestedProducts' => $this->latestActiveProducts(3),
         ], 404);
     }
 }

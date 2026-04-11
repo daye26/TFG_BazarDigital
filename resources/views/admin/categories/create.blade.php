@@ -6,8 +6,6 @@
                     kicker="Gestion de categorias"
                     title="Crear categoria"
                     description="Da de alta una categoria nueva para organizar mejor el catalogo y usarla despues en el alta de productos."
-                    :back-href="route('admin.index')"
-                    back-label="Volver al panel"
                 />
 
                 <div class="app-surface-body">

@@ -6,8 +6,6 @@
                     kicker="Gestion de productos"
                     title="Crear producto"
                     description="Completa la ficha, revisa la imagen y valida el precio antes de guardar el producto en el catalogo."
-                    :back-href="route('admin.index')"
-                    back-label="Volver al panel"
                 />
 
                 <div

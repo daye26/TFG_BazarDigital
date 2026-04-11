@@ -23,7 +23,7 @@
             </div>
 
             <div class="mt-8">
-                <p class="store-kicker">Filtros</p>
+                <p class="store-kicker">Categorías</p>
                 <div class="mt-4 flex flex-wrap gap-3">
                     <a href="{{ route('products.index', ['q' => $searchQuery !== '' ? $searchQuery : null, 'sort' => $selectedSort !== 'default' ? $selectedSort : null]) }}" class="{{ $selectedCategory ? 'store-filter-pill' : 'store-filter-pill-active' }}">
                         Todas
@@ -78,7 +78,8 @@
                     <option value="alphabetical" @selected($selectedSort === 'alphabetical')>Alfabetico A-Z</option>
                     <option value="alphabetical_desc" @selected($selectedSort === 'alphabetical_desc')>Alfabetico Z-A</option>
                     <option value="newest" @selected($selectedSort === 'newest')>Nuevos</option>
-                    <option value="price" @selected($selectedSort === 'price')>Precio</option>
+                    <option value="price_asc" @selected($selectedSort === 'price_asc')>Precio: menor a mayor</option>
+                    <option value="price_desc" @selected($selectedSort === 'price_desc')>Precio: mayor a menor</option>
                 </select>
             </form>
         </div>

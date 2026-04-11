@@ -6,8 +6,6 @@
                     kicker="Preparacion de pedidos"
                     title="Pedidos del bazar"
                     description="Cada tarjeta permite revisar el contenido del pedido, abrir el detalle completo y avanzar su estado sin salir del panel."
-                    :back-href="route('admin.index')"
-                    back-label="Volver al panel"
                 />
 
                 <div class="app-surface-body">
