@@ -369,7 +369,6 @@ class DatabaseSeeder extends Seeder
 
         $seededOrders = [
             [
-                'order_number' => 'SEED-ORDER-STORE-PENDING-001',
                 'user' => $testUser,
                 'pickup_name' => 'Test User',
                 'status' => OrderStatus::PENDING,
@@ -386,7 +385,6 @@ class DatabaseSeeder extends Seeder
                 ],
             ],
             [
-                'order_number' => 'SEED-ORDER-ONLINE-PAID-002',
                 'user' => $cartUser,
                 'pickup_name' => 'Maria Cliente',
                 'status' => OrderStatus::COMPLETED,
@@ -403,7 +401,6 @@ class DatabaseSeeder extends Seeder
                 ],
             ],
             [
-                'order_number' => 'SEED-ORDER-CANCELLED-003',
                 'user' => $carlosUser,
                 'pickup_name' => 'Carlos Cliente',
                 'status' => OrderStatus::CANCELLED,
@@ -421,7 +418,6 @@ class DatabaseSeeder extends Seeder
                 ],
             ],
             [
-                'order_number' => 'SEED-ORDER-STORE-COMPLETED-004',
                 'user' => $yaizaUser,
                 'pickup_name' => 'Yaiza',
                 'status' => OrderStatus::COMPLETED,
@@ -438,7 +434,6 @@ class DatabaseSeeder extends Seeder
                 ],
             ],
             [
-                'order_number' => 'SEED-ORDER-READY-005',
                 'user' => $cartUser,
                 'pickup_name' => 'Maria Cliente',
                 'status' => OrderStatus::READY,
@@ -455,7 +450,6 @@ class DatabaseSeeder extends Seeder
                 ],
             ],
             [
-                'order_number' => 'SEED-ORDER-COMPLETED-006',
                 'user' => $testUser,
                 'pickup_name' => 'Test User',
                 'status' => OrderStatus::COMPLETED,
@@ -472,7 +466,6 @@ class DatabaseSeeder extends Seeder
                 ],
             ],
             [
-                'order_number' => 'SEED-ORDER-ONLINE-UNPAID-007',
                 'user' => $carlosUser,
                 'pickup_name' => 'Carlos Cliente',
                 'status' => OrderStatus::PENDING,
@@ -489,7 +482,6 @@ class DatabaseSeeder extends Seeder
                 ],
             ],
             [
-                'order_number' => 'SEED-ORDER-ONLINE-COMPLETED-008',
                 'user' => $yaizaUser,
                 'pickup_name' => 'Yaiza',
                 'status' => OrderStatus::COMPLETED,
@@ -506,7 +498,6 @@ class DatabaseSeeder extends Seeder
                 ],
             ],
             [
-                'order_number' => 'SEED-ORDER-READY-009',
                 'user' => $cartUser,
                 'pickup_name' => 'Maria Cliente',
                 'status' => OrderStatus::READY,
@@ -523,7 +514,6 @@ class DatabaseSeeder extends Seeder
                 ],
             ],
             [
-                'order_number' => 'SEED-ORDER-ONLINE-COMPLETED-010',
                 'user' => $carlosUser,
                 'pickup_name' => 'Carlos Cliente',
                 'status' => OrderStatus::COMPLETED,
@@ -540,7 +530,6 @@ class DatabaseSeeder extends Seeder
                 ],
             ],
             [
-                'order_number' => 'SEED-ORDER-STORE-PENDING-011',
                 'user' => $yaizaUser,
                 'pickup_name' => 'Yaiza',
                 'status' => OrderStatus::PENDING,
@@ -557,7 +546,6 @@ class DatabaseSeeder extends Seeder
                 ],
             ],
             [
-                'order_number' => 'SEED-ORDER-STORE-COMPLETED-012',
                 'user' => $cartUser,
                 'pickup_name' => 'Maria Cliente',
                 'status' => OrderStatus::COMPLETED,
@@ -574,7 +562,6 @@ class DatabaseSeeder extends Seeder
                 ],
             ],
             [
-                'order_number' => 'SEED-ORDER-ONLINE-PAID-013',
                 'user' => $testUser,
                 'pickup_name' => 'Test User',
                 'status' => OrderStatus::PENDING,
@@ -591,7 +578,6 @@ class DatabaseSeeder extends Seeder
                 ],
             ],
             [
-                'order_number' => 'SEED-ORDER-ONLINE-UNPAID-014',
                 'user' => $carlosUser,
                 'pickup_name' => 'Carlos Cliente',
                 'status' => OrderStatus::PENDING,
@@ -609,7 +595,6 @@ class DatabaseSeeder extends Seeder
                 ],
             ],
             [
-                'order_number' => 'SEED-ORDER-TODAY-PENDING-015',
                 'user' => $yaizaUser,
                 'pickup_name' => 'Yaiza',
                 'status' => OrderStatus::PENDING,
@@ -627,8 +612,10 @@ class DatabaseSeeder extends Seeder
             ],
         ];
 
-        foreach ($seededOrders as $seededOrder) {
-            $this->upsertSeedOrder($seededOrder);
+        foreach ($seededOrders as $index => $seededOrder) {
+            $seededOrders[$index] = $this->prepareSeedOrder($seededOrder, $index + 1);
+
+            $this->upsertSeedOrder($seededOrders[$index]);
         }
 
         $this->syncSeededProductStock($baseProductQuantities, $seededOrders);
@@ -645,7 +632,7 @@ class DatabaseSeeder extends Seeder
         $order->forceFill([
             'order_number' => $seededOrder['order_number'],
             'user_id' => $seededOrder['user']->id,
-            'source' => 'web',
+            'source' => $seededOrder['source'] ?? 'seed',
             'pickup_name' => $seededOrder['pickup_name'],
             'status' => $seededOrder['status']->value,
             'cancel_reason' => $seededOrder['cancel_reason'] ?? null,
@@ -664,6 +651,38 @@ class DatabaseSeeder extends Seeder
 
         $order->items()->delete();
         $order->items()->createMany($summary['items']);
+    }
+
+    protected function prepareSeedOrder(array $seededOrder, int $seedIndex): array
+    {
+        $source = strtolower((string) ($seededOrder['source'] ?? 'seed'));
+
+        $seededOrder['source'] = $source;
+        $seededOrder['order_number'] = $this->generateSeedOrderNumber(
+            $source,
+            $seededOrder['created_at'],
+            $seedIndex
+        );
+        $seededOrder['notes'] = $this->normalizeSeedOrderNotes((string) $seededOrder['notes']);
+
+        return $seededOrder;
+    }
+
+    protected function generateSeedOrderNumber(string $source, $createdAt, int $seedIndex): string
+    {
+        return sprintf(
+            '%s-%s-%06d',
+            strtoupper($source),
+            $createdAt->format('YmdHis'),
+            $seedIndex
+        );
+    }
+
+    protected function normalizeSeedOrderNotes(string $notes): string
+    {
+        $scenario = trim((string) preg_replace('/^Seeder demo:\s*/i', '', trim($notes)));
+
+        return 'Seed de desarrollo para pruebas funcionales: ' . $scenario;
     }
 
     protected function buildOrderSummary(array $items): array

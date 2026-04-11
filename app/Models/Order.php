@@ -89,6 +89,24 @@ class Order extends Model
         return $this->payment_method === PaymentMethod::STORE;
     }
 
+    public function canRetryOnlinePayment(): bool
+    {
+        return $this->usesOnlinePayment()
+            && in_array($this->payment_status, [
+                PaymentStatus::PENDING,
+                PaymentStatus::FAILED,
+            ], true)
+            && ! in_array($this->status, [
+                OrderStatus::COMPLETED,
+                OrderStatus::CANCELLED,
+            ], true);
+    }
+
+    public function canSwitchToStorePayment(): bool
+    {
+        return $this->canRetryOnlinePayment();
+    }
+
     public function canBePrepared(): bool
     {
         if ($this->status === OrderStatus::COMPLETED || $this->status === OrderStatus::CANCELLED) {

@@ -26,18 +26,31 @@
                     <article class="store-card store-cart-compact-card">
                         <div class="store-cart-compact-layout">
                             <div class="min-w-0">
-                                <p class="store-cart-barcode">{{ $item->product?->barcode ?? 'Snapshot' }}</p>
-                                <h2 class="mt-2 store-title-lg">{{ $item->product_name }}</h2>
-                                <p class="store-text mt-3">
-                                    {{ $item->quantity }} unidades · {{ number_format((float) $item->unit_final_price, 2, ',', '.') }} &euro; por unidad
-                                </p>
+                                <div class="flex flex-wrap items-center gap-x-3 gap-y-1">
+                                    <p class="store-cart-barcode">{{ $item->product?->barcode ?? 'Snapshot' }}</p>
+                                    <span class="text-sm text-stone-300" aria-hidden="true">|</span>
+                                    <p class="store-text">
+                                        {{ $item->quantity }} unidades · {{ number_format((float) $item->unit_final_price, 2, ',', '.') }} &euro; por unidad
+                                    </p>
+                                </div>
+
+                                <h2 class="mt-1 store-title-lg">{{ $item->product_name }}</h2>
                             </div>
 
-                            <div class="store-cart-compact-actions">
-                                <p class="store-detail-label">Total linea</p>
-                                <p class="store-cart-price">
-                                    {{ number_format((float) $item->line_total, 2, ',', '.') }} &euro;
-                                </p>
+                            <div class="store-cart-compact-actions lg:ml-auto lg:min-w-[18rem] lg:items-end lg:text-right">
+                                <p class="store-detail-label">Total</p>
+
+                                <div class="mt-0 flex w-full items-center justify-end gap-2">
+                                    @if (((float) $item->unit_price * $item->quantity) > (float) $item->line_total)
+                                        <p class="store-price-old">
+                                            {{ number_format((float) $item->unit_price * $item->quantity, 2, ',', '.') }} &euro;
+                                        </p>
+                                    @endif
+
+                                    <p class="store-cart-price">
+                                        {{ number_format((float) $item->line_total, 2, ',', '.') }} &euro;
+                                    </p>
+                                </div>
                             </div>
                         </div>
                     </article>
@@ -87,7 +100,7 @@
                 @endif
 
                 <div class="mt-8 flex flex-col gap-3">
-                    @if ($order->usesOnlinePayment() && ! $order->isPaid() && $order->status->value !== 'cancelled' && $order->status->value !== 'completed')
+                    @if ($order->canRetryOnlinePayment())
                         <form method="POST" action="{{ route('checkout.pay', $order) }}">
                             @csrf
 
@@ -95,6 +108,15 @@
                                 Pagar ahora con Stripe
                             </button>
                         </form>
+
+                        <x-orders.switch-to-store-form
+                            :order="$order"
+                            button-class="store-button-secondary w-full justify-center"
+                        />
+
+                        <p class="store-text text-xs">
+                            Si todavia no lo has pagado, puedes pasar este pedido a pago en tienda. El cambio solo funciona en este sentido.
+                        </p>
                     @endif
 
                     @if ($order->canBeCancelled())

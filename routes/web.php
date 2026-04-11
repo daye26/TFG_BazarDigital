@@ -51,6 +51,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
     Route::post('/orders', [OrderController::class, 'store'])->name('orders.store');
     Route::get('/orders/{order}', [OrderController::class, 'show'])->name('orders.show');
+    Route::patch('/orders/{order}/payment-method/store', [OrderController::class, 'switchToStorePayment'])->name('orders.payment.store');
     Route::patch('/orders/{order}/cancel', [OrderController::class, 'cancel'])->name('orders.cancel');
 
     Route::post('/orders/{order}/checkout', [StripeCheckoutController::class, 'pay'])->name('checkout.pay');

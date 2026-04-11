@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\OrderStatus;
+use App\Enums\PaymentMethod;
+use App\Enums\PaymentStatus;
 use App\Models\Category;
 use App\Models\Product;
 use App\Services\CatalogSearchService;
@@ -149,6 +152,20 @@ class ProductController extends Controller
             return $this->missingProductResponse();
         }
 
+        $switchableOrders = collect();
+
+        if ($request->user() && ! $request->user()->isAdmin()) {
+            $switchableOrders = $request->user()
+                ->orders()
+                ->withCount('items')
+                ->where('payment_method', PaymentMethod::ONLINE)
+                ->whereIn('payment_status', [PaymentStatus::PENDING, PaymentStatus::FAILED])
+                ->whereNotIn('status', [OrderStatus::COMPLETED, OrderStatus::CANCELLED])
+                ->whereHas('items', fn ($query) => $query->where('product_id', $productModel->id))
+                ->latest()
+                ->get();
+        }
+
         return view('products.show', [
             'product' => $productModel,
             'adminCategories' => $request->user()?->isAdmin()
@@ -163,6 +180,7 @@ class ProductController extends Controller
                 ->when($productModel->category_id, fn ($query) => $query->where('category_id', $productModel->category_id))
                 ->take(3)
                 ->get(),
+            'switchableOrders' => $switchableOrders,
         ]);
     }
 

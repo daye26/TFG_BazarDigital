@@ -186,6 +186,28 @@ class OrderService
         });
     }
 
+    public function switchToStorePayment(Order $order): Order
+    {
+        return DB::transaction(function () use ($order): Order {
+            $lockedOrder = Order::query()
+                ->lockForUpdate()
+                ->findOrFail($order->id);
+
+            if (! $lockedOrder->canSwitchToStorePayment()) {
+                throw new RuntimeException('Este pedido ya no puede cambiarse a pago en tienda.');
+            }
+
+            $lockedOrder->forceFill([
+                'payment_method' => PaymentMethod::STORE,
+                'payment_status' => PaymentStatus::PENDING,
+                'paid_at' => null,
+                'payment_reference' => null,
+            ])->save();
+
+            return $lockedOrder->fresh(['items.product', 'user']);
+        });
+    }
+
     public function rollbackDraftOnlineOrder(Order $order): void
     {
         DB::transaction(function () use ($order): void {

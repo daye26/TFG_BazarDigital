@@ -57,16 +57,14 @@
                                 class="form-input w-full rounded-full border-stone-300 px-4 py-2 text-sm text-stone-700 lg:w-auto"
                             >
 
-                            <div class="flex flex-wrap gap-3">
+                            <div class="flex shrink-0 items-center gap-3">
                                 <button type="submit" class="app-button-secondary">
                                     Filtrar
                                 </button>
 
-                                @if ($searchQuery !== '' || $selectedDate)
-                                    <a href="{{ route('admin.orders.index', array_filter(['scope' => $scope !== 'all' ? $scope : null])) }}" class="app-button-secondary">
-                                        Limpiar
-                                    </a>
-                                @endif
+                                <a href="{{ route('admin.orders.index', array_filter(['scope' => $scope !== 'all' ? $scope : null])) }}" class="app-button-secondary">
+                                    Limpiar
+                                </a>
                             </div>
                         </form>
 

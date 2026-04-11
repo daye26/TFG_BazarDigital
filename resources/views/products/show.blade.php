@@ -52,6 +52,44 @@
                             />
                         </div>
                     </div>
+
+                    @if ($switchableOrders->isNotEmpty())
+                        <div class="store-detail-card mt-6 space-y-4">
+                            <div>
+                                <p class="store-detail-label">Pedido pendiente</p>
+                                <h2 class="store-title-lg">Este producto ya esta en un pedido con pago online</h2>
+                                <p class="store-text mt-3">
+                                    Si todavia no has pagado ese pedido, puedes cambiarlo ahora a pago en tienda. Despues no se podra volver a pago online.
+                                </p>
+                            </div>
+
+                            <div class="space-y-3">
+                                @foreach ($switchableOrders as $switchableOrder)
+                                    <div class="rounded-[1.5rem] border border-stone-200 bg-white p-4 shadow-sm shadow-stone-200/60">
+                                        <div class="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
+                                            <div>
+                                                <p class="store-kicker text-stone-700">{{ $switchableOrder->order_number }}</p>
+                                                <p class="store-text mt-2">
+                                                    {{ $switchableOrder->items_count }} lineas | {{ number_format((float) $switchableOrder->total, 2, ',', '.') }} &euro;
+                                                </p>
+                                            </div>
+
+                                            <div class="flex flex-wrap gap-3">
+                                                <a href="{{ route('orders.show', $switchableOrder) }}" class="store-button-secondary">
+                                                    Ver pedido
+                                                </a>
+
+                                                <x-orders.switch-to-store-form
+                                                    :order="$switchableOrder"
+                                                    button-class="store-button-primary"
+                                                />
+                                            </div>
+                                        </div>
+                                    </div>
+                                @endforeach
+                            </div>
+                        </div>
+                    @endif
                 @endif
 
                 <div class="store-product-actions">

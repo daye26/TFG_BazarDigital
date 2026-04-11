@@ -123,6 +123,23 @@ class OrderController extends Controller
         return to_route('orders.show', $order)->with('order_status', 'El pedido se ha cancelado correctamente.');
     }
 
+    public function switchToStorePayment(Request $request, Order $order, OrderService $orderService): RedirectResponse
+    {
+        $this->ensureCustomer($request);
+        $this->ensureOrderBelongsToUser($request, $order);
+
+        try {
+            $orderService->switchToStorePayment($order);
+        } catch (RuntimeException $exception) {
+            return $this->redirectToOrderContext($request, $order)->withErrors([
+                'order' => $exception->getMessage(),
+            ]);
+        }
+
+        return $this->redirectToOrderContext($request, $order)
+            ->with('order_status', 'El pedido queda pendiente de pago en tienda.');
+    }
+
     protected function ensureCustomer(Request $request): void
     {
         abort_if($request->user()->isAdmin(), 403);
@@ -131,5 +148,16 @@ class OrderController extends Controller
     protected function ensureOrderBelongsToUser(Request $request, Order $order): void
     {
         abort_if($order->user_id !== $request->user()->id, 404);
+    }
+
+    protected function redirectToOrderContext(Request $request, Order $order): RedirectResponse
+    {
+        $redirectTo = $request->string('redirect_to')->toString();
+
+        if ($redirectTo !== '' && str_starts_with($redirectTo, '/') && ! str_starts_with($redirectTo, '//')) {
+            return redirect()->to($redirectTo);
+        }
+
+        return to_route('orders.show', $order);
     }
 }

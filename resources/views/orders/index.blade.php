@@ -5,7 +5,7 @@
                 <p class="store-kicker">Seguimiento de compra</p>
                 <h1 class="store-heading">TUS PEDIDOS</h1>
                 <p class="store-text mt-3 max-w-2xl">
-                    Aqui puedes revisar el estado de cada pedido, ver si ya esta listo y completar el pago online cuando haga falta.
+                    Aqui puedes revisar el estado de cada pedido, ver si ya esta listo y, si sigue sin pagarse, mantener el pago online o pasarlo a pago en tienda.
                 </p>
             </div>
 
@@ -45,7 +45,7 @@
                                 </div>
 
                                 <div class="flex flex-wrap gap-3 lg:justify-end">
-                                    @if ($order->usesOnlinePayment() && ! $order->isPaid())
+                                    @if ($order->canRetryOnlinePayment())
                                         <form method="POST" action="{{ route('checkout.pay', $order) }}">
                                             @csrf
 
@@ -53,6 +53,11 @@
                                                 Pago online
                                             </button>
                                         </form>
+
+                                        <x-orders.switch-to-store-form
+                                            :order="$order"
+                                            button-class="store-button-secondary"
+                                        />
                                     @endif
 
                                     <a href="{{ route('orders.show', $order) }}" class="store-button-secondary">
@@ -106,7 +111,7 @@
                                 </div>
 
                                 <div class="flex flex-wrap gap-3 lg:justify-end">
-                                    @if ($order->usesOnlinePayment() && ! $order->isPaid() && $order->status->value !== 'cancelled' && $order->status->value !== 'completed')
+                                    @if ($order->canRetryOnlinePayment())
                                         <form method="POST" action="{{ route('checkout.pay', $order) }}">
                                             @csrf
 
@@ -114,6 +119,11 @@
                                                 Pago online
                                             </button>
                                         </form>
+
+                                        <x-orders.switch-to-store-form
+                                            :order="$order"
+                                            button-class="store-button-secondary"
+                                        />
                                     @endif
 
                                     <a href="{{ route('orders.show', $order) }}" class="store-button-secondary">
