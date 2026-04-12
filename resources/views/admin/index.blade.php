@@ -72,13 +72,11 @@
                     </section>
 
                     <section class="mt-8">
-                        <div class="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
-                            <div>
-                                <p class="app-section-kicker">Atencion requerida</p>
-                                <h4 class="mt-1 text-2xl font-black tracking-tight text-stone-950">Tareas pendientes</h4>
-                            </div>
-                            <p class="text-sm text-stone-500">Los avisos se ordenan por urgencia y solo aparecen cuando requieren accion.</p>
-                        </div>
+                        <x-admin.section-header kicker="Atencion requerida" title="Tareas pendientes">
+                            <x-slot name="aside">
+                                <p class="app-section-description">Los avisos se ordenan por urgencia y solo aparecen cuando requieren accion.</p>
+                            </x-slot>
+                        </x-admin.section-header>
 
                         @if ($alerts->isNotEmpty())
                             <div class="mt-6 grid gap-4 xl:grid-cols-2">
@@ -132,15 +130,13 @@
                     </section>
 
                     <section class="app-card mt-8">
-                        <div class="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
-                            <div>
-                                <p class="app-section-kicker">Actividad reciente</p>
-                                <h4 class="mt-1 text-2xl font-black tracking-tight text-stone-950">Ultimos productos</h4>
-                            </div>
-                            <a href="{{ route('admin.products.create') }}" class="app-button-secondary">
-                                Crear producto
-                            </a>
-                        </div>
+                        <x-admin.section-header kicker="Actividad reciente" title="Ultimos productos">
+                            <x-slot name="aside">
+                                <a href="{{ route('admin.products.create') }}" class="app-button-secondary">
+                                    Crear producto
+                                </a>
+                            </x-slot>
+                        </x-admin.section-header>
 
                         <div class="mt-6 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
                             @forelse ($latestProducts as $product)

@@ -10,7 +10,7 @@
             <div class="app-surface">
                 <div class="app-surface-body text-stone-900">
                     <p class="app-section-kicker">Zona privada</p>
-                    <h3 class="mt-2 text-3xl font-black tracking-tight">Sesion iniciada correctamente</h3>
+                    <h3 class="app-note-title text-stone-900">Sesion iniciada correctamente</h3>
                     <p class="mt-4 max-w-2xl text-sm leading-6 text-stone-600">
                         Esta vista te sirve de base para la zona del usuario. Desde aqui luego podras enlazar pedidos, carrito, perfil y funcionalidades privadas.
                     </p>

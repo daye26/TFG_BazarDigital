@@ -109,16 +109,16 @@
                 <p class="store-kicker">Resumen</p>
                 <h2 class="store-heading">TOTAL ACTUAL</h2>
 
-                <div class="mt-8 space-y-4">
-                    <div class="flex items-center justify-between gap-4 text-sm text-stone-600">
+                <div class="store-summary-list">
+                    <div class="store-summary-row">
                         <span>Articulos en carrito</span>
-                        <span class="font-semibold text-stone-900" data-cart-summary-count>{{ $itemsCount }}</span>
+                        <span class="store-summary-value" data-cart-summary-count>{{ $itemsCount }}</span>
                     </div>
-                    <div class="flex items-center justify-between gap-4 text-sm text-stone-600">
+                    <div class="store-summary-row">
                         <span>Lineas distintas</span>
-                        <span class="font-semibold text-stone-900">{{ $items->count() }}</span>
+                        <span class="store-summary-value">{{ $items->count() }}</span>
                     </div>
-                    <div class="flex items-center justify-between gap-4 border-t border-stone-200 pt-4 text-base font-bold text-stone-950">
+                    <div class="store-summary-total-row">
                         <span>Subtotal</span>
                         <span data-cart-summary-subtotal>{{ number_format((float) $subtotal, 2, ',', '.') }} &euro;</span>
                     </div>

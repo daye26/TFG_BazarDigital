@@ -1,6 +1,6 @@
 <x-app-layout>
     <div class="app-page">
-        <div class="mx-auto max-w-[95rem] space-y-8 sm:px-6 lg:px-8 2xl:max-w-[102rem]">
+        <div class="app-shell-stack-wide">
             <section class="app-surface">
                 <x-admin.page-hero
                     kicker="Gestion de productos"
@@ -53,13 +53,13 @@
                                     @endif
 
                                     <label for="admin-product-search" class="sr-only">Buscar productos para editar</label>
-                                    <div class="rounded-2xl border border-stone-300 bg-white px-4 py-3 shadow-sm shadow-stone-200/50">
+                                    <div class="app-search-shell">
                                         <input
                                             id="admin-product-search"
                                             name="q"
                                             type="search"
                                             value="{{ $searchQuery }}"
-                                            class="w-full border-0 bg-transparent p-0 text-sm font-medium text-stone-800 placeholder:text-stone-400 focus:outline-none focus:ring-0"
+                                            class="app-search-input"
                                             placeholder="Codigo de barras, nombre o categoria"
                                         >
                                     </div>
@@ -78,29 +78,24 @@
                             </section>
 
                             <section class="app-card">
-                                <div class="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
-                                    <div>
-                                        <p class="app-section-kicker">Lista de productos</p>
-                                        <h4 class="mt-1 text-2xl font-black tracking-tight text-stone-950">
-                                            @if ($stockFilter === 'out')
-                                                Productos sin stock
-                                            @elseif ($stockFilter === 'low')
-                                                Productos con stock bajo (<= {{ $lowStockThreshold }} uds)
-                                            @elseif ($searchQuery !== '')
-                                                Resultados de busqueda
-                                            @elseif ($productScope === 'active')
-                                                Productos activos
-                                            @elseif ($productScope === 'inactive')
-                                                Productos ocultos
-                                            @else
-                                                Todos los productos
-                                            @endif
-                                        </h4>
-                                    </div>
-                                    <div class="flex flex-wrap gap-3">
+                                <x-admin.section-header
+                                    kicker="Lista de productos"
+                                    :title="$stockFilter === 'out'
+                                        ? 'Productos sin stock'
+                                        : ($stockFilter === 'low'
+                                            ? 'Productos con stock bajo (<= ' . $lowStockThreshold . ' uds)'
+                                            : ($searchQuery !== ''
+                                                ? 'Resultados de busqueda'
+                                                : ($productScope === 'active'
+                                                    ? 'Productos activos'
+                                                    : ($productScope === 'inactive'
+                                                        ? 'Productos ocultos'
+                                                        : 'Todos los productos'))))"
+                                >
+                                    <x-slot name="aside">
                                         <a href="{{ route('admin.products.create') }}" class="app-button-secondary">Nuevo producto</a>
-                                    </div>
-                                </div>
+                                    </x-slot>
+                                </x-admin.section-header>
 
                                 <div class="mt-6 flex flex-wrap gap-3">
                                     <a href="{{ route('admin.products.manage', array_filter(['q' => $searchQuery !== '' ? $searchQuery : null])) }}" class="{{ $stockFilter === '' ? 'app-button-primary' : 'app-button-secondary' }}">Todos</a>
@@ -179,7 +174,7 @@
                                             </a>
                                         </div>
                                     @empty
-                                        <div class="rounded-2xl border border-dashed border-stone-300 bg-stone-50 px-5 py-6 text-sm text-stone-600">
+                                        <div class="app-empty-card">
                                             {{ $stockFilter === 'out' ? 'No hay productos activos sin stock.' : ($stockFilter === 'low' ? 'No hay productos activos con stock bajo.' : 'No hemos encontrado productos para esa busqueda.') }}
                                         </div>
                                     @endforelse
@@ -201,20 +196,20 @@
                                     <div class="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
                                         <div>
                                             <p class="app-note-kicker">Producto seleccionado</p>
-                                            <h4 class="mt-2 text-3xl font-black tracking-tight text-stone-950">{{ $selectedProduct->name }}</h4>
+                                            <h4 class="app-note-title">{{ $selectedProduct->name }}</h4>
                                             <p class="mt-3 text-sm leading-6 text-stone-600">
                                                 Codigo {{ $selectedProduct->barcode }} · {{ $selectedProduct->category?->name ?? 'Sin categoria' }} · {{ $selectedProduct->is_active ? 'Visible en tienda' : 'Oculto en tienda' }}
                                             </p>
                                         </div>
 
                                         <div class="grid gap-3 sm:grid-cols-2">
-                                            <article class="rounded-2xl border border-stone-200 bg-stone-50 px-4 py-4">
+                                            <article class="app-inline-stat-card">
                                                 <p class="app-stat-label">Precio actual</p>
-                                                <p class="mt-3 text-2xl font-black tracking-tight text-stone-950">{{ number_format((float) $selectedProduct->sale_price, 2, ',', '.') }} &euro;</p>
+                                                <p class="app-inline-stat-value">{{ number_format((float) $selectedProduct->sale_price, 2, ',', '.') }} &euro;</p>
                                             </article>
-                                            <article class="rounded-2xl border border-stone-200 bg-stone-50 px-4 py-4">
+                                            <article class="app-inline-stat-card">
                                                 <p class="app-stat-label">Stock actual</p>
-                                                <p class="mt-3 text-2xl font-black tracking-tight text-stone-950">{{ $selectedProduct->qty }}</p>
+                                                <p class="app-inline-stat-value">{{ $selectedProduct->qty }}</p>
                                             </article>
                                         </div>
                                     </div>
@@ -222,37 +217,35 @@
 
                                 <section class="app-card">
                                     <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-                                        <div class="inline-flex rounded-full border border-stone-300 bg-stone-100 p-1">
+                                        <div class="app-segmented-control">
                                             <button
                                                 type="button"
                                                 @click="activeTab = 'general'"
-                                                :class="activeTab === 'general' ? 'bg-stone-900 text-white shadow-sm' : 'text-stone-600 hover:text-stone-950'"
-                                                class="rounded-full px-4 py-2 text-sm font-bold transition"
+                                                :class="activeTab === 'general' ? 'app-segmented-control-button-active' : 'app-segmented-control-button-idle'"
+                                                class="app-segmented-control-button"
                                             >
                                                 General
                                             </button>
                                             <button
                                                 type="button"
                                                 @click="activeTab = 'price'"
-                                                :class="activeTab === 'price' ? 'bg-stone-900 text-white shadow-sm' : 'text-stone-600 hover:text-stone-950'"
-                                                class="rounded-full px-4 py-2 text-sm font-bold transition"
+                                                :class="activeTab === 'price' ? 'app-segmented-control-button-active' : 'app-segmented-control-button-idle'"
+                                                class="app-segmented-control-button"
                                             >
                                                 Precio
                                             </button>
                                         </div>
 
-                                        <p class="text-sm text-stone-500">Cambia entre la ficha general y el bloque de precio.</p>
+                                        <p class="app-section-description">Cambia entre la ficha general y el bloque de precio.</p>
                                     </div>
                                 </section>
 
                                 <section class="app-card" x-show="activeTab === 'general'" x-cloak>
-                                    <div class="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
-                                        <div>
-                                            <p class="app-section-kicker">Caracteristicas</p>
-                                            <h4 class="mt-1 text-2xl font-black tracking-tight text-stone-950">Ficha del producto</h4>
-                                        </div>
-                                        <p class="text-sm text-stone-500">Aqui cambias datos descriptivos, stock, imagen, categoria y estado.</p>
-                                    </div>
+                                    <x-admin.section-header kicker="Caracteristicas" title="Ficha del producto">
+                                        <x-slot name="aside">
+                                            <p class="app-section-description">Aqui cambias datos descriptivos, stock, imagen, categoria y estado.</p>
+                                        </x-slot>
+                                    </x-admin.section-header>
 
                                     <form method="POST" action="{{ route('admin.products.update.details', $selectedProduct) }}" enctype="multipart/form-data" class="mt-6 space-y-6">
                                         @csrf
@@ -309,9 +302,9 @@
 
                                             <div class="md:col-span-2">
                                                 <div class="grid gap-4 lg:grid-cols-[minmax(0,1fr)_auto]">
-                                                    <div class="rounded-2xl border border-dashed border-stone-300 bg-stone-50 p-4">
+                                                    <div class="app-image-preview-card bg-stone-50">
                                                         <p class="text-xs font-semibold uppercase tracking-[0.2em] text-stone-500">Imagen actual</p>
-                                                        <div class="mt-4 flex min-h-52 items-center justify-center overflow-hidden rounded-2xl bg-white">
+                                                        <div class="app-image-preview-media min-h-52 bg-white">
                                                             @if ($selectedProduct->image_url)
                                                                 <img src="{{ $selectedProduct->image_url }}" alt="Imagen actual de {{ $selectedProduct->name }}" class="h-full max-h-64 w-full object-contain">
                                                             @else
@@ -324,22 +317,22 @@
                                                     </div>
 
                                                     <div class="space-y-4 rounded-2xl border border-stone-200 bg-white p-4">
-                                                        <label class="flex items-start gap-3">
+                                                        <label class="app-form-option-card">
                                                             <input type="hidden" name="remove_image" value="0">
                                                             <input type="checkbox" name="remove_image" value="1" class="app-checkbox" @checked(old('remove_image') === '1')>
                                                             <span>
-                                                                <span class="block text-sm font-bold text-stone-900">Eliminar imagen actual</span>
-                                                                <span class="mt-1 block text-xs leading-5 text-stone-500">Si subes una nueva imagen, la anterior se reemplazara automaticamente.</span>
+                                                                <span class="app-form-option-title">Eliminar imagen actual</span>
+                                                                <span class="app-form-option-copy">Si subes una nueva imagen, la anterior se reemplazara automaticamente.</span>
                                                             </span>
                                                         </label>
                                                         <x-input-error :messages="$errors->get('remove_image')" class="mt-2" />
 
-                                                        <label class="flex items-start gap-3">
+                                                        <label class="app-form-option-card">
                                                             <input type="hidden" name="is_active" value="0">
                                                             <input type="checkbox" name="is_active" value="1" class="app-checkbox" @checked((string) old('is_active', $selectedProduct->is_active ? '1' : '0') === '1')>
                                                             <span>
-                                                                <span class="block text-sm font-bold text-stone-900">Producto activo</span>
-                                                                <span class="mt-1 block text-xs leading-5 text-stone-500">Si lo desmarcas dejara de mostrarse en la tienda publica.</span>
+                                                                <span class="app-form-option-title">Producto activo</span>
+                                                                <span class="app-form-option-copy">Si lo desmarcas dejara de mostrarse en la tienda publica.</span>
                                                             </span>
                                                         </label>
                                                         <x-input-error :messages="$errors->get('is_active')" class="mt-2" />
@@ -370,13 +363,11 @@
                                     x-init="init()"
                                     x-effect="refreshPreview()"
                                 >
-                                    <div class="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
-                                        <div>
-                                            <p class="app-section-kicker">Precio</p>
-                                            <h4 class="mt-1 text-2xl font-black tracking-tight text-stone-950">Precio, margen e impuestos</h4>
-                                        </div>
-                                        <p class="text-sm text-stone-500">Este bloque solo afecta al coste, precio de venta, descuento e IVA.</p>
-                                    </div>
+                                    <x-admin.section-header kicker="Precio" title="Precio, margen e impuestos">
+                                        <x-slot name="aside">
+                                            <p class="app-section-description">Este bloque solo afecta al coste, precio de venta, descuento e IVA.</p>
+                                        </x-slot>
+                                    </x-admin.section-header>
 
                                     <form method="POST" action="{{ route('admin.products.update.pricing', $selectedProduct) }}" @submit="applyPreview()" class="mt-6 grid gap-8 xl:grid-cols-[minmax(0,1.8fr)_minmax(280px,0.7fr)] 2xl:grid-cols-[minmax(0,1.9fr)_minmax(300px,0.68fr)]">
                                         @csrf
@@ -429,18 +420,18 @@
 
                                         <aside class="app-note-card">
                                             <p class="app-note-kicker">Resumen del precio</p>
-                                            <dl class="mt-5 space-y-4 text-sm text-stone-700">
-                                                <div class="flex items-center justify-between gap-4">
+                                            <dl class="app-summary-list mt-5">
+                                                <div class="app-summary-row">
                                                     <dt>Coste base</dt>
-                                                    <dd class="font-bold text-stone-950" x-text="formatCurrency(costPrice, 4)"></dd>
+                                                    <dd class="app-summary-value" x-text="formatCurrency(costPrice, 4)"></dd>
                                                 </div>
-                                                <div class="flex items-center justify-between gap-4">
+                                                <div class="app-summary-row">
                                                     <dt>Margen a guardar</dt>
-                                                    <dd class="font-bold text-stone-950" x-text="formatNumber(displayMarginValue(), 4)"></dd>
+                                                    <dd class="app-summary-value" x-text="formatNumber(displayMarginValue(), 4)"></dd>
                                                 </div>
-                                                <div class="flex items-center justify-between gap-4">
+                                                <div class="app-summary-row">
                                                     <dt>IVA aplicado</dt>
-                                                    <dd class="font-bold text-stone-950" x-text="formatTax(tax)"></dd>
+                                                    <dd class="app-summary-value" x-text="formatTax(tax)"></dd>
                                                 </div>
                                                 <div class="border-t border-amber-200 pt-4">
                                                     <dt class="text-xs font-semibold uppercase tracking-[0.2em] text-stone-500">Precio base a guardar</dt>
@@ -467,7 +458,7 @@
                             @else
                                 <section class="app-note-card">
                                     <p class="app-note-kicker">Siguiente paso</p>
-                                    <h4 class="mt-2 text-3xl font-black tracking-tight text-stone-950">Selecciona un producto de la lista</h4>
+                                    <h4 class="app-note-title">Selecciona un producto de la lista</h4>
                                     <div class="app-note-copy">
                                         <p>Primero localiza el producto desde el listado de la izquierda. Puedes buscarlo por nombre, categoria o, sobre todo, por codigo de barras.</p>
                                         <p>Cuando elijas uno se abriran dos bloques de trabajo distintos: caracteristicas del producto y precio.</p>

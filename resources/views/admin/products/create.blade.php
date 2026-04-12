@@ -33,7 +33,7 @@
 
                         <div class="space-y-8">
                             <section class="app-card-muted">
-                                <h4 class="text-lg font-bold text-stone-900">Ficha del producto</h4>
+                                <h4 class="app-form-section-title">Ficha del producto</h4>
                                 <div class="mt-6 grid gap-6 md:grid-cols-2">
                                     <div>
                                         <x-input-label for="barcode">
@@ -117,7 +117,7 @@
                             </section>
 
                             <section class="app-card">
-                                <h4 class="text-lg font-bold text-stone-900">Precios e impuestos</h4>
+                                <h4 class="app-form-section-title">Precios e impuestos</h4>
                                 <div class="mt-6 grid gap-6 md:grid-cols-2">
                                     <div>
                                         <x-input-label for="cost_price">
@@ -242,18 +242,18 @@
                         <aside class="space-y-6">
                             <section class="app-note-card">
                                 <p class="app-note-kicker">Resumen</p>
-                                <dl class="mt-5 space-y-4 text-sm text-stone-700">
-                                    <div class="flex items-center justify-between gap-4">
+                                <dl class="app-summary-list mt-5">
+                                    <div class="app-summary-row">
                                         <dt>Coste base</dt>
-                                        <dd class="font-bold text-stone-950" x-text="formatCurrency(costPrice, 4)"></dd>
+                                        <dd class="app-summary-value" x-text="formatCurrency(costPrice, 4)"></dd>
                                     </div>
-                                    <div class="flex items-center justify-between gap-4">
+                                    <div class="app-summary-row">
                                         <dt>Margen a guardar</dt>
-                                        <dd class="font-bold text-stone-950" x-text="formatNumber(displayMarginValue(), 4)"></dd>
+                                        <dd class="app-summary-value" x-text="formatNumber(displayMarginValue(), 4)"></dd>
                                     </div>
-                                    <div class="flex items-center justify-between gap-4">
+                                    <div class="app-summary-row">
                                         <dt>IVA aplicado</dt>
-                                        <dd class="font-bold text-stone-950" x-text="formatTax(tax)"></dd>
+                                        <dd class="app-summary-value" x-text="formatTax(tax)"></dd>
                                     </div>
                                     <div class="border-t border-amber-200 pt-4">
                                         <dt class="text-xs font-semibold uppercase tracking-[0.2em] text-stone-500">Precio base a guardar</dt>
@@ -270,7 +270,7 @@
                             </section>
 
                             <section class="app-card">
-                                <label class="flex items-start gap-3">
+                                <label class="app-form-option-card">
                                     <input
                                         type="checkbox"
                                         name="is_active"
@@ -279,8 +279,8 @@
                                         @checked(old('is_active', '1'))
                                     >
                                     <span>
-                                        <span class="block text-sm font-bold text-stone-900">Producto activo</span>
-                                        <span class="mt-1 block text-xs leading-5 text-stone-500">Si lo desmarcas se crea oculto para la tienda publica.</span>
+                                        <span class="app-form-option-title">Producto activo</span>
+                                        <span class="app-form-option-copy">Si lo desmarcas se crea oculto para la tienda publica.</span>
                                     </span>
                                 </label>
 

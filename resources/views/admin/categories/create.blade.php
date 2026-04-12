@@ -20,7 +20,7 @@
 
                         <div class="space-y-8">
                             <section class="app-card-muted">
-                                <h4 class="text-lg font-bold text-stone-900">Datos de la categoria</h4>
+                                <h4 class="app-form-section-title">Datos de la categoria</h4>
                                 <div class="mt-6 grid gap-6 md:grid-cols-2">
                                     <div>
                                         <x-input-label for="name">
@@ -57,7 +57,7 @@
                             </section>
 
                             <section class="app-card">
-                                <label class="flex items-start gap-3">
+                                <label class="app-form-option-card">
                                     <input
                                         type="checkbox"
                                         name="is_active"
@@ -66,8 +66,8 @@
                                         @checked(old('is_active', '1'))
                                     >
                                     <span>
-                                        <span class="block text-sm font-bold text-stone-900">Categoria activa</span>
-                                        <span class="mt-1 block text-xs leading-5 text-stone-500">Si la desmarcas, quedara creada pero no aparecera como categoria activa en la tienda.</span>
+                                        <span class="app-form-option-title">Categoria activa</span>
+                                        <span class="app-form-option-copy">Si la desmarcas, quedara creada pero no aparecera como categoria activa en la tienda.</span>
                                     </span>
                                 </label>
 

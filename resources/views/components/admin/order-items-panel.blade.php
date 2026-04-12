@@ -121,22 +121,22 @@
 
         <article class="app-card-muted app-order-summary-panel">
             <p class="app-section-kicker">Resumen</p>
-            <dl class="mt-4 space-y-3 text-sm text-stone-700">
-                <div class="flex items-center justify-between gap-4">
+            <dl class="app-summary-list mt-4">
+                <div class="app-summary-row">
                     <dt>Subtotal</dt>
-                    <dd class="font-bold text-stone-950">{{ number_format((float) $order->subtotal, 2, ',', '.') }} &euro;</dd>
+                    <dd class="app-summary-value">{{ number_format((float) $order->subtotal, 2, ',', '.') }} &euro;</dd>
                 </div>
-                <div class="flex items-center justify-between gap-4">
+                <div class="app-summary-row">
                     <dt>Descuento</dt>
-                    <dd class="font-bold text-stone-950">-{{ number_format((float) $order->discount_total, 2, ',', '.') }} &euro;</dd>
+                    <dd class="app-summary-value">-{{ number_format((float) $order->discount_total, 2, ',', '.') }} &euro;</dd>
                 </div>
-                <div class="flex items-center justify-between gap-4">
+                <div class="app-summary-row">
                     <dt>IVA incluido</dt>
-                    <dd class="font-bold text-stone-950">{{ number_format((float) $order->tax_total, 2, ',', '.') }} &euro;</dd>
+                    <dd class="app-summary-value">{{ number_format((float) $order->tax_total, 2, ',', '.') }} &euro;</dd>
                 </div>
-                <div class="flex items-center justify-between gap-4 border-t border-stone-200 pt-3">
-                    <dt class="text-sm font-bold uppercase tracking-[0.08em] text-stone-950">Total</dt>
-                    <dd class="text-xl font-black tracking-tight text-stone-950">{{ number_format((float) $order->total, 2, ',', '.') }} &euro;</dd>
+                <div class="app-summary-total-row">
+                    <dt class="app-summary-total-label">Total</dt>
+                    <dd class="app-summary-total-value">{{ number_format((float) $order->total, 2, ',', '.') }} &euro;</dd>
                 </div>
             </dl>
         </article>

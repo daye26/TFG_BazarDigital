@@ -74,24 +74,24 @@
                     </span>
                 </div>
 
-                <div class="mt-8 space-y-4">
-                    <div class="flex items-center justify-between gap-4 text-sm text-stone-600">
+                <div class="store-summary-list">
+                    <div class="store-summary-row">
                         <span>Metodo de pago</span>
-                        <span class="font-semibold text-stone-900">{{ $order->payment_method->label() }}</span>
+                        <span class="store-summary-value">{{ $order->payment_method->label() }}</span>
                     </div>
-                    <div class="flex items-center justify-between gap-4 text-sm text-stone-600">
+                    <div class="store-summary-row">
                         <span>Subtotal</span>
-                        <span class="font-semibold text-stone-900">{{ number_format((float) $order->subtotal, 2, ',', '.') }} &euro;</span>
+                        <span class="store-summary-value">{{ number_format((float) $order->subtotal, 2, ',', '.') }} &euro;</span>
                     </div>
-                    <div class="flex items-center justify-between gap-4 text-sm text-stone-600">
+                    <div class="store-summary-row">
                         <span>Descuento</span>
-                        <span class="font-semibold text-stone-900">-{{ number_format((float) $order->discount_total, 2, ',', '.') }} &euro;</span>
+                        <span class="store-summary-value">-{{ number_format((float) $order->discount_total, 2, ',', '.') }} &euro;</span>
                     </div>
-                    <div class="flex items-center justify-between gap-4 text-sm text-stone-600">
+                    <div class="store-summary-row">
                         <span>IVA incluido</span>
-                        <span class="font-semibold text-stone-900">{{ number_format((float) $order->tax_total, 2, ',', '.') }} &euro;</span>
+                        <span class="store-summary-value">{{ number_format((float) $order->tax_total, 2, ',', '.') }} &euro;</span>
                     </div>
-                    <div class="flex items-center justify-between gap-4 border-t border-stone-200 pt-4 text-base font-bold text-stone-950">
+                    <div class="store-summary-total-row">
                         <span>Total</span>
                         <span>{{ number_format((float) $order->total, 2, ',', '.') }} &euro;</span>
                     </div>

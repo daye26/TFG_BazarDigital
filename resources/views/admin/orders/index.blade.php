@@ -33,7 +33,7 @@
                                 name="q"
                                 type="search"
                                 value="{{ $searchQuery }}"
-                                class="form-input w-full rounded-full border-stone-300 px-4 py-2 text-sm text-stone-800 placeholder:text-stone-400 lg:w-auto lg:min-w-[22rem]"
+                                class="app-filter-input app-filter-input-search lg:w-auto lg:min-w-[22rem]"
                                 placeholder="Codigo de pedido"
                             >
 
@@ -43,7 +43,7 @@
                                 name="date"
                                 type="date"
                                 value="{{ $selectedDate ?? '' }}"
-                                class="form-input w-full rounded-full border-stone-300 px-4 py-2 text-sm text-stone-700 lg:w-auto"
+                                class="app-filter-input lg:w-auto"
                             >
 
                             <div class="flex shrink-0 items-center gap-3">

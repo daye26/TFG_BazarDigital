@@ -20,26 +20,21 @@
                     <div class="grid gap-8 xl:grid-cols-[minmax(280px,0.8fr)_minmax(0,1.2fr)]">
                         <aside class="space-y-6">
                             <section class="app-card">
-                                <div class="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
-                                    <div>
-                                        <p class="app-section-kicker">Lista de categorias</p>
-                                        <h4 class="mt-1 text-2xl font-black tracking-tight text-stone-950">
-                                            @if ($categoryScope === 'active')
-                                                Categorias activas
-                                            @elseif ($categoryScope === 'inactive')
-                                                Categorias inactivas
-                                            @else
-                                                Todas las categorias
-                                            @endif
-                                        </h4>
-                                    </div>
-                                    <div class="flex flex-wrap gap-3">
+                                <x-admin.section-header
+                                    kicker="Lista de categorias"
+                                    :title="$categoryScope === 'active'
+                                        ? 'Categorias activas'
+                                        : ($categoryScope === 'inactive'
+                                            ? 'Categorias inactivas'
+                                            : 'Todas las categorias')"
+                                >
+                                    <x-slot name="aside">
                                         @if ($categoryScope !== 'all')
                                             <a href="{{ route('admin.categories.manage') }}" class="app-button-secondary">Ver todas</a>
                                         @endif
                                         <a href="{{ route('admin.categories.create') }}" class="app-button-secondary">Nueva categoria</a>
-                                    </div>
-                                </div>
+                                    </x-slot>
+                                </x-admin.section-header>
 
                                 <div class="app-product-picker-list">
                                     <div class="space-y-3">
@@ -78,7 +73,7 @@
                                                 </div>
                                             </a>
                                         @empty
-                                            <div class="rounded-2xl border border-dashed border-stone-300 bg-stone-50 px-5 py-6 text-sm text-stone-600">
+                                            <div class="app-empty-card">
                                                 Todavia no hay categorias creadas.
                                             </div>
                                         @endforelse
@@ -93,27 +88,25 @@
                                     <div class="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
                                         <div>
                                             <p class="app-note-kicker">Categoria seleccionada</p>
-                                            <h4 class="mt-2 text-3xl font-black tracking-tight text-stone-950">{{ $selectedCategory->name }}</h4>
+                                            <h4 class="app-note-title">{{ $selectedCategory->name }}</h4>
                                             <p class="mt-3 text-sm leading-6 text-stone-600">
                                                 {{ $selectedCategory->url ?: 'Sin slug definido' }} / {{ $selectedCategory->is_active ? 'Visible en tienda' : 'Oculta en tienda' }}
                                             </p>
                                         </div>
 
-                                        <article class="rounded-2xl border border-stone-200 bg-stone-50 px-4 py-4">
+                                        <article class="app-inline-stat-card">
                                             <p class="app-stat-label">Productos asociados</p>
-                                            <p class="mt-3 text-2xl font-black tracking-tight text-stone-950">{{ $selectedCategory->products_count }}</p>
+                                            <p class="app-inline-stat-value">{{ $selectedCategory->products_count }}</p>
                                         </article>
                                     </div>
                                 </section>
 
                                 <section class="app-card">
-                                    <div class="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
-                                        <div>
-                                            <p class="app-section-kicker">Ficha</p>
-                                            <h4 class="mt-1 text-2xl font-black tracking-tight text-stone-950">Datos de la categoria</h4>
-                                        </div>
-                                        <p class="text-sm text-stone-500">Aqui puedes cambiar nombre, descripcion, slug y estado.</p>
-                                    </div>
+                                    <x-admin.section-header kicker="Ficha" title="Datos de la categoria">
+                                        <x-slot name="aside">
+                                            <p class="app-section-description">Aqui puedes cambiar nombre, descripcion, slug y estado.</p>
+                                        </x-slot>
+                                    </x-admin.section-header>
 
                                     <form method="POST" action="{{ route('admin.categories.update', $selectedCategory) }}" class="mt-6 grid gap-8 lg:grid-cols-[minmax(0,1.6fr)_minmax(280px,0.7fr)]">
                                         @csrf
@@ -152,7 +145,7 @@
                                             </section>
 
                                             <section class="app-card">
-                                                <label class="flex items-start gap-3">
+                                                <label class="app-form-option-card">
                                                     <input type="hidden" name="is_active" value="0">
                                                     <input
                                                         type="checkbox"
@@ -162,8 +155,8 @@
                                                         @checked((string) old('is_active', $selectedCategory->is_active ? '1' : '0') === '1')
                                                     >
                                                     <span>
-                                                        <span class="block text-sm font-bold text-stone-900">Categoria activa</span>
-                                                        <span class="mt-1 block text-xs leading-5 text-stone-500">Los productos pueden seguir existiendo aunque la categoria quede inactiva.</span>
+                                                        <span class="app-form-option-title">Categoria activa</span>
+                                                        <span class="app-form-option-copy">Los productos pueden seguir existiendo aunque la categoria quede inactiva.</span>
                                                     </span>
                                                 </label>
 
@@ -175,7 +168,7 @@
                             @else
                                 <section class="app-note-card">
                                     <p class="app-note-kicker">Siguiente paso</p>
-                                    <h4 class="mt-2 text-3xl font-black tracking-tight text-stone-950">Selecciona una categoria</h4>
+                                    <h4 class="app-note-title">Selecciona una categoria</h4>
                                     <div class="app-note-copy">
                                         <p>Elige una categoria del listado para editar su nombre, descripcion, slug o estado.</p>
                                         <p>En la lista veras tambien cuántos productos tiene asignados cada categoria.</p>

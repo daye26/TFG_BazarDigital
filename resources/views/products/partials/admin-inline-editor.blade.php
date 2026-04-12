@@ -31,13 +31,13 @@
 
     <section x-show="editorOpen" x-cloak class="store-detail-card space-y-6">
         @if (session('status'))
-            <div class="rounded-2xl border border-emerald-200 bg-emerald-50 px-5 py-4 text-sm font-medium text-emerald-800">
+            <div class="app-alert-success mb-0">
                 {{ session('status') }}
             </div>
         @endif
 
         @if ($errors->any())
-            <div class="rounded-2xl border border-rose-200 bg-rose-50 px-5 py-4 text-sm text-rose-800">
+            <div class="app-alert-error mb-0">
                 Revisa los campos marcados. Hay cambios que no se han podido guardar.
             </div>
         @endif
@@ -48,20 +48,20 @@
                 <h2 class="mt-2 text-2xl font-black tracking-tight text-stone-950">Actualizar producto</h2>
             </div>
 
-            <div class="inline-flex rounded-full border border-stone-300 bg-stone-100 p-1">
+            <div class="app-segmented-control">
                 <button
                     type="button"
                     @click="activeTab = 'general'"
-                    :class="activeTab === 'general' ? 'bg-stone-900 text-white shadow-sm' : 'text-stone-600 hover:text-stone-950'"
-                    class="rounded-full px-4 py-2 text-sm font-bold transition"
+                    :class="activeTab === 'general' ? 'app-segmented-control-button-active' : 'app-segmented-control-button-idle'"
+                    class="app-segmented-control-button"
                 >
                     General
                 </button>
                 <button
                     type="button"
                     @click="activeTab = 'price'"
-                    :class="activeTab === 'price' ? 'bg-stone-900 text-white shadow-sm' : 'text-stone-600 hover:text-stone-950'"
-                    class="rounded-full px-4 py-2 text-sm font-bold transition"
+                    :class="activeTab === 'price' ? 'app-segmented-control-button-active' : 'app-segmented-control-button-idle'"
+                    class="app-segmented-control-button"
                 >
                     Precio
                 </button>
@@ -128,21 +128,21 @@
                 </div>
 
                 <div class="grid gap-4 rounded-[1.5rem] border border-stone-200 bg-stone-50 p-4 sm:grid-cols-2">
-                    <label class="flex items-start gap-3">
+                    <label class="app-form-option-card">
                         <input type="hidden" name="remove_image" value="0">
                         <input type="checkbox" name="remove_image" value="1" class="app-checkbox" @checked(old('remove_image') === '1')>
                         <span>
-                            <span class="block text-sm font-bold text-stone-900">Eliminar imagen actual</span>
-                            <span class="mt-1 block text-xs leading-5 text-stone-500">La imagen visible en la ficha se borrara al guardar.</span>
+                            <span class="app-form-option-title">Eliminar imagen actual</span>
+                            <span class="app-form-option-copy">La imagen visible en la ficha se borrara al guardar.</span>
                         </span>
                     </label>
 
-                    <label class="flex items-start gap-3">
+                    <label class="app-form-option-card">
                         <input type="hidden" name="is_active" value="0">
                         <input type="checkbox" name="is_active" value="1" class="app-checkbox" @checked((string) old('is_active', $product->is_active ? '1' : '0') === '1')>
                         <span>
-                            <span class="block text-sm font-bold text-stone-900">Producto activo</span>
-                            <span class="mt-1 block text-xs leading-5 text-stone-500">Si lo desmarcas dejara de mostrarse para clientes.</span>
+                            <span class="app-form-option-title">Producto activo</span>
+                            <span class="app-form-option-copy">Si lo desmarcas dejara de mostrarse para clientes.</span>
                         </span>
                     </label>
                 </div>
@@ -221,18 +221,18 @@
 
                 <aside class="rounded-[1.5rem] border border-stone-200 bg-stone-50 p-5">
                     <p class="store-kicker">Resumen</p>
-                    <dl class="mt-5 space-y-4 text-sm text-stone-700">
-                        <div class="flex items-center justify-between gap-4">
+                    <dl class="app-summary-list mt-5">
+                        <div class="app-summary-row">
                             <dt>Coste base</dt>
-                            <dd class="font-bold text-stone-950" x-text="formatCurrency(costPrice, 4)"></dd>
+                            <dd class="app-summary-value" x-text="formatCurrency(costPrice, 4)"></dd>
                         </div>
-                        <div class="flex items-center justify-between gap-4">
+                        <div class="app-summary-row">
                             <dt>Margen a guardar</dt>
-                            <dd class="font-bold text-stone-950" x-text="formatNumber(displayMarginValue(), 4)"></dd>
+                            <dd class="app-summary-value" x-text="formatNumber(displayMarginValue(), 4)"></dd>
                         </div>
-                        <div class="flex items-center justify-between gap-4">
+                        <div class="app-summary-row">
                             <dt>IVA aplicado</dt>
-                            <dd class="font-bold text-stone-950" x-text="formatTax(tax)"></dd>
+                            <dd class="app-summary-value" x-text="formatTax(tax)"></dd>
                         </div>
                         <div class="border-t border-stone-200 pt-4">
                             <dt class="text-xs font-semibold uppercase tracking-[0.2em] text-stone-500">Precio base</dt>

@@ -95,20 +95,20 @@
 
                         @auth
                             @if (Auth::user()->isAdmin())
-                                <a href="{{ route('admin.index') }}" class="rounded-full bg-amber-200 px-4 py-2 text-sm font-semibold text-stone-900 transition hover:bg-amber-300">
+                                <a href="{{ route('admin.index') }}" class="store-header-link-accent">
                                     Panel de control
                                 </a>
                             @else
-                                <a href="{{ route('orders.index') }}" class="rounded-full border border-stone-300 bg-white px-4 py-2 text-sm font-semibold text-stone-800 transition hover:border-stone-900 hover:text-stone-950">
+                                <a href="{{ route('orders.index') }}" class="store-header-link">
                                     Pedidos
                                 </a>
-                                <a href="{{ route('cart.show') }}" class="rounded-full border border-stone-300 bg-white px-4 py-2 text-sm font-semibold text-stone-800 transition hover:border-stone-900 hover:text-stone-950">
+                                <a href="{{ route('cart.show') }}" class="store-header-link">
                                     Carrito (<span data-cart-count>{{ $storeCartItemsCount ?? 0 }}</span>)
                                 </a>
                             @endif
                             <x-dropdown align="right" width="48" contentClasses="py-2 bg-white">
                                 <x-slot name="trigger">
-                                    <button type="button" class="inline-flex items-center gap-2 rounded-full border border-stone-300 bg-white px-4 py-2 text-sm font-semibold text-stone-800 transition hover:border-stone-900 hover:text-stone-950">
+                                    <button type="button" class="store-header-user-button">
                                         <span>{{ Auth::user()->name }}</span>
                                         <svg class="h-4 w-4 fill-current" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
                                             <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
@@ -132,10 +132,10 @@
                                 </x-slot>
                             </x-dropdown>
                         @else
-                            <a href="{{ route('login') }}" class="rounded-full border border-stone-300 px-4 py-2 text-sm font-semibold text-stone-800 transition hover:border-stone-900 hover:text-stone-950">
+                            <a href="{{ route('login') }}" class="store-header-link">
                                 Iniciar sesion
                             </a>
-                            <a href="{{ route('register') }}" class="rounded-full bg-stone-900 px-4 py-2 text-sm font-semibold text-white transition hover:bg-stone-700">
+                            <a href="{{ route('register') }}" class="store-header-link-primary">
                                 Crear cuenta
                             </a>
                         @endauth
