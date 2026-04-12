@@ -12,17 +12,19 @@
     @if ($showMeta)
         <section class="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
             <article class="app-mini-card">
-                <p class="app-stat-label">Cliente</p>
+                <p class="app-stat-label">Recogida</p>
                 <p class="mt-3 text-lg font-black tracking-tight text-stone-950">
-                    {{ $order->user?->name ?? 'Sin usuario' }}
+                    {{ $order->pickup_name }}
                 </p>
-                <p class="mt-2 text-sm text-stone-500">{{ $order->user?->email ?? 'Sin correo asociado' }}</p>
+                <p class="mt-2 text-sm text-stone-500">Creado el {{ $createdAtLabel }}</p>
             </article>
 
             <article class="app-mini-card">
-                <p class="app-stat-label">Recogida</p>
-                <p class="mt-3 text-lg font-black tracking-tight text-stone-950">{{ $order->pickup_name }}</p>
-                <p class="mt-2 text-sm text-stone-500">Creado el {{ $createdAtLabel }}</p>
+                <p class="app-stat-label">Telefono</p>
+                <p class="mt-3 text-lg font-black tracking-tight text-stone-950">
+                    {{ $order->user?->phone_for_display ?? 'Sin telefono asociado' }}
+                </p>
+                <p class="mt-2 text-sm text-stone-500">{{ $order->user?->email ?? 'Sin correo asociado' }}</p>
             </article>
 
             <article class="app-mini-card">

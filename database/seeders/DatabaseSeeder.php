@@ -578,6 +578,22 @@ class DatabaseSeeder extends Seeder
                 ],
             ],
             [
+                'user' => $cartUser,
+                'pickup_name' => 'Maria Cliente',
+                'status' => OrderStatus::PENDING,
+                'payment_method' => PaymentMethod::STORE,
+                'payment_status' => PaymentStatus::PENDING,
+                'payment_reference' => null,
+                'paid_at' => null,
+                'notes' => 'Seeder demo: cuarto pedido por preparar con mas de dos dias de espera para comprobar el limite de 3 avisos.',
+                'created_at' => $seedNow->copy()->subDays(2)->setTime(9, 5),
+                'updated_at' => $seedNow->copy()->subDays(2)->setTime(9, 5),
+                'items' => [
+                    ['product' => $glassBottle, 'quantity' => 1],
+                    ['product' => $stickyNotes, 'quantity' => 1],
+                ],
+            ],
+            [
                 'user' => $carlosUser,
                 'pickup_name' => 'Carlos Cliente',
                 'status' => OrderStatus::PENDING,

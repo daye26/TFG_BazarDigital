@@ -7,6 +7,7 @@ use App\Enums\PaymentMethod;
 use App\Enums\PaymentStatus;
 use App\Http\Controllers\Controller;
 use App\Models\Order;
+use App\Services\AdminAlertService;
 use App\Services\OrderService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -47,8 +48,25 @@ class OrderManagementController extends Controller
                     })
             )
             ->when(
+                $scope === 'overdue_preparable',
+                fn ($query) => $query
+                    ->where('status', OrderStatus::PENDING)
+                    ->where(function ($nestedQuery) {
+                        $nestedQuery
+                            ->where('payment_method', PaymentMethod::STORE->value)
+                            ->orWhere('payment_status', PaymentStatus::PAID->value);
+                    })
+                    ->where('created_at', '<=', now()->subHours(AdminAlertService::OVERDUE_PREPARABLE_HOURS))
+            )
+            ->when(
                 $scope === 'ready',
                 fn ($query) => $query->where('status', OrderStatus::READY)
+            )
+            ->when(
+                $scope === 'stale_ready',
+                fn ($query) => $query
+                    ->where('status', OrderStatus::READY)
+                    ->where('updated_at', '<=', now()->subHours(AdminAlertService::STALE_READY_HOURS))
             )
             ->when(
                 $scope === 'cancelled',
@@ -130,7 +148,7 @@ class OrderManagementController extends Controller
 
     private function normalizeScope(string $scope): string
     {
-        return in_array($scope, ['pending', 'preparable', 'ready', 'cancelled'], true) ? $scope : 'all';
+        return in_array($scope, ['pending', 'preparable', 'overdue_preparable', 'ready', 'stale_ready', 'cancelled'], true) ? $scope : 'all';
     }
 
     private function normalizeDateFilter(string $selectedDate): ?string

@@ -71,6 +71,66 @@
                         </div>
                     </section>
 
+                    <section class="mt-8">
+                        <div class="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+                            <div>
+                                <p class="app-section-kicker">Atencion requerida</p>
+                                <h4 class="mt-1 text-2xl font-black tracking-tight text-stone-950">Tareas pendientes</h4>
+                            </div>
+                            <p class="text-sm text-stone-500">Los avisos se ordenan por urgencia y solo aparecen cuando requieren accion.</p>
+                        </div>
+
+                        @if ($alerts->isNotEmpty())
+                            <div class="mt-6 grid gap-4 xl:grid-cols-2">
+                                @foreach ($alerts as $alert)
+                                    <article class="{{ $alert['tone'] === 'urgent' ? 'app-attention-card app-attention-card-urgent' : 'app-attention-card app-attention-card-review' }}">
+                                        <div class="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+                                            <div class="min-w-0">
+                                                <span class="store-status-pill {{ $alert['tone'] === 'urgent' ? 'store-status-pill-danger' : 'store-status-pill-warning' }}">
+                                                    {{ $alert['tone_label'] }}
+                                                </span>
+                                                <h5 class="mt-3 text-xl font-black tracking-tight text-stone-950">{{ $alert['title'] }}</h5>
+                                                <p class="mt-2 text-sm leading-6 text-stone-600">{{ $alert['summary'] }}</p>
+                                            </div>
+
+                                            <div class="shrink-0 rounded-2xl border border-stone-200 bg-white px-4 py-4 shadow-sm">
+                                                <p class="app-stat-label">Casos</p>
+                                                <p class="mt-3 text-3xl font-black tracking-tight text-stone-950">{{ $alert['count'] }}</p>
+                                            </div>
+                                        </div>
+
+                                        @if (! empty($alert['items']))
+                                            <div class="mt-5 space-y-3">
+                                                @foreach ($alert['items'] as $item)
+                                                    <a href="{{ $item['href'] }}" class="app-attention-item">
+                                                        <div class="min-w-0">
+                                                            <p class="truncate text-sm font-bold text-stone-950">{{ $item['title'] }}</p>
+                                                            <p class="mt-1 text-xs text-stone-500">{{ $item['subtitle'] }}</p>
+                                                        </div>
+                                                        <p class="shrink-0 text-xs font-semibold text-stone-600">{{ $item['meta'] }}</p>
+                                                    </a>
+                                                @endforeach
+                                            </div>
+                                        @endif
+
+                                        <div class="mt-5">
+                                            <a href="{{ $alert['action_href'] }}" class="app-button-secondary">
+                                                {{ $alert['action_label'] }}
+                                            </a>
+                                        </div>
+                                    </article>
+                                @endforeach
+                            </div>
+                        @else
+                            <section class="app-note-card mt-6">
+                                <p class="app-note-kicker">Sin incidencias</p>
+                                <div class="app-note-copy">
+                                    <p>No hay tareas urgentes ni revisiones pendientes en este momento.</p>
+                                </div>
+                            </section>
+                        @endif
+                    </section>
+
                     <section class="app-card mt-8">
                         <div class="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
                             <div>

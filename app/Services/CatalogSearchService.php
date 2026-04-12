@@ -162,10 +162,10 @@ class CatalogSearchService
                 ->sortBy(fn (Product $product) => $product->created_at?->getTimestamp() ?? 0, SORT_NUMERIC, true)
                 ->values(),
             'price_asc', 'price' => $products
-                ->sortBy(fn (Product $product) => $this->discountedPriceValue($product), SORT_NUMERIC)
+                ->sortBy(fn (Product $product) => $product->discountedPriceAmount(), SORT_NUMERIC)
                 ->values(),
             'price_desc' => $products
-                ->sortBy(fn (Product $product) => $this->discountedPriceValue($product), SORT_NUMERIC, true)
+                ->sortBy(fn (Product $product) => $product->discountedPriceAmount(), SORT_NUMERIC, true)
                 ->values(),
             default => $products
                 ->sort(function (Product $left, Product $right) {
@@ -400,22 +400,6 @@ class CatalogSearchService
     private function bestScore(array $currentBest, array $candidate): array
     {
         return $candidate[0] > $currentBest[0] ? $candidate : $currentBest;
-    }
-
-    private function discountedPriceValue(Product $product): float
-    {
-        $salePrice = (float) $product->sale_price;
-        $discountValue = (float) $product->discount_value;
-
-        if ($discountValue <= 0) {
-            return $salePrice;
-        }
-
-        return match ($product->discount_type) {
-            'percentage' => max($salePrice - ($salePrice * $discountValue / 100), 0),
-            'fixed' => max($salePrice - $discountValue, 0),
-            default => $salePrice,
-        };
     }
 
     private function normalize(string $value): string

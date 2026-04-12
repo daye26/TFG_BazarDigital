@@ -48,6 +48,9 @@
                                     @if ($productScope !== 'all')
                                         <input type="hidden" name="scope" value="{{ $productScope }}">
                                     @endif
+                                    @if ($stockFilter !== '')
+                                        <input type="hidden" name="stock" value="{{ $stockFilter }}">
+                                    @endif
 
                                     <label for="admin-product-search" class="sr-only">Buscar productos para editar</label>
                                     <div class="rounded-2xl border border-stone-300 bg-white px-4 py-3 shadow-sm shadow-stone-200/50">
@@ -65,7 +68,10 @@
                                         <button type="submit" class="app-button-primary">Buscar producto</button>
 
                                         @if ($searchQuery !== '')
-                                            <a href="{{ route('admin.products.manage', array_filter(['scope' => $productScope !== 'all' ? $productScope : null])) }}" class="app-button-secondary">Limpiar busqueda</a>
+                                            <a href="{{ route('admin.products.manage', array_filter([
+                                                'scope' => $productScope !== 'all' ? $productScope : null,
+                                                'stock' => $stockFilter !== '' ? $stockFilter : null,
+                                            ])) }}" class="app-button-secondary">Limpiar busqueda</a>
                                         @endif
                                     </div>
                                 </form>
@@ -76,7 +82,11 @@
                                     <div>
                                         <p class="app-section-kicker">Lista de productos</p>
                                         <h4 class="mt-1 text-2xl font-black tracking-tight text-stone-950">
-                                            @if ($searchQuery !== '')
+                                            @if ($stockFilter === 'out')
+                                                Productos sin stock
+                                            @elseif ($stockFilter === 'low')
+                                                Productos con stock bajo (<= {{ $lowStockThreshold }} uds)
+                                            @elseif ($searchQuery !== '')
                                                 Resultados de busqueda
                                             @elseif ($productScope === 'active')
                                                 Productos activos
@@ -88,11 +98,14 @@
                                         </h4>
                                     </div>
                                     <div class="flex flex-wrap gap-3">
-                                        @if ($productScope !== 'all')
-                                            <a href="{{ route('admin.products.manage', array_filter(['q' => $searchQuery !== '' ? $searchQuery : null])) }}" class="app-button-secondary">Ver todos</a>
-                                        @endif
                                         <a href="{{ route('admin.products.create') }}" class="app-button-secondary">Nuevo producto</a>
                                     </div>
+                                </div>
+
+                                <div class="mt-6 flex flex-wrap gap-3">
+                                    <a href="{{ route('admin.products.manage', array_filter(['q' => $searchQuery !== '' ? $searchQuery : null])) }}" class="{{ $stockFilter === '' ? 'app-button-primary' : 'app-button-secondary' }}">Todos</a>
+                                    <a href="{{ route('admin.products.manage', array_filter(['stock' => 'out', 'q' => $searchQuery !== '' ? $searchQuery : null])) }}" class="{{ $stockFilter === 'out' ? 'app-button-primary' : 'app-button-secondary' }}">Sin stock</a>
+                                    <a href="{{ route('admin.products.manage', array_filter(['stock' => 'low', 'q' => $searchQuery !== '' ? $searchQuery : null])) }}" class="{{ $stockFilter === 'low' ? 'app-button-primary' : 'app-button-secondary' }}">Stock bajo</a>
                                 </div>
 
                                 <div class="app-product-picker-list">
@@ -114,6 +127,7 @@
                                                     'product' => $listedProduct->id,
                                                     'q' => $searchQuery !== '' ? $searchQuery : null,
                                                     'scope' => $productScope !== 'all' ? $productScope : null,
+                                                    'stock' => $stockFilter !== '' ? $stockFilter : null,
                                                     'page' => $currentProductsPage > 1 ? $currentProductsPage : null,
                                                 ])) }}"
                                                 class="{{ $isSelected ? 'app-product-picker-card app-product-picker-card-active' : 'app-product-picker-card' }}"
@@ -144,7 +158,7 @@
                                                                 Precio
                                                             </p>
                                                             <p class="mt-0.5 text-base font-black tracking-tight {{ $isSelected ? 'text-white' : 'text-stone-950' }}">
-                                                                {{ number_format((float) ($listedProduct->has_discount ? $listedProduct->discounted_price : $listedProduct->sale_price), 2, ',', '.') }} &euro;
+                                                                {{ number_format((float) $listedProduct->discounted_price, 2, ',', '.') }} &euro;
                                                             </p>
                                                         </article>
 
@@ -166,7 +180,7 @@
                                         </div>
                                     @empty
                                         <div class="rounded-2xl border border-dashed border-stone-300 bg-stone-50 px-5 py-6 text-sm text-stone-600">
-                                            No hemos encontrado productos para esa busqueda.
+                                            {{ $stockFilter === 'out' ? 'No hay productos activos sin stock.' : ($stockFilter === 'low' ? 'No hay productos activos con stock bajo.' : 'No hemos encontrado productos para esa busqueda.') }}
                                         </div>
                                     @endforelse
                                     </div>
@@ -245,6 +259,7 @@
                                         @method('PATCH')
                                         <input type="hidden" name="return_query" value="{{ $searchQuery }}">
                                         <input type="hidden" name="return_scope" value="{{ $productScope }}">
+                                        <input type="hidden" name="return_stock" value="{{ $stockFilter }}">
                                         <input type="hidden" name="return_page" value="{{ $currentProductsPage }}">
 
                                         <div class="grid gap-6 md:grid-cols-2">
@@ -368,6 +383,7 @@
                                         @method('PATCH')
                                         <input type="hidden" name="return_query" value="{{ $searchQuery }}">
                                         <input type="hidden" name="return_scope" value="{{ $productScope }}">
+                                        <input type="hidden" name="return_stock" value="{{ $stockFilter }}">
                                         <input type="hidden" name="return_page" value="{{ $currentProductsPage }}">
 
                                         <div class="grid gap-6 md:grid-cols-2">

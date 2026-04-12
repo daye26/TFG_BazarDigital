@@ -83,8 +83,8 @@ class ProductController extends Controller
                 'alphabetical' => $productsQuery->orderBy('name'),
                 'alphabetical_desc' => $productsQuery->orderByDesc('name'),
                 'newest' => $productsQuery->latest(),
-                'price_asc' => $productsQuery->orderByRaw($this->discountedPriceSortExpression().' asc', ['percentage', 'fixed']),
-                'price_desc' => $productsQuery->orderByRaw($this->discountedPriceSortExpression().' desc', ['percentage', 'fixed']),
+                'price_asc' => $productsQuery->orderByDiscountedPrice(),
+                'price_desc' => $productsQuery->orderByDiscountedPrice('desc'),
                 default => $productsQuery->orderBy('name'),
             };
 
@@ -132,34 +132,13 @@ class ProductController extends Controller
                 ->sortBy(fn (Product $product) => mb_strtolower($product->name), SORT_NATURAL, true)
                 ->values(),
             'price_asc' => $products
-                ->sortBy(fn (Product $product) => $this->discountedPriceValue($product), SORT_NUMERIC)
+                ->sortBy(fn (Product $product) => $product->discountedPriceAmount(), SORT_NUMERIC)
                 ->values(),
             'price_desc' => $products
-                ->sortBy(fn (Product $product) => $this->discountedPriceValue($product), SORT_NUMERIC, true)
+                ->sortBy(fn (Product $product) => $product->discountedPriceAmount(), SORT_NUMERIC, true)
                 ->values(),
             default => $products->values(),
         };
-    }
-
-    private function discountedPriceValue(Product $product): float
-    {
-        $salePrice = (float) $product->sale_price;
-        $discountValue = (float) $product->discount_value;
-
-        if ($discountValue <= 0) {
-            return $salePrice;
-        }
-
-        return match ($product->discount_type) {
-            'percentage' => max($salePrice - ($salePrice * $discountValue / 100), 0),
-            'fixed' => max($salePrice - $discountValue, 0),
-            default => $salePrice,
-        };
-    }
-
-    private function discountedPriceSortExpression(): string
-    {
-        return '(sale_price - CASE WHEN discount_value > 0 AND discount_type = ? THEN sale_price * discount_value / 100 WHEN discount_value > 0 AND discount_type = ? THEN discount_value ELSE 0 END)';
     }
 
     private function paginateCollection(Collection $items, int $perPage, Request $request, string $pageName = 'page'): LengthAwarePaginator

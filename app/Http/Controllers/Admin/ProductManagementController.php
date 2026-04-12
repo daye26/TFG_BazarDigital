@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Category;
 use App\Models\Order;
 use App\Models\Product;
+use App\Services\AdminAlertService;
 use App\Services\CatalogSearchService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -18,7 +19,7 @@ use Illuminate\View\View;
 
 class ProductManagementController extends Controller
 {
-    public function index(): View
+    public function index(AdminAlertService $adminAlertService): View
     {
         $totalProducts = Product::query()->count();
         $activeProducts = Product::query()->where('is_active', true)->count();
@@ -31,6 +32,7 @@ class ProductManagementController extends Controller
                 ->latest()
                 ->take(8)
                 ->get(),
+            'alerts' => $adminAlertService->dashboardAlerts(),
             'stats' => [
                 'pending_orders' => $pendingOrders,
                 'ready_orders' => $readyOrders,
@@ -46,6 +48,7 @@ class ProductManagementController extends Controller
     {
         $searchQuery = trim($request->string('q')->toString());
         $productScope = $this->normalizeProductScope($request->string('scope')->toString());
+        $stockFilter = $this->normalizeStockFilter($request->string('stock')->toString());
         $selectedProduct = null;
 
         if ($request->filled('product')) {
@@ -55,7 +58,8 @@ class ProductManagementController extends Controller
         }
 
         $products = $searchQuery === ''
-            ? Product::query()
+            ? $this->applyStockFilterToQuery(
+                Product::query()
                 ->with('category')
                 ->when(
                     $productScope === 'active',
@@ -65,12 +69,16 @@ class ProductManagementController extends Controller
                     $productScope === 'inactive',
                     fn ($query) => $query->where('is_active', false)
                 )
+                ,
+                $stockFilter,
+            )
                 ->orderByDesc('updated_at')
                 ->orderByDesc('created_at')
                 ->paginate(12)
                 ->withQueryString()
             : $this->paginateCollection(
-                $catalogSearch->searchAdminProducts($searchQuery)
+                $this->applyStockFilterToCollection(
+                    $catalogSearch->searchAdminProducts($searchQuery)
                 ->when(
                     $productScope === 'active',
                     fn ($collection) => $collection->where('is_active', true)
@@ -80,6 +88,8 @@ class ProductManagementController extends Controller
                     fn ($collection) => $collection->where('is_active', false)
                 )
                 ->values(),
+                    $stockFilter,
+                ),
                 12,
                 $request,
             );
@@ -93,6 +103,8 @@ class ProductManagementController extends Controller
                 ->get(),
             'searchQuery' => $searchQuery,
             'productScope' => $productScope,
+            'stockFilter' => $stockFilter,
+            'lowStockThreshold' => AdminAlertService::LOW_STOCK_THRESHOLD,
         ]);
     }
 
@@ -203,6 +215,7 @@ class ProductManagementController extends Controller
             'is_active' => ['nullable', 'boolean'],
             'return_query' => ['nullable', 'string'],
             'return_scope' => ['nullable', 'in:all,active,inactive'],
+            'return_stock' => ['nullable', 'in:out,low'],
             'return_page' => ['nullable', 'integer', 'min:1'],
             'return_context' => ['nullable', 'in:manage,show'],
             'return_tab' => ['nullable', 'in:general,price'],
@@ -238,6 +251,7 @@ class ProductManagementController extends Controller
             $product,
             $validated['return_query'] ?? '',
             $validated['return_scope'] ?? 'all',
+            $validated['return_stock'] ?? '',
             $validated['return_page'] ?? null,
             'Caracteristicas del producto actualizadas correctamente.',
             $validated['return_context'] ?? 'manage',
@@ -257,6 +271,7 @@ class ProductManagementController extends Controller
             'discount_type' => ['required', 'in:fixed,percentage'],
             'return_query' => ['nullable', 'string'],
             'return_scope' => ['nullable', 'in:all,active,inactive'],
+            'return_stock' => ['nullable', 'in:out,low'],
             'return_page' => ['nullable', 'integer', 'min:1'],
             'return_context' => ['nullable', 'in:manage,show'],
             'return_tab' => ['nullable', 'in:general,price'],
@@ -277,6 +292,7 @@ class ProductManagementController extends Controller
             $product,
             $validated['return_query'] ?? '',
             $validated['return_scope'] ?? 'all',
+            $validated['return_stock'] ?? '',
             $validated['return_page'] ?? null,
             'Precio del producto actualizado correctamente.',
             $validated['return_context'] ?? 'manage',
@@ -354,6 +370,7 @@ class ProductManagementController extends Controller
         Product $product,
         string $searchQuery,
         string $productScope,
+        string $stockFilter,
         ?int $page,
         string $status,
         string $returnContext = 'manage',
@@ -377,6 +394,7 @@ class ProductManagementController extends Controller
                 'product' => $product->id,
                 'q' => $query !== '' ? $query : null,
                 'scope' => $productScope !== 'all' ? $productScope : null,
+                'stock' => $stockFilter !== '' ? $stockFilter : null,
                 'page' => $page,
             ]))
             ->with('status', $status);
@@ -385,6 +403,46 @@ class ProductManagementController extends Controller
     private function normalizeProductScope(string $productScope): string
     {
         return in_array($productScope, ['active', 'inactive'], true) ? $productScope : 'all';
+    }
+
+    private function normalizeStockFilter(string $stockFilter): string
+    {
+        return in_array($stockFilter, ['out', 'low'], true) ? $stockFilter : '';
+    }
+
+    private function applyStockFilterToQuery($query, string $stockFilter)
+    {
+        return $query
+            ->when(
+                $stockFilter === 'out',
+                fn ($builder) => $builder
+                    ->where('is_active', true)
+                    ->where('qty', '<=', 0)
+            )
+            ->when(
+                $stockFilter === 'low',
+                fn ($builder) => $builder
+                    ->where('is_active', true)
+                    ->whereBetween('qty', [1, AdminAlertService::LOW_STOCK_THRESHOLD])
+            );
+    }
+
+    private function applyStockFilterToCollection(Collection $items, string $stockFilter): Collection
+    {
+        return $items
+            ->when(
+                $stockFilter === 'out',
+                fn (Collection $collection) => $collection
+                    ->where('is_active', true)
+                    ->where('qty', '<=', 0)
+            )
+            ->when(
+                $stockFilter === 'low',
+                fn (Collection $collection) => $collection
+                    ->where('is_active', true)
+                    ->filter(fn (Product $product) => $product->qty >= 1 && $product->qty <= AdminAlertService::LOW_STOCK_THRESHOLD)
+            )
+            ->values();
     }
 
     private function paginateCollection(Collection $items, int $perPage, Request $request, string $pageName = 'page'): LengthAwarePaginator

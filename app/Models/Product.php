@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -68,13 +69,13 @@ class Product extends Model
         return $this->hasMany(OrderItem::class);
     }
 
-    public function getDiscountedPriceAttribute(): string
+    public function discountedPriceAmount(): float
     {
         $salePrice = (float) $this->sale_price;
         $discountValue = (float) $this->discount_value;
 
         if ($discountValue <= 0) {
-            return number_format($salePrice, 2, '.', '');
+            return $salePrice;
         }
 
         $discountedPrice = match ($this->discount_type) {
@@ -83,12 +84,47 @@ class Product extends Model
             default => throw new InvalidArgumentException('Unsupported discount type.'),
         };
 
-        return number_format(max($discountedPrice, 0), 2, '.', '');
+        return max($discountedPrice, 0);
+    }
+
+    public function getDiscountedPriceAttribute(): string
+    {
+        return number_format($this->discountedPriceAmount(), 2, '.', '');
     }
 
     public function getHasDiscountAttribute(): bool
     {
         return (float) $this->discount_value > 0;
+    }
+
+    public function scopeOrderByDiscountedPrice(Builder $query, string $direction = 'asc'): Builder
+    {
+        $direction = strtolower($direction) === 'desc' ? 'desc' : 'asc';
+
+        return $query->orderByRaw(
+            self::discountedPriceSortExpression().' '.$direction,
+            ['percentage', 'fixed']
+        );
+    }
+
+    public static function discountedPriceSortExpression(): string
+    {
+        return <<<'SQL'
+CASE
+    WHEN discount_value <= 0 THEN sale_price
+    WHEN discount_type = ? THEN
+        CASE
+            WHEN sale_price - (sale_price * discount_value / 100) < 0 THEN 0
+            ELSE sale_price - (sale_price * discount_value / 100)
+        END
+    WHEN discount_type = ? THEN
+        CASE
+            WHEN sale_price - discount_value < 0 THEN 0
+            ELSE sale_price - discount_value
+        END
+    ELSE sale_price
+END
+SQL;
     }
 
     public function getImageUrlAttribute(): ?string

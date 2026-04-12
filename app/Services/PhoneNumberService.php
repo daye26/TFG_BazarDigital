@@ -44,6 +44,27 @@ class PhoneNumberService
         }
     }
 
+    public function formatForDisplay(?string $phone): ?string
+    {
+        if (! is_string($phone) || trim($phone) === '') {
+            return null;
+        }
+
+        $normalizedPhone = preg_replace('/\s+/', '', trim($phone));
+
+        try {
+            $phoneNumber = $this->parse($normalizedPhone);
+
+            if (! $this->phoneNumberUtil->isValidNumber($phoneNumber)) {
+                throw new InvalidArgumentException('Invalid phone number.');
+            }
+
+            return '+'.$phoneNumber->getCountryCode().' '.$this->phoneNumberUtil->getNationalSignificantNumber($phoneNumber);
+        } catch (InvalidArgumentException) {
+            return preg_replace('/^(\+\d{1,3})(\d+)$/', '$1 $2', $normalizedPhone) ?: $normalizedPhone;
+        }
+    }
+
     /**
      * @return array{phone_country_code: string, phone_number: string}
      */

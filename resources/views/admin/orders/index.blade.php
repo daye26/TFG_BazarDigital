@@ -63,6 +63,8 @@
                             <a href="{{ route('admin.orders.index', array_filter(['scope' => 'preparable', 'q' => $searchQuery !== '' ? $searchQuery : null, 'date' => $selectedDate])) }}" class="{{ $scope === 'preparable' ? 'app-button-primary' : 'app-button-secondary' }}">Por preparar</a>
                             <a href="{{ route('admin.orders.index', array_filter(['scope' => 'ready', 'q' => $searchQuery !== '' ? $searchQuery : null, 'date' => $selectedDate])) }}" class="{{ $scope === 'ready' ? 'app-button-primary' : 'app-button-secondary' }}">Listos</a>
                             <a href="{{ route('admin.orders.index', array_filter(['scope' => 'cancelled', 'q' => $searchQuery !== '' ? $searchQuery : null, 'date' => $selectedDate])) }}" class="{{ $scope === 'cancelled' ? 'app-button-primary' : 'app-button-secondary' }}">Cancelados</a>
+                            <a href="{{ route('admin.orders.index', array_filter(['scope' => 'overdue_preparable', 'q' => $searchQuery !== '' ? $searchQuery : null, 'date' => $selectedDate])) }}" class="{{ $scope === 'overdue_preparable' ? 'app-button-primary' : 'app-button-secondary' }}">Preparar +24h</a>
+                            <a href="{{ route('admin.orders.index', array_filter(['scope' => 'stale_ready', 'q' => $searchQuery !== '' ? $searchQuery : null, 'date' => $selectedDate])) }}" class="{{ $scope === 'stale_ready' ? 'app-button-primary' : 'app-button-secondary' }}">Listos +48h</a>
                         </div>
                     </div>
 
