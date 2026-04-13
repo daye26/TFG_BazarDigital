@@ -23,7 +23,7 @@
             <div class="{{ $storeGlowClasses }}"></div>
 
             <header class="store-site-header relative z-50 border-b border-stone-200/80 bg-white/80 backdrop-blur">
-                <div class="store-shell flex flex-col gap-4 py-4 lg:grid lg:grid-cols-[auto_1fr_auto] lg:items-center">
+                <div class="store-site-header-row">
                     <div class="flex items-center justify-between gap-4">
                         <a href="{{ route('home') }}" class="flex items-center gap-3">
                             <span class="inline-flex h-11 w-11 items-center justify-center rounded-2xl bg-stone-900 text-sm font-black uppercase tracking-[0.2em] text-amber-200">BD</span>
@@ -126,14 +126,14 @@
 
                                         <x-dropdown-link :href="route('logout')"
                                             onclick="event.preventDefault(); this.closest('form').submit();">
-                                            Cerrar sesion
+                                            Cerrar sesión
                                         </x-dropdown-link>
                                     </form>
                                 </x-slot>
                             </x-dropdown>
                         @else
                             <a href="{{ route('login') }}" class="store-header-link">
-                                Iniciar sesion
+                                Iniciar sesión
                             </a>
                             <a href="{{ route('register') }}" class="store-header-link-primary">
                                 Crear cuenta

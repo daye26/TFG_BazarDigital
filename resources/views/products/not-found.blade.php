@@ -1,6 +1,6 @@
 <x-layouts.store title="Producto no encontrado | Bazar Digital">
     <section class="store-shell pb-10 pt-10">
-        <div class="store-panel mx-auto max-w-4xl">
+        <div class="store-panel store-panel-narrow">
             <p class="store-kicker">Producto no disponible</p>
             <h1 class="store-heading">Ese producto no existe o ya no esta disponible</h1>
             <p class="store-text mt-4 max-w-2xl">

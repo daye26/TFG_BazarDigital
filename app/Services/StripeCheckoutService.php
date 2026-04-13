@@ -164,7 +164,7 @@ class StripeCheckoutService
             }
         }
 
-        throw new RuntimeException('La sesion de Stripe no referencia ningun pedido.');
+        throw new RuntimeException('La sesión de Stripe no referencia ningún pedido.');
     }
 
     /**

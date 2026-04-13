@@ -1,6 +1,6 @@
 <x-layouts.store title="LO + NUEVO | Bazar Digital">
     <section class="store-shell pb-16 pt-10">
-        <div class="store-panel store-panel-soft mx-auto">
+        <div class="store-panel store-panel-soft store-panel-centered">
             <div>
                 <p class="store-kicker">Los productos mas recientes</p>
                 <h1 class="store-heading">LO + NUEVO</h1>
@@ -28,7 +28,7 @@
             </form>
         </div>
 
-        <div class="store-grid-auto mx-auto mt-8">
+        <div class="store-grid-auto store-results-shell">
             @forelse ($products as $product)
                 <x-store.responsive-product-card :product="$product" />
             @empty

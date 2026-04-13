@@ -14,7 +14,7 @@
                         </div>
                     @endif
 
-                    <section class="grid gap-5 lg:grid-cols-[minmax(0,1.12fr)_minmax(320px,0.88fr)]">
+                    <section class="app-dashboard-grid">
                         <div class="app-card-muted">
                             <p class="app-section-kicker">Catalogo y mantenimiento</p>
                             <h4 class="app-section-title">Acciones rapidas</h4>

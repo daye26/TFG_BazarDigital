@@ -3,6 +3,7 @@
         $isAdmin = Auth::user()?->isAdmin();
         $adminLinks = [
             ['label' => 'Panel', 'href' => route('admin.index'), 'active' => request()->routeIs('admin.index')],
+            ['label' => 'Estadisticas', 'href' => route('admin.stats.index'), 'active' => request()->routeIs('admin.stats.*')],
             ['label' => 'Pedidos', 'href' => route('admin.orders.index'), 'active' => request()->routeIs('admin.orders.*')],
             ['label' => 'Productos', 'href' => route('admin.products.manage'), 'active' => request()->routeIs('admin.products.*')],
             ['label' => 'Categorias', 'href' => route('admin.categories.manage'), 'active' => request()->routeIs('admin.categories.*')],
@@ -59,7 +60,7 @@
                             <x-dropdown-link :href="route('logout')"
                                     onclick="event.preventDefault();
                                                 this.closest('form').submit();">
-                                {{ __('Cerrar sesion') }}
+                                {{ __('Cerrar sesión') }}
                             </x-dropdown-link>
                         </form>
                     </x-slot>
@@ -109,7 +110,7 @@
                     <x-responsive-nav-link :href="route('logout')"
                             onclick="event.preventDefault();
                                         this.closest('form').submit();">
-                        {{ __('Cerrar sesion') }}
+                        {{ __('Cerrar sesión') }}
                     </x-responsive-nav-link>
                 </form>
             </div>

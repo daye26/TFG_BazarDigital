@@ -45,11 +45,13 @@
         <div class="app-order-lines-panel">
             @foreach ($order->items as $item)
                 @php
-                    $discountLabel = match ($item->discount_type) {
-                        'percentage' => 'Desc. ' . rtrim(rtrim(number_format((float) $item->discount_value, 2, ',', ''), '0'), ',') . '%',
-                        'fixed' => 'Desc. -' . number_format((float) $item->discount_value, 2, ',', '.') . ' EUR',
-                        default => null,
-                    };
+                    $discountLabel = $item->hasDiscount()
+                        ? match ($item->discount_type) {
+                            'percentage' => 'Desc. ' . rtrim(rtrim(number_format((float) $item->discount_value, 2, ',', ''), '0'), ',') . '%',
+                            'fixed' => 'Desc. -' . number_format((float) $item->discount_value, 2, ',', '.') . ' EUR',
+                            default => null,
+                        }
+                        : null;
 
                     $lineMeta = collect([
                         $item->product?->barcode ?? 'Snapshot sin producto enlazado',
@@ -83,7 +85,7 @@
                             {{ $item->quantity }} x {{ number_format((float) $item->unit_final_price, 2, ',', '.') }} &euro;
                         </p>
 
-                        @if ((float) $item->unit_price !== (float) $item->unit_final_price)
+                        @if ($item->hasDiscount())
                             <p class="text-xs text-stone-500">
                                 Base {{ number_format((float) $item->unit_price, 2, ',', '.') }} &euro;
                             </p>
@@ -98,7 +100,7 @@
         </div>
     </section>
 
-    <section class="grid gap-4 xl:grid-cols-[minmax(0,1fr)_minmax(320px,0.7fr)]">
+    <section class="app-order-details-layout">
         <article class="app-note-card">
             <p class="app-note-kicker">Datos del pedido</p>
             <div class="app-note-copy">
@@ -126,10 +128,12 @@
                     <dt>Subtotal</dt>
                     <dd class="app-summary-value">{{ number_format((float) $order->subtotal, 2, ',', '.') }} &euro;</dd>
                 </div>
-                <div class="app-summary-row">
-                    <dt>Descuento</dt>
-                    <dd class="app-summary-value">-{{ number_format((float) $order->discount_total, 2, ',', '.') }} &euro;</dd>
-                </div>
+                @if ($order->hasDiscount())
+                    <div class="app-summary-row">
+                        <dt>Descuento</dt>
+                        <dd class="app-summary-value">-{{ number_format((float) $order->discount_total, 2, ',', '.') }} &euro;</dd>
+                    </div>
+                @endif
                 <div class="app-summary-row">
                     <dt>IVA incluido</dt>
                     <dd class="app-summary-value">{{ number_format((float) $order->tax_total, 2, ',', '.') }} &euro;</dd>

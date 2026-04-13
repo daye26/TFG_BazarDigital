@@ -30,7 +30,7 @@ class StripeWebhookService
         $sessionPayload = $event['data']['object'] ?? null;
 
         if (! is_array($sessionPayload)) {
-            throw new InvalidArgumentException('El payload del webhook de Stripe no incluye una sesion valida.');
+            throw new InvalidArgumentException('El payload del webhook de Stripe no incluye una sesión válida.');
         }
 
         if (($sessionPayload['payment_status'] ?? null) !== 'paid') {

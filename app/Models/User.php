@@ -62,7 +62,7 @@ class User extends Authenticatable
 
     public function redirectRouteName(): string
     {
-        return $this->isAdmin() ? 'admin.index' : 'home';
+        return $this->isAdmin() ? 'admin.index' : 'products.index';
     }
 
     public function cartItems(): HasMany

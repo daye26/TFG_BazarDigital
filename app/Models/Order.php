@@ -66,6 +66,11 @@ class Order extends Model
         return $this->hasMany(OrderItem::class);
     }
 
+    public function hasDiscount(): bool
+    {
+        return $this->discountTotalCents() > 0;
+    }
+
     public function canBeCancelled(): bool
     {
         return in_array($this->status, [
@@ -114,5 +119,10 @@ class Order extends Model
         }
 
         return $this->usesStorePayment() || $this->isPaid();
+    }
+
+    protected function discountTotalCents(): int
+    {
+        return (int) round(((float) $this->discount_total) * 100);
     }
 }

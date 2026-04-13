@@ -28,7 +28,7 @@
                         </div>
                     @endif
 
-                    <form method="POST" action="{{ route('admin.products.store') }}" enctype="multipart/form-data" @submit="applyPreview()" class="grid gap-8 lg:grid-cols-[minmax(0,2fr)_minmax(320px,1fr)]">
+                    <form method="POST" action="{{ route('admin.products.store') }}" enctype="multipart/form-data" @submit="applyPreview()" class="app-form-layout">
                         @csrf
 
                         <div class="space-y-8">

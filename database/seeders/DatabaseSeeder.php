@@ -160,7 +160,7 @@ class DatabaseSeeder extends Seeder
             ['barcode' => '000000000003'],
             [
                 'name' => 'Cuaderno A5',
-                'description' => 'Cuaderno tamano A5 con 80 hojas rayadas.',
+                'description' => 'Cuaderno tamaño A5 con 80 hojas rayadas.',
                 'tax' => 21,
                 'cost_price' => 0.9200,
                 'sale_price' => 2.50,
@@ -292,8 +292,8 @@ class DatabaseSeeder extends Seeder
         $microfiberCloth = Product::updateOrCreate(
             ['barcode' => '000000000010'],
             [
-                'name' => 'Pack de panos microfibra',
-                'description' => 'Pack de 4 panos reutilizables para limpieza delicada.',
+                'name' => 'Pack de paños microfibra',
+                'description' => 'Pack de 4 paños reutilizables para limpieza delicada.',
                 'tax' => 21,
                 'cost_price' => 1.6400,
                 'sale_price' => 4.75,

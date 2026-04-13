@@ -168,7 +168,7 @@
             x-init="init()"
             x-effect="refreshPreview()"
         >
-            <form method="POST" action="{{ route('admin.products.update.pricing', $product) }}" @submit="applyPreview()" class="grid gap-8 xl:grid-cols-[minmax(0,1.8fr)_minmax(280px,0.75fr)]">
+            <form method="POST" action="{{ route('admin.products.update.pricing', $product) }}" @submit="applyPreview()" class="app-pricing-layout">
                 @csrf
                 @method('PATCH')
                 <input type="hidden" name="return_context" value="show">

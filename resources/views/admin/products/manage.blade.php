@@ -35,7 +35,7 @@
                             : 1;
                     @endphp
 
-                    <div class="grid gap-8 xl:grid-cols-[minmax(290px,0.68fr)_minmax(0,1.32fr)] 2xl:grid-cols-[minmax(300px,0.64fr)_minmax(0,1.36fr)]">
+                    <div class="app-admin-manage-layout-wide">
                         <aside class="space-y-6">
                             <section class="app-card-muted">
                                 <p class="app-section-kicker">Buscador admin</p>
@@ -127,7 +127,7 @@
                                                 ])) }}"
                                                 class="{{ $isSelected ? 'app-product-picker-card app-product-picker-card-active' : 'app-product-picker-card' }}"
                                             >
-                                                <div class="grid grid-cols-[minmax(0,1fr)_auto] items-start gap-x-3 gap-y-2">
+                                                <div class="app-product-picker-head">
                                                     <div class="min-w-0 sm:pr-2">
                                                         <div class="flex flex-wrap items-center gap-2">
                                                             <p class="text-lg font-black tracking-tight {{ $isSelected ? 'text-white' : 'text-stone-950' }}">
@@ -301,7 +301,7 @@
                                             </div>
 
                                             <div class="md:col-span-2">
-                                                <div class="grid gap-4 lg:grid-cols-[minmax(0,1fr)_auto]">
+                                                <div class="app-product-media-layout">
                                                     <div class="app-image-preview-card bg-stone-50">
                                                         <p class="text-xs font-semibold uppercase tracking-[0.2em] text-stone-500">Imagen actual</p>
                                                         <div class="app-image-preview-media min-h-52 bg-white">
@@ -369,7 +369,7 @@
                                         </x-slot>
                                     </x-admin.section-header>
 
-                                    <form method="POST" action="{{ route('admin.products.update.pricing', $selectedProduct) }}" @submit="applyPreview()" class="mt-6 grid gap-8 xl:grid-cols-[minmax(0,1.8fr)_minmax(280px,0.7fr)] 2xl:grid-cols-[minmax(0,1.9fr)_minmax(300px,0.68fr)]">
+                                    <form method="POST" action="{{ route('admin.products.update.pricing', $selectedProduct) }}" @submit="applyPreview()" class="app-pricing-layout-wide mt-6">
                                         @csrf
                                         @method('PATCH')
                                         <input type="hidden" name="return_query" value="{{ $searchQuery }}">

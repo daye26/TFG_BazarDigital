@@ -24,7 +24,7 @@
             @csrf
 
             <button type="submit" class="form-link-muted">
-                {{ __('Cerrar sesion') }}
+                {{ __('Cerrar sesión') }}
             </button>
         </form>
     </div>

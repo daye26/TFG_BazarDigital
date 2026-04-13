@@ -24,9 +24,13 @@
             </div>
         @endif
 
-        <div class="mt-8 grid gap-6 lg:grid-cols-[1.18fr_0.82fr]">
+        <div class="store-summary-layout">
             <div class="space-y-4">
                 @foreach ($order->items as $item)
+                    @php
+                        $baseLineTotal = $item->baseLineTotalAmount();
+                    @endphp
+
                     <article class="store-card store-cart-compact-card">
                         <div class="store-cart-compact-layout">
                             <div class="min-w-0">
@@ -45,9 +49,9 @@
                                 <p class="store-detail-label">Total</p>
 
                                 <div class="mt-0 flex w-full items-center justify-end gap-2">
-                                    @if (((float) $item->unit_price * $item->quantity) > (float) $item->line_total)
+                                    @if ($item->hasDiscount())
                                         <p class="store-price-old">
-                                            {{ number_format((float) $item->unit_price * $item->quantity, 2, ',', '.') }} &euro;
+                                            {{ number_format($baseLineTotal, 2, ',', '.') }} &euro;
                                         </p>
                                     @endif
 
@@ -83,10 +87,12 @@
                         <span>Subtotal</span>
                         <span class="store-summary-value">{{ number_format((float) $order->subtotal, 2, ',', '.') }} &euro;</span>
                     </div>
-                    <div class="store-summary-row">
-                        <span>Descuento</span>
-                        <span class="store-summary-value">-{{ number_format((float) $order->discount_total, 2, ',', '.') }} &euro;</span>
-                    </div>
+                    @if ($order->hasDiscount())
+                        <div class="store-summary-row">
+                            <span>Descuento</span>
+                            <span class="store-summary-value">-{{ number_format((float) $order->discount_total, 2, ',', '.') }} &euro;</span>
+                        </div>
+                    @endif
                     <div class="store-summary-row">
                         <span>IVA incluido</span>
                         <span class="store-summary-value">{{ number_format((float) $order->tax_total, 2, ',', '.') }} &euro;</span>

@@ -1,6 +1,6 @@
 <x-layouts.store title="Productos | Bazar Digital">
     <section class="store-shell pb-16 pt-10">
-        <div class="store-panel store-panel-soft mx-auto">
+        <div class="store-panel store-panel-soft store-panel-centered">
             <div>
                 <p class="store-kicker">Productos del bazar</p>
                 <h1 class="store-heading">LA TIENDA</h1>
@@ -38,7 +38,7 @@
         </div>
 
         @if ($searchQuery !== '' && $relatedCategories->isNotEmpty())
-            <div class="store-panel mx-auto mt-6">
+            <div class="store-panel store-panel-centered mt-6">
                 <p class="store-kicker">Categorias relacionadas</p>
                 <p class="store-text mt-3 max-w-2xl">
                     Si eliges una categoria, entraras en la tienda para ver todos los productos de esa categoria.
@@ -84,7 +84,7 @@
             </form>
         </div>
 
-        <div class="{{ $searchQuery !== '' ? 'store-search-results-list mx-auto mt-8' : 'store-grid-auto mx-auto mt-8' }}">
+        <div class="{{ $searchQuery !== '' ? 'store-search-results-list store-results-shell' : 'store-grid-auto store-results-shell' }}">
             @forelse ($products as $product)
                 @if ($searchQuery !== '')
                     <x-store.product-card
@@ -110,7 +110,7 @@
         </div>
 
         @if ($products->hasPages())
-            <div class="mx-auto mt-8 max-w-6xl">
+            <div class="store-pagination-shell">
                 {{ $products->links() }}
             </div>
         @endif

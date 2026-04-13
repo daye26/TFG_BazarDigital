@@ -57,6 +57,6 @@
     <span class="store-text">La compra solo esta disponible para clientes.</span>
 @else
     <a href="{{ route('login') }}" class="{{ $buttonClass }}">
-        Inicia sesion para comprar
+        Inicia sesión para comprar
     </a>
 @endif

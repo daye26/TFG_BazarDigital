@@ -48,7 +48,7 @@ class StripeCheckoutController extends Controller
 
         if ($sessionId === '') {
             return to_route('orders.show', $order)->withErrors([
-                'order' => 'Stripe no ha devuelto una sesion valida para confirmar el pago.',
+                'order' => 'Stripe no ha devuelto una sesión válida para confirmar el pago.',
             ]);
         }
 

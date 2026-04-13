@@ -89,7 +89,7 @@ class ProductController extends Controller
             };
 
             $products = $productsQuery
-                ->paginate(20)
+                ->paginate(5)
                 ->withQueryString();
         }
 

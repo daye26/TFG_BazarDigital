@@ -1,6 +1,6 @@
 <x-layouts.store title="Bazar Digital">
     <section class="store-shell pb-10 pt-10 lg:pt-14">
-        <div class="grid gap-8 lg:grid-cols-[1.2fr_0.8fr]">
+        <div class="store-home-hero-layout">
             <div class="store-panel-dark">
                 <p class="store-kicker-light">Bazar para el dia a dia</p>
                 <h1 class="store-heading-xl max-w-xl text-white">Productos utiles, precios claros y una base limpia para crecer.</h1>

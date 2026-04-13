@@ -56,4 +56,34 @@ class OrderItem extends Model
     {
         return $this->belongsTo(Product::class);
     }
+
+    public function hasDiscount(): bool
+    {
+        return $this->discountCents() > 0;
+    }
+
+    public function baseLineTotalAmount(): float
+    {
+        return $this->baseLineTotalCents() / 100;
+    }
+
+    protected function baseLineTotalCents(): int
+    {
+        return $this->amountToCents($this->unit_price) * $this->quantity;
+    }
+
+    protected function lineTotalCents(): int
+    {
+        return $this->amountToCents($this->line_total);
+    }
+
+    protected function discountCents(): int
+    {
+        return max($this->baseLineTotalCents() - $this->lineTotalCents(), 0);
+    }
+
+    protected function amountToCents(float|int|string|null $amount): int
+    {
+        return (int) round(((float) $amount) * 100);
+    }
 }

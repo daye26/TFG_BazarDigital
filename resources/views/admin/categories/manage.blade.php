@@ -17,7 +17,7 @@
                         <div class="app-alert-error">Revisa los campos marcados. Hay cambios en la categoria que no se han podido guardar.</div>
                     @endif
 
-                    <div class="grid gap-8 xl:grid-cols-[minmax(280px,0.8fr)_minmax(0,1.2fr)]">
+                    <div class="app-admin-manage-layout">
                         <aside class="space-y-6">
                             <section class="app-card">
                                 <x-admin.section-header
@@ -108,7 +108,7 @@
                                         </x-slot>
                                     </x-admin.section-header>
 
-                                    <form method="POST" action="{{ route('admin.categories.update', $selectedCategory) }}" class="mt-6 grid gap-8 lg:grid-cols-[minmax(0,1.6fr)_minmax(280px,0.7fr)]">
+                                    <form method="POST" action="{{ route('admin.categories.update', $selectedCategory) }}" class="app-category-edit-layout mt-6">
                                         @csrf
                                         @method('PATCH')
 

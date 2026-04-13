@@ -20,7 +20,7 @@
             </div>
         @endif
 
-        <div class="mt-8 grid gap-6 lg:grid-cols-[1.18fr_0.82fr]">
+        <div class="store-summary-layout">
             <div class="space-y-4">
                 @forelse ($items as $item)
                     <article
@@ -159,7 +159,7 @@
                                     <label class="store-choice-card">
                                         <input type="radio" name="payment_method" value="online" @checked(old('payment_method') === 'online')>
                                         <span>
-                                            <span class="block font-bold text-stone-950">Pao online</span>
+                                            <span class="block font-bold text-stone-950">Pago online</span>
                                             <span class="store-text mt-1 block">Se te redirigirá a Stripe Checkout para completar el pago.</span>
                                         </span>
                                     </label>

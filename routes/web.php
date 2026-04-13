@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\AdminStatsController;
 use App\Http\Controllers\Admin\OrderManagementController;
 use App\Http\Controllers\Admin\ProductManagementController;
 use App\Http\Controllers\CartController;
@@ -22,6 +23,7 @@ Route::get('/search/suggestions', [SearchController::class, 'suggestions'])->nam
 
 Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/admin', [ProductManagementController::class, 'index'])->name('admin.index');
+    Route::get('/admin/stats', [AdminStatsController::class, 'index'])->name('admin.stats.index');
     Route::get('/admin/orders', [OrderManagementController::class, 'index'])->name('admin.orders.index');
     Route::get('/admin/orders/{order}', [OrderManagementController::class, 'show'])->name('admin.orders.show');
     Route::patch('/admin/orders/{order}/ready', [OrderManagementController::class, 'ready'])->name('admin.orders.ready');
