@@ -2,18 +2,21 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Enums\OrderDocumentFormat;
 use App\Enums\OrderStatus;
 use App\Enums\PaymentMethod;
 use App\Enums\PaymentStatus;
 use App\Http\Controllers\Controller;
 use App\Models\Order;
 use App\Services\AdminAlertService;
+use App\Services\OrderDocumentService;
 use App\Services\OrderService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\View\View;
 use RuntimeException;
+use Symfony\Component\HttpFoundation\Response;
 
 class OrderManagementController extends Controller
 {
@@ -99,6 +102,14 @@ class OrderManagementController extends Controller
             'returnSelectedDate' => $selectedDate,
             'returnPage' => $page,
         ]);
+    }
+
+    public function download(
+        Order $order,
+        OrderDocumentFormat $format,
+        OrderDocumentService $orderDocumentService,
+    ): Response {
+        return $orderDocumentService->downloadForAdmin($order, $format);
     }
 
     public function ready(Request $request, Order $order, OrderService $orderService): RedirectResponse

@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\OrderDocumentFormat;
 use App\Enums\OrderStatus;
 use App\Enums\PaymentMethod;
 use App\Models\Order;
+use App\Services\OrderDocumentService;
 use App\Services\OrderService;
 use App\Services\StripeCheckoutService;
 use Illuminate\Http\RedirectResponse;
@@ -12,6 +14,7 @@ use Illuminate\Http\Request;
 use Illuminate\Validation\Rules\Enum;
 use Illuminate\View\View;
 use RuntimeException;
+use Symfony\Component\HttpFoundation\Response;
 
 class OrderController extends Controller
 {
@@ -48,6 +51,18 @@ class OrderController extends Controller
         return view('orders.show', [
             'order' => $order->load(['items.product']),
         ]);
+    }
+
+    public function download(
+        Request $request,
+        Order $order,
+        OrderDocumentFormat $format,
+        OrderDocumentService $orderDocumentService,
+    ): Response {
+        $this->ensureCustomer($request);
+        $this->ensureOrderBelongsToUser($request, $order);
+
+        return $orderDocumentService->downloadForCustomer($order, $format);
     }
 
     public function store(

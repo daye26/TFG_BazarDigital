@@ -126,6 +126,10 @@
                                     <div class="app-order-summary-side">
                                         <div class="app-order-summary-actions-row">
                                             <div class="app-order-summary-controls" data-no-toggle>
+                                                <a href="{{ route('admin.orders.documents.download', ['order' => $order, 'format' => 'ticket']) }}" class="app-button-secondary-compact">
+                                                    Ticket
+                                                </a>
+
                                                 <a href="{{ route('admin.orders.show', array_filter([
                                                     'order' => $order->id,
                                                     'scope' => $scope !== 'all' ? $scope : null,

@@ -110,6 +110,10 @@
                 @endif
 
                 <div class="mt-8 flex flex-col gap-3">
+                    <a href="{{ route('orders.documents.download', ['order' => $order, 'format' => 'ticket']) }}" class="store-button-primary w-full justify-center">
+                        Descargar ticket
+                    </a>
+
                     @if ($order->canRetryOnlinePayment())
                         <form method="POST" action="{{ route('checkout.pay', $order) }}">
                             @csrf

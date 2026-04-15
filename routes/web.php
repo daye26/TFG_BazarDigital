@@ -26,6 +26,7 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/admin/stats', [AdminStatsController::class, 'index'])->name('admin.stats.index');
     Route::get('/admin/orders', [OrderManagementController::class, 'index'])->name('admin.orders.index');
     Route::get('/admin/orders/{order}', [OrderManagementController::class, 'show'])->name('admin.orders.show');
+    Route::get('/admin/orders/{order}/documents/{format}', [OrderManagementController::class, 'download'])->name('admin.orders.documents.download');
     Route::patch('/admin/orders/{order}/ready', [OrderManagementController::class, 'ready'])->name('admin.orders.ready');
     Route::patch('/admin/orders/{order}/complete', [OrderManagementController::class, 'complete'])->name('admin.orders.complete');
     Route::get('/admin/products', [ProductManagementController::class, 'manage'])->name('admin.products.manage');
@@ -53,6 +54,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
     Route::post('/orders', [OrderController::class, 'store'])->name('orders.store');
     Route::get('/orders/{order}', [OrderController::class, 'show'])->name('orders.show');
+    Route::get('/orders/{order}/documents/{format}', [OrderController::class, 'download'])->name('orders.documents.download');
     Route::patch('/orders/{order}/payment-method/store', [OrderController::class, 'switchToStorePayment'])->name('orders.payment.store');
     Route::patch('/orders/{order}/cancel', [OrderController::class, 'cancel'])->name('orders.cancel');
 

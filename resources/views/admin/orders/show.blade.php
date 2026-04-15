@@ -37,6 +37,10 @@
                         </div>
 
                         <div class="flex flex-wrap gap-3">
+                            <a href="{{ route('admin.orders.documents.download', ['order' => $order, 'format' => 'ticket']) }}" class="app-button-secondary">
+                                Descargar ticket
+                            </a>
+
                             @if ($order->status->value === 'pending' && $order->canBePrepared())
                                 <form method="POST" action="{{ route('admin.orders.ready', $order) }}" x-data="{ confirming: false }" class="flex flex-wrap gap-3">
                                     @csrf

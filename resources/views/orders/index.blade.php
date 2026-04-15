@@ -45,6 +45,10 @@
                                 </div>
 
                                 <div class="flex flex-wrap gap-3 lg:justify-end">
+                                    <a href="{{ route('orders.documents.download', ['order' => $order, 'format' => 'ticket']) }}" class="store-button-secondary">
+                                        Ticket
+                                    </a>
+
                                     @if ($order->canRetryOnlinePayment())
                                         <form method="POST" action="{{ route('checkout.pay', $order) }}">
                                             @csrf
@@ -111,6 +115,10 @@
                                 </div>
 
                                 <div class="flex flex-wrap gap-3 lg:justify-end">
+                                    <a href="{{ route('orders.documents.download', ['order' => $order, 'format' => 'ticket']) }}" class="store-button-secondary">
+                                        Ticket
+                                    </a>
+
                                     @if ($order->canRetryOnlinePayment())
                                         <form method="POST" action="{{ route('checkout.pay', $order) }}">
                                             @csrf
