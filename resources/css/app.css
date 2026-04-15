@@ -140,8 +140,32 @@
         @apply flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between;
     }
 
+    .store-split-layout {
+        @apply flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between;
+    }
+
+    .store-split-side {
+        @apply flex flex-col gap-4 lg:items-end;
+    }
+
+    .store-pill-row-end {
+        @apply flex flex-wrap gap-2 lg:justify-end;
+    }
+
+    .store-button-row-end {
+        @apply flex flex-wrap gap-3 lg:justify-end;
+    }
+
     .store-summary-layout {
         @apply mt-8 grid gap-6 lg:grid-cols-[1.18fr_0.82fr];
+    }
+
+    .store-summary-panel-sticky {
+        @apply h-fit lg:sticky lg:top-6;
+    }
+
+    .store-stack-actions {
+        @apply mt-8 flex flex-col gap-3;
     }
 
     .store-home-hero-layout {
@@ -1009,6 +1033,14 @@
         @apply text-sm text-stone-500;
     }
 
+    .app-form-grid-2 {
+        @apply grid gap-6 md:grid-cols-2;
+    }
+
+    .app-split-layout {
+        @apply flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between;
+    }
+
     .app-product-picker-list {
         @apply mt-6 rounded-[2rem] border border-stone-200 bg-stone-50/90 p-3;
     }
@@ -1029,12 +1061,28 @@
         @apply border-white/15 bg-white/10 text-white shadow-none;
     }
 
+    .app-picker-title {
+        @apply text-lg font-black tracking-tight;
+    }
+
+    .app-picker-stat-label {
+        @apply text-[8px] font-semibold uppercase tracking-[0.18em];
+    }
+
+    .app-picker-stat-value {
+        @apply mt-0.5 text-base font-black tracking-tight;
+    }
+
     .app-note-kicker {
         @apply text-sm font-semibold uppercase tracking-[0.2em] text-amber-700;
     }
 
     .app-note-copy {
         @apply mt-5 space-y-3 text-sm leading-6 text-stone-700;
+    }
+
+    .app-lead-copy {
+        @apply mt-3 text-sm leading-6 text-stone-600;
     }
 
     .app-section-kicker {
@@ -1133,6 +1181,14 @@
         @apply mt-1 text-xs uppercase tracking-[0.2em] text-stone-500;
     }
 
+    .app-mini-card-value {
+        @apply mt-3 text-lg font-black tracking-tight text-stone-950;
+    }
+
+    .app-mini-card-copy {
+        @apply mt-2 text-sm text-stone-500;
+    }
+
     .app-mini-card-row {
         @apply mt-3 flex items-center justify-between gap-3 text-sm;
     }
@@ -1163,6 +1219,14 @@
 
     .app-image-preview-media {
         @apply mt-4 flex min-h-56 items-center justify-center overflow-hidden rounded-2xl bg-stone-100;
+    }
+
+    .app-meta-label {
+        @apply text-xs font-semibold uppercase tracking-[0.2em] text-stone-500;
+    }
+
+    .app-placeholder-copy {
+        @apply px-4 text-center text-sm font-medium text-stone-500;
     }
 
     .profile-card {
@@ -1211,6 +1275,22 @@
 
     .app-summary-total-value {
         @apply text-xl font-black tracking-tight text-stone-950;
+    }
+
+    .app-summary-emphasis-value {
+        @apply mt-2 text-4xl font-black tracking-tight text-stone-950;
+    }
+
+    .app-summary-emphasis-value-success {
+        @apply mt-2 text-2xl font-black tracking-tight text-emerald-700;
+    }
+
+    .app-summary-compact-value {
+        @apply mt-2 text-3xl font-black tracking-tight text-stone-950;
+    }
+
+    .app-summary-compact-value-success {
+        @apply mt-2 text-xl font-black tracking-tight text-emerald-700;
     }
 
     .app-search-shell {

@@ -40,7 +40,7 @@
                             <section class="app-card-muted">
                                 <p class="app-section-kicker">Buscador admin</p>
                                 <h4 class="app-section-title">Encuentra el producto correcto</h4>
-                                <p class="mt-3 text-sm leading-6 text-stone-600">
+                                <p class="app-lead-copy">
                                     Este buscador da prioridad al codigo de barras para localizar antes el producto que quieres corregir.
                                 </p>
 
@@ -130,7 +130,7 @@
                                                 <div class="app-product-picker-head">
                                                     <div class="min-w-0 sm:pr-2">
                                                         <div class="flex flex-wrap items-center gap-2">
-                                                            <p class="text-lg font-black tracking-tight {{ $isSelected ? 'text-white' : 'text-stone-950' }}">
+                                                            <p class="app-picker-title {{ $isSelected ? 'text-white' : 'text-stone-950' }}">
                                                                 {{ $listedProduct->name }}
                                                             </p>
                                                             <span class="{{ $isSelected ? 'text-stone-400' : 'text-stone-300' }}">|</span>
@@ -149,19 +149,19 @@
 
                                                     <div class="flex shrink-0 items-start gap-1.5 border-l {{ $isSelected ? 'border-white/15 pl-2.5' : 'border-stone-200 pl-2.5' }}">
                                                         <article class="{{ $isSelected ? 'app-product-picker-stat app-product-picker-stat-active' : 'app-product-picker-stat' }}">
-                                                            <p class="text-[8px] font-semibold uppercase tracking-[0.18em] {{ $isSelected ? 'text-stone-300' : 'text-stone-500' }}">
+                                                            <p class="app-picker-stat-label {{ $isSelected ? 'text-stone-300' : 'text-stone-500' }}">
                                                                 Precio
                                                             </p>
-                                                            <p class="mt-0.5 text-base font-black tracking-tight {{ $isSelected ? 'text-white' : 'text-stone-950' }}">
+                                                            <p class="app-picker-stat-value {{ $isSelected ? 'text-white' : 'text-stone-950' }}">
                                                                 {{ number_format((float) $listedProduct->discounted_price, 2, ',', '.') }} &euro;
                                                             </p>
                                                         </article>
 
                                                         <article class="{{ $isSelected ? 'app-product-picker-stat app-product-picker-stat-active' : 'app-product-picker-stat' }}">
-                                                            <p class="text-[8px] font-semibold uppercase tracking-[0.18em] {{ $isSelected ? 'text-stone-300' : 'text-stone-500' }}">
+                                                            <p class="app-picker-stat-label {{ $isSelected ? 'text-stone-300' : 'text-stone-500' }}">
                                                                 Stock
                                                             </p>
-                                                            <p class="mt-0.5 text-base font-black tracking-tight {{ $isSelected ? 'text-white' : 'text-stone-950' }}">
+                                                            <p class="app-picker-stat-value {{ $isSelected ? 'text-white' : 'text-stone-950' }}">
                                                                 {{ $listedProduct->qty }}
                                                             </p>
                                                         </article>
@@ -193,11 +193,11 @@
                             @if ($selectedProduct)
                                 <div x-data="{ activeTab: @js($activeEditorTab) }" class="space-y-6">
                                 <section class="app-note-card">
-                                    <div class="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
+                                    <div class="app-split-layout">
                                         <div>
                                             <p class="app-note-kicker">Producto seleccionado</p>
                                             <h4 class="app-note-title">{{ $selectedProduct->name }}</h4>
-                                            <p class="mt-3 text-sm leading-6 text-stone-600">
+                                            <p class="app-lead-copy">
                                                 Codigo {{ $selectedProduct->barcode }} · {{ $selectedProduct->category?->name ?? 'Sin categoria' }} · {{ $selectedProduct->is_active ? 'Visible en tienda' : 'Oculto en tienda' }}
                                             </p>
                                         </div>
@@ -255,7 +255,7 @@
                                         <input type="hidden" name="return_stock" value="{{ $stockFilter }}">
                                         <input type="hidden" name="return_page" value="{{ $currentProductsPage }}">
 
-                                        <div class="grid gap-6 md:grid-cols-2">
+                                        <div class="app-form-grid-2">
                                             <div>
                                                 <x-input-label for="barcode">Codigo de barras <span class="text-red-600">*</span></x-input-label>
                                                 <x-text-input id="barcode" name="barcode" type="text" class="mt-2 block w-full" :value="old('barcode', $selectedProduct->barcode)" required />
@@ -303,12 +303,12 @@
                                             <div class="md:col-span-2">
                                                 <div class="app-product-media-layout">
                                                     <div class="app-image-preview-card bg-stone-50">
-                                                        <p class="text-xs font-semibold uppercase tracking-[0.2em] text-stone-500">Imagen actual</p>
+                                                        <p class="app-meta-label">Imagen actual</p>
                                                         <div class="app-image-preview-media min-h-52 bg-white">
                                                             @if ($selectedProduct->image_url)
                                                                 <img src="{{ $selectedProduct->image_url }}" alt="Imagen actual de {{ $selectedProduct->name }}" class="h-full max-h-64 w-full object-contain">
                                                             @else
-                                                                <span class="px-4 text-center text-sm font-medium text-stone-500">Este producto no tiene imagen guardada.</span>
+                                                                <span class="app-placeholder-copy">Este producto no tiene imagen guardada.</span>
                                                             @endif
                                                         </div>
                                                         @if ($selectedProduct->image)
@@ -377,7 +377,7 @@
                                         <input type="hidden" name="return_stock" value="{{ $stockFilter }}">
                                         <input type="hidden" name="return_page" value="{{ $currentProductsPage }}">
 
-                                        <div class="grid gap-6 md:grid-cols-2">
+                                        <div class="app-form-grid-2">
                                             <div>
                                                 <x-input-label for="cost_price">Coste base <span class="text-red-600">*</span></x-input-label>
                                                 <x-text-input id="cost_price" name="cost_price" type="number" min="0.0001" step="0.0001" class="mt-2 block w-full" x-model="costPrice" @focus="pricingMode = 'margin'" @input="pricingMode = 'margin'" @blur="applyPreview()" required />
@@ -434,12 +434,12 @@
                                                     <dd class="app-summary-value" x-text="formatTax(tax)"></dd>
                                                 </div>
                                                 <div class="border-t border-amber-200 pt-4">
-                                                    <dt class="text-xs font-semibold uppercase tracking-[0.2em] text-stone-500">Precio base a guardar</dt>
-                                                    <dd class="mt-2 text-4xl font-black tracking-tight text-stone-950" x-text="formatCurrency(displaySalePriceValue(), 2)"></dd>
+                                                    <dt class="app-meta-label">Precio base a guardar</dt>
+                                                    <dd class="app-summary-emphasis-value" x-text="formatCurrency(displaySalePriceValue(), 2)"></dd>
                                                 </div>
                                                 <div class="pt-2">
-                                                    <dt class="text-xs font-semibold uppercase tracking-[0.2em] text-stone-500">Precio final con descuento</dt>
-                                                    <dd class="mt-2 text-2xl font-black tracking-tight text-emerald-700" x-text="formatCurrency(displayDiscountedSalePriceValue(), 2)"></dd>
+                                                    <dt class="app-meta-label">Precio final con descuento</dt>
+                                                    <dd class="app-summary-emphasis-value-success" x-text="formatCurrency(displayDiscountedSalePriceValue(), 2)"></dd>
                                                 </div>
                                             </dl>
                                             <p class="mt-5 text-xs leading-5 text-stone-500">

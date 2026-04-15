@@ -21,7 +21,7 @@
                         <div class="space-y-8">
                             <section class="app-card-muted">
                                 <h4 class="app-form-section-title">Datos de la categoria</h4>
-                                <div class="mt-6 grid gap-6 md:grid-cols-2">
+                                <div class="mt-6 app-form-grid-2">
                                     <div>
                                         <x-input-label for="name">
                                             Nombre <span class="text-red-600">*</span>

@@ -34,7 +34,7 @@
                         <div class="space-y-8">
                             <section class="app-card-muted">
                                 <h4 class="app-form-section-title">Ficha del producto</h4>
-                                <div class="mt-6 grid gap-6 md:grid-cols-2">
+                                <div class="mt-6 app-form-grid-2">
                                     <div>
                                         <x-input-label for="barcode">
                                             Codigo de barras <span class="text-red-600">*</span>
@@ -99,13 +99,13 @@
 
                                     <div class="md:col-span-2">
                                         <div class="app-image-preview-card">
-                                            <p class="text-xs font-semibold uppercase tracking-[0.2em] text-stone-500">Vista previa de imagen</p>
+                                            <p class="app-meta-label">Vista previa de imagen</p>
                                             <div class="app-image-preview-media">
                                                 <template x-if="imagePreviewUrl">
                                                     <img :src="imagePreviewUrl" :alt="imageFileName || 'Vista previa de imagen'" class="h-full max-h-72 w-full object-contain">
                                                 </template>
                                                 <template x-if="!imagePreviewUrl">
-                                                    <span class="px-4 text-center text-sm font-medium text-stone-500">
+                                                    <span class="app-placeholder-copy">
                                                         La imagen se mostrara aqui en cuanto la selecciones.
                                                     </span>
                                                 </template>
@@ -118,7 +118,7 @@
 
                             <section class="app-card">
                                 <h4 class="app-form-section-title">Precios e impuestos</h4>
-                                <div class="mt-6 grid gap-6 md:grid-cols-2">
+                                <div class="mt-6 app-form-grid-2">
                                     <div>
                                         <x-input-label for="cost_price">
                                             Coste base <span class="text-red-600">*</span>
@@ -256,12 +256,12 @@
                                         <dd class="app-summary-value" x-text="formatTax(tax)"></dd>
                                     </div>
                                     <div class="border-t border-amber-200 pt-4">
-                                        <dt class="text-xs font-semibold uppercase tracking-[0.2em] text-stone-500">Precio base a guardar</dt>
-                                        <dd class="mt-2 text-4xl font-black tracking-tight text-stone-950" x-text="formatCurrency(displaySalePriceValue(), 2)"></dd>
+                                        <dt class="app-meta-label">Precio base a guardar</dt>
+                                        <dd class="app-summary-emphasis-value" x-text="formatCurrency(displaySalePriceValue(), 2)"></dd>
                                     </div>
                                     <div class="pt-2">
-                                        <dt class="text-xs font-semibold uppercase tracking-[0.2em] text-stone-500">Precio final con descuento</dt>
-                                        <dd class="mt-2 text-2xl font-black tracking-tight text-emerald-700" x-text="formatCurrency(displayDiscountedSalePriceValue(), 2)"></dd>
+                                        <dt class="app-meta-label">Precio final con descuento</dt>
+                                        <dd class="app-summary-emphasis-value-success" x-text="formatCurrency(displayDiscountedSalePriceValue(), 2)"></dd>
                                     </div>
                                 </dl>
                                 <p class="mt-5 text-xs leading-5 text-stone-500">

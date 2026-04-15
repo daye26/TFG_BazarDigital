@@ -105,7 +105,7 @@
                 @endforelse
             </div>
 
-            <aside class="store-panel h-fit lg:sticky lg:top-6">
+            <aside class="store-panel store-summary-panel-sticky">
                 <p class="store-kicker">Resumen</p>
                 <h2 class="store-heading">TOTAL ACTUAL</h2>
 
@@ -128,7 +128,7 @@
                     El carrito usa el precio con descuento y el stock actual del producto. Al confirmar el pedido, el stock quedara reservado para la recogida.
                 </p>
 
-                <div class="mt-8 flex flex-col gap-3">
+                <div class="store-stack-actions">
                     @if ($items->isNotEmpty() && ! $hasAvailabilityIssues)
                         <form method="POST" action="{{ route('orders.store') }}" class="space-y-4">
                             @csrf

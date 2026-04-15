@@ -75,7 +75,7 @@
                 <input type="hidden" name="return_context" value="show">
                 <input type="hidden" name="return_tab" value="general">
 
-                <div class="grid gap-6 md:grid-cols-2">
+                <div class="app-form-grid-2">
                     <div>
                         <x-input-label for="show-barcode">Codigo de barras <span class="text-red-600">*</span></x-input-label>
                         <x-text-input id="show-barcode" name="barcode" type="text" class="mt-2 block w-full" :value="old('barcode', $product->barcode)" required />
@@ -174,7 +174,7 @@
                 <input type="hidden" name="return_context" value="show">
                 <input type="hidden" name="return_tab" value="price">
 
-                <div class="grid gap-6 md:grid-cols-2">
+                <div class="app-form-grid-2">
                     <div>
                         <x-input-label for="show-cost_price">Coste base <span class="text-red-600">*</span></x-input-label>
                         <x-text-input id="show-cost_price" name="cost_price" type="number" min="0.0001" step="0.0001" class="mt-2 block w-full" x-model="costPrice" @focus="pricingMode = 'margin'" @input="pricingMode = 'margin'" @blur="applyPreview()" required />
@@ -235,12 +235,12 @@
                             <dd class="app-summary-value" x-text="formatTax(tax)"></dd>
                         </div>
                         <div class="border-t border-stone-200 pt-4">
-                            <dt class="text-xs font-semibold uppercase tracking-[0.2em] text-stone-500">Precio base</dt>
-                            <dd class="mt-2 text-3xl font-black tracking-tight text-stone-950" x-text="formatCurrency(displaySalePriceValue(), 2)"></dd>
+                            <dt class="app-meta-label">Precio base</dt>
+                            <dd class="app-summary-compact-value" x-text="formatCurrency(displaySalePriceValue(), 2)"></dd>
                         </div>
                         <div class="pt-2">
-                            <dt class="text-xs font-semibold uppercase tracking-[0.2em] text-stone-500">Precio con descuento</dt>
-                            <dd class="mt-2 text-xl font-black tracking-tight text-emerald-700" x-text="formatCurrency(displayDiscountedSalePriceValue(), 2)"></dd>
+                            <dt class="app-meta-label">Precio con descuento</dt>
+                            <dd class="app-summary-compact-value-success" x-text="formatCurrency(displayDiscountedSalePriceValue(), 2)"></dd>
                         </div>
                     </dl>
                 </aside>

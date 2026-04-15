@@ -48,7 +48,7 @@
                                                 <div class="flex items-start justify-between gap-4">
                                                     <div class="min-w-0 flex-1">
                                                         <div class="flex flex-wrap items-center gap-2">
-                                                            <p class="text-lg font-black tracking-tight {{ $isSelected ? 'text-white' : 'text-stone-950' }}">
+                                                            <p class="app-picker-title {{ $isSelected ? 'text-white' : 'text-stone-950' }}">
                                                                 {{ $listedCategory->name }}
                                                             </p>
                                                             <span class="{{ $isSelected ? 'text-stone-400' : 'text-stone-300' }}">|</span>
@@ -63,10 +63,10 @@
                                                     </div>
 
                                                     <article class="{{ $isSelected ? 'app-product-picker-stat app-product-picker-stat-active' : 'app-product-picker-stat' }}">
-                                                        <p class="text-[8px] font-semibold uppercase tracking-[0.18em] {{ $isSelected ? 'text-stone-300' : 'text-stone-500' }}">
+                                                        <p class="app-picker-stat-label {{ $isSelected ? 'text-stone-300' : 'text-stone-500' }}">
                                                             Productos
                                                         </p>
-                                                        <p class="mt-0.5 text-base font-black tracking-tight {{ $isSelected ? 'text-white' : 'text-stone-950' }}">
+                                                        <p class="app-picker-stat-value {{ $isSelected ? 'text-white' : 'text-stone-950' }}">
                                                             {{ $listedCategory->products_count }}
                                                         </p>
                                                     </article>
@@ -85,11 +85,11 @@
                         <div class="space-y-6">
                             @if ($selectedCategory)
                                 <section class="app-note-card">
-                                    <div class="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
+                                    <div class="app-split-layout">
                                         <div>
                                             <p class="app-note-kicker">Categoria seleccionada</p>
                                             <h4 class="app-note-title">{{ $selectedCategory->name }}</h4>
-                                            <p class="mt-3 text-sm leading-6 text-stone-600">
+                                            <p class="app-lead-copy">
                                                 {{ $selectedCategory->url ?: 'Sin slug definido' }} / {{ $selectedCategory->is_active ? 'Visible en tienda' : 'Oculta en tienda' }}
                                             </p>
                                         </div>
@@ -113,7 +113,7 @@
                                         @method('PATCH')
 
                                         <div class="space-y-6">
-                                            <div class="grid gap-6 md:grid-cols-2">
+                                            <div class="app-form-grid-2">
                                                 <div>
                                                     <x-input-label for="name">Nombre <span class="text-red-600">*</span></x-input-label>
                                                     <x-text-input id="name" name="name" type="text" class="mt-2 block w-full" :value="old('name', $selectedCategory->name)" required />

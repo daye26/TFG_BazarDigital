@@ -13,30 +13,30 @@
         <section class="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
             <article class="app-mini-card">
                 <p class="app-stat-label">Recogida</p>
-                <p class="mt-3 text-lg font-black tracking-tight text-stone-950">
+                <p class="app-mini-card-value">
                     {{ $order->pickup_name }}
                 </p>
-                <p class="mt-2 text-sm text-stone-500">Creado el {{ $createdAtLabel }}</p>
+                <p class="app-mini-card-copy">Creado el {{ $createdAtLabel }}</p>
             </article>
 
             <article class="app-mini-card">
                 <p class="app-stat-label">Telefono</p>
-                <p class="mt-3 text-lg font-black tracking-tight text-stone-950">
+                <p class="app-mini-card-value">
                     {{ $order->user?->phone_for_display ?? 'Sin telefono asociado' }}
                 </p>
-                <p class="mt-2 text-sm text-stone-500">{{ $order->user?->email ?? 'Sin correo asociado' }}</p>
+                <p class="app-mini-card-copy">{{ $order->user?->email ?? 'Sin correo asociado' }}</p>
             </article>
 
             <article class="app-mini-card">
                 <p class="app-stat-label">Pago</p>
-                <p class="mt-3 text-lg font-black tracking-tight text-stone-950">{{ $order->payment_method->label() }}</p>
-                <p class="mt-2 text-sm text-stone-500">Estado {{ $order->payment_status->label() }}</p>
+                <p class="app-mini-card-value">{{ $order->payment_method->label() }}</p>
+                <p class="app-mini-card-copy">Estado {{ $order->payment_status->label() }}</p>
             </article>
 
             <article class="app-mini-card">
                 <p class="app-stat-label">Contenido</p>
-                <p class="mt-3 text-lg font-black tracking-tight text-stone-950">{{ $order->items->count() }} lineas</p>
-                <p class="mt-2 text-sm text-stone-500">{{ $totalUnits }} unidad{{ $totalUnits === 1 ? '' : 'es' }}</p>
+                <p class="app-mini-card-value">{{ $order->items->count() }} lineas</p>
+                <p class="app-mini-card-copy">{{ $totalUnits }} unidad{{ $totalUnits === 1 ? '' : 'es' }}</p>
             </article>
         </section>
     @endif

@@ -25,7 +25,7 @@
 
                 @foreach ($readyOrders as $order)
                     <article class="store-panel border-amber-300 bg-gradient-to-r from-amber-50 via-white to-amber-100 shadow-amber-200/70">
-                        <div class="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
+                        <div class="store-split-layout">
                             <div>
                                 <p class="store-kicker text-stone-700">{{ $order->order_number }}</p>
                                 <h2 class="mt-2 store-title-lg">{{ $order->pickup_name }}</h2>
@@ -34,8 +34,8 @@
                                 </p>
                             </div>
 
-                            <div class="flex flex-col gap-4 lg:items-end">
-                                <div class="flex flex-wrap gap-2 lg:justify-end">
+                            <div class="store-split-side">
+                                <div class="store-pill-row-end">
                                     <span class="store-status-pill store-status-pill-warning">
                                         LISTO PARA RECOGER
                                     </span>
@@ -44,7 +44,7 @@
                                     </span>
                                 </div>
 
-                                <div class="flex flex-wrap gap-3 lg:justify-end">
+                                <div class="store-button-row-end">
                                     <a href="{{ route('orders.documents.download', ['order' => $order, 'format' => 'ticket']) }}" class="store-button-secondary">
                                         Ticket
                                     </a>
@@ -95,7 +95,7 @@
 
                 @foreach ($otherOrders as $order)
                     <article class="store-panel">
-                        <div class="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
+                        <div class="store-split-layout">
                             <div>
                                 <p class="store-kicker">{{ $order->order_number }}</p>
                                 <h2 class="mt-2 store-title-lg">{{ $order->pickup_name }}</h2>
@@ -104,8 +104,8 @@
                                 </p>
                             </div>
 
-                            <div class="flex flex-col gap-4 lg:items-end">
-                                <div class="flex flex-wrap gap-2 lg:justify-end">
+                            <div class="store-split-side">
+                                <div class="store-pill-row-end">
                                     <span class="store-status-pill {{ match ($order->status->value) { 'completed' => 'store-status-pill-success', 'cancelled' => 'store-status-pill-danger', default => 'store-status-pill-neutral' } }}">
                                         {{ $order->status->label() }}
                                     </span>
@@ -114,7 +114,7 @@
                                     </span>
                                 </div>
 
-                                <div class="flex flex-wrap gap-3 lg:justify-end">
+                                <div class="store-button-row-end">
                                     <a href="{{ route('orders.documents.download', ['order' => $order, 'format' => 'ticket']) }}" class="store-button-secondary">
                                         Ticket
                                     </a>

@@ -13,9 +13,15 @@
                 </p>
             </div>
 
-            <a href="{{ route('orders.index') }}" class="store-button-secondary">
-                Volver a pedidos
-            </a>
+            <div class="flex flex-wrap items-center gap-3">
+                <a href="{{ route('orders.index') }}" class="store-button-secondary">
+                    Volver a pedidos
+                </a>
+
+                <a href="{{ route('orders.documents.download', ['order' => $order, 'format' => 'ticket']) }}" class="store-button-primary">
+                    Descargar ticket
+                </a>
+            </div>
         </div>
 
         @if (session('order_status'))
@@ -65,7 +71,7 @@
                 @endforeach
             </div>
 
-            <aside class="store-panel h-fit lg:sticky lg:top-6">
+            <aside class="store-panel store-summary-panel-sticky">
                 <p class="store-kicker">Resumen</p>
                 <h2 class="store-heading">ESTADO ACTUAL</h2>
 
@@ -109,11 +115,7 @@
                     </div>
                 @endif
 
-                <div class="mt-8 flex flex-col gap-3">
-                    <a href="{{ route('orders.documents.download', ['order' => $order, 'format' => 'ticket']) }}" class="store-button-primary w-full justify-center">
-                        Descargar ticket
-                    </a>
-
+                <div class="store-stack-actions">
                     @if ($order->canRetryOnlinePayment())
                         <form method="POST" action="{{ route('checkout.pay', $order) }}">
                             @csrf
