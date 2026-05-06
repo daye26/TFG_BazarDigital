@@ -12,8 +12,11 @@ use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\Product;
 use App\Models\User;
+use App\Notifications\OrderReadyForPickupNotification;
 use App\Services\StripeCheckoutService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Notifications\SendQueuedNotifications;
+use Illuminate\Support\Facades\Queue;
 use Mockery\MockInterface;
 use Stripe\Checkout\Session;
 use Tests\TestCase;
@@ -316,6 +319,63 @@ class OrderFlowTest extends TestCase
         $this->assertSame('completed', $freshOrder->status->value);
         $this->assertSame('paid', $freshOrder->payment_status->value);
         $this->assertNotNull($freshOrder->paid_at);
+    }
+
+    public function test_marking_an_order_as_ready_queues_a_ready_for_pickup_email(): void
+    {
+        Queue::fake();
+
+        $admin = User::factory()->create([
+            'role' => UserRole::ADMIN,
+        ]);
+        $customer = User::factory()->create([
+            'name' => 'Ana Cliente',
+            'email' => 'ana@example.com',
+        ]);
+
+        $order = Order::create([
+            'order_number' => 'WEB-20260418-000001',
+            'user_id' => $customer->id,
+            'source' => 'web',
+            'pickup_name' => 'Ana Cliente',
+            'status' => OrderStatus::PENDING,
+            'payment_method' => PaymentMethod::STORE,
+            'payment_status' => PaymentStatus::PENDING,
+            'subtotal' => '24.90',
+            'discount_total' => '0.00',
+            'tax_total' => '4.32',
+            'total' => '24.90',
+        ]);
+
+        $this
+            ->actingAs($admin)
+            ->patch(route('admin.orders.ready', $order))
+            ->assertRedirect(route('admin.orders.index', absolute: false));
+
+        $this->assertSame('ready', $order->fresh()->status->value);
+
+        Queue::assertPushed(SendQueuedNotifications::class, function (SendQueuedNotifications $job) use ($customer, $order): bool {
+            if (! $job->notification instanceof OrderReadyForPickupNotification) {
+                return false;
+            }
+
+            if (! in_array('mail', $job->channels, true)) {
+                return false;
+            }
+
+            $queuedNotifiable = $job->notifiables->first();
+
+            if (! $queuedNotifiable instanceof User || ! $queuedNotifiable->is($customer)) {
+                return false;
+            }
+
+            $mailMessage = $job->notification->toMail($customer);
+
+            return $mailMessage->subject === 'Tu pedido '.$order->order_number.' ya esta listo para recoger'
+                && $mailMessage->actionText === 'Ver pedido'
+                && $mailMessage->actionUrl === route('orders.show', $order)
+                && in_array('Recuerda que el pago se realizara al recoger el pedido.', $mailMessage->outroLines, true);
+        });
     }
 
     public function test_admin_cannot_prepare_an_unpaid_online_order(): void

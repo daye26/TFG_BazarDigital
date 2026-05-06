@@ -8,8 +8,11 @@ use App\Enums\PaymentStatus;
 use App\Models\Order;
 use App\Models\Product;
 use App\Models\User;
+use App\Notifications\OrderReadyForPickupNotification;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use RuntimeException;
+use Throwable;
 
 class OrderService
 {
@@ -139,7 +142,7 @@ class OrderService
 
     public function markReady(Order $order): Order
     {
-        return DB::transaction(function () use ($order): Order {
+        $readyOrder = DB::transaction(function () use ($order): Order {
             $lockedOrder = Order::query()
                 ->lockForUpdate()
                 ->findOrFail($order->id);
@@ -158,6 +161,10 @@ class OrderService
 
             return $lockedOrder->fresh(['items.product', 'user']);
         });
+
+        $this->queueReadyForPickupNotification($readyOrder);
+
+        return $readyOrder;
     }
 
     public function markCompleted(Order $order): Order
@@ -243,5 +250,23 @@ class OrderService
         }
 
         return round($lineTotal - ($lineTotal / (1 + ($taxRate / 100))), 2);
+    }
+
+    private function queueReadyForPickupNotification(Order $order): void
+    {
+        if (blank($order->user?->email)) {
+            return;
+        }
+
+        try {
+            $order->user->notify(new OrderReadyForPickupNotification($order));
+        } catch (Throwable $throwable) {
+            Log::error('No se pudo encolar el correo de pedido listo para recoger.', [
+                'order_id' => $order->id,
+                'order_number' => $order->order_number,
+                'user_id' => $order->user_id,
+                'exception' => $throwable->getMessage(),
+            ]);
+        }
     }
 }
