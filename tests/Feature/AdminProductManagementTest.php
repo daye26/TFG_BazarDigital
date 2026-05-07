@@ -29,7 +29,9 @@ class AdminProductManagementTest extends TestCase
             ->assertOk()
             ->assertSee('Acciones rapidas')
             ->assertSee('Nueva categoria')
-            ->assertSee(route('admin.categories.create'), false);
+            ->assertSee(route('admin.categories.create'), false)
+            ->assertSee('Pedidos por preparar')
+            ->assertSee(route('admin.orders.index', ['scope' => 'preparable']), false);
     }
 
     public function test_admin_can_view_product_creation_page(): void

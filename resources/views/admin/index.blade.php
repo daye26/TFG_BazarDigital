@@ -35,6 +35,10 @@
                                 <a href="{{ route('admin.categories.manage') }}" class="app-button-primary">
                                     Actualizar categoria
                                 </a>
+
+                                <a href="{{ route('admin.orders.index', ['scope' => 'preparable']) }}" class="app-button-primary">
+                                    Pedidos por preparar
+                                </a>
                             </div>
                         </div>
 
